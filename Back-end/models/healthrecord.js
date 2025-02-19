@@ -12,7 +12,7 @@ const healthRecordSchema = new Schema({
     },
     patientId: {
         type: Schema.Types.ObjectId,
-        ref: "User",
+        ref: "Patient",
         required: true,
     },
     doctorId: {

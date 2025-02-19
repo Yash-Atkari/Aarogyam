@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const passportLocalMongoose = require("passport-local-mongoose");
 
 const doctorSchema = new Schema ({
     email: {
@@ -48,6 +49,10 @@ const doctorSchema = new Schema ({
             ref: "Patient"
         }
     ],
+}, {
+    timestamps: true // Automatically adds createdAt and updatedAt
 });
+
+doctorSchema.plugin(passportLocalMongoose);
 
 module.exports = mongoose.model("Doctor", doctorSchema);
