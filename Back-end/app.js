@@ -25,3 +25,10 @@ const port = 3000;
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
+
+app.get('/admin/dashboard', async (req, res) => {
+  const appointments = await getAppointments(); // Fetch from DB
+  const doctors = await getDoctorsStatus(); // Fetch from DB
+  const operations = await getOperations(); // Fetch from DB
+  res.render('admin/dashboard', { appointments, doctors, operations });
+});

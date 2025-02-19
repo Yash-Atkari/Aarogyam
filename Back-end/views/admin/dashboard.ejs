@@ -233,10 +233,8 @@
           <div class="card-title">Appointments</div>
           <div class="card-body">
             <h2>
-              <!-- DB: Insert dynamic count of appointments -->
-              <% //Example: <%= totalappointments %> %>
-              650
-            </h2>
+              <%= typeof totalappointments !== 'undefined' ? totalappointments : 'N/A' %>
+            </h2>                       
           </div>
         </div>
 
@@ -268,7 +266,7 @@
           <div class="card-body">
             <h2>
               <!-- DB: Insert dynamic earnings -->
-              $5,600
+              ₹50,600
             </h2>
           </div>
         </div>
@@ -383,5 +381,140 @@
         }
       });
     </script>
+
+<div class="row mt-4">
+  <!-- Appointments Section -->
+  <div class="col-md-8">
+      <div class="card text-white bg-dark">
+          <div class="card-header d-flex justify-content-between">
+              <span>Appointments</span>
+              <a href="/appointments" class="text-white">View All</a>
+          </div>
+          <div class="card-body">
+              <table class="table text-white">
+                  <thead>
+                      <tr>
+                          <th>Patient Name</th>
+                          <th>Assigned Doctor</th>
+                          <th>Date</th>
+                          <th>Diseases</th>
+                          <th>Actions</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <% appointments.forEach(appointment => { %>
+                          <tr>
+                              <td><%= appointment.patientName %></td>
+                              <td>
+                                  <a href="/doctor/<%= appointment.doctorId %>" class="text-primary">
+                                      <%= appointment.assignedDoctor %>
+                                  </a>
+                              </td>
+                              <td><%= appointment.date %></td>
+                              <td>
+                                  <span class="badge bg-warning text-dark"><%= appointment.disease %></span>
+                              </td>
+                              <td>
+                                  <a href="/edit-appointment/<%= appointment.id %>" class="text-info">
+                                      <i class="fas fa-edit"></i>
+                                  </a>
+                                  <a href="/delete-appointment/<%= appointment.id %>" class="text-danger ms-2">
+                                      <i class="fas fa-trash"></i>
+                                  </a>
+                              </td>
+                          </tr>
+                      <% }) %>
+                  </tbody>
+              </table>
+          </div>
+      </div>
+  </div>
+
+  <!-- Doctor Status Section -->
+  <div class="col-md-4">
+      <div class="card text-white bg-dark">
+          <div class="card-header d-flex justify-content-between">
+              <span>Doctor Status</span>
+              <a href="/doctors" class="text-white">View All</a>
+          </div>
+          <div class="card-body">
+              <ul class="list-group list-group-flush">
+                  <% doctors.forEach(doctor => { %>
+                      <li class="list-group-item d-flex justify-content-between text-white">
+                          <span>
+                              <img src="<%= doctor.image %>" class="rounded-circle me-2" width="30" height="30">
+                              <a href="/doctor/<%= doctor.id %>" class="text-primary"><%= doctor.name %></a>
+                          </span>
+                          <span class="badge <%= doctor.status === 'Available' ? 'bg-success' : 'bg-danger' %>">
+                              <%= doctor.status %>
+                          </span>
+                      </li>
+                  <% }) %>
+              </ul>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- Operations Section -->
+<div class="row mt-4">
+  <div class="col-md-12">
+      <div class="card text-white bg-dark">
+          <div class="card-header d-flex justify-content-between">
+              <span>Operations</span>
+              <a href="/operations" class="text-white">View All</a>
+          </div>
+          <div class="card-body">
+              <table class="table text-white">
+                  <thead>
+                      <tr>
+                          <th>Patient Name</th>
+                          <th>Doctors Team</th>
+                          <th>Date of Operation</th>
+                          <th>Duration</th>
+                          <th>Anesthesia Type</th>
+                          <th>Follow-Up Date</th>
+                          <th>Report</th>
+                          <th>Diseases</th>
+                          <th>Actions</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <% operations.forEach(operation => { %>
+                          <tr>
+                              <td><%= operation.patientName %></td>
+                              <td>
+                                  <% operation.doctorsTeam.forEach(doc => { %>
+                                      <img src="<%= doc.image %>" class="rounded-circle me-1" width="30" height="30">
+                                  <% }) %>
+                              </td>
+                              <td><%= operation.date %></td>
+                              <td><%= operation.duration %></td>
+                              <td><%= operation.anesthesia %></td>
+                              <td><%= operation.followUpDate %></td>
+                              <td>
+                                  <a href="/reports/<%= operation.reportId %>" class="text-info">
+                                      <i class="fas fa-file-medical"></i>
+                                  </a>
+                              </td>
+                              <td>
+                                  <span class="badge bg-warning text-dark"><%= operation.disease %></span>
+                              </td>
+                              <td>
+                                  <a href="/edit-operation/<%= operation.id %>" class="text-info">
+                                      <i class="fas fa-edit"></i>
+                                  </a>
+                                  <a href="/delete-operation/<%= operation.id %>" class="text-danger ms-2">
+                                      <i class="fas fa-trash"></i>
+                                  </a>
+                              </td>
+                          </tr>
+                      <% }) %>
+                  </tbody>
+              </table>
+          </div>
+      </div>
+  </div>
+</div>
   </body>
 </html>
