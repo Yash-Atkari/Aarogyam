@@ -11,6 +11,8 @@ app.use(express.static(path.join(__dirname, "public")));
 app.engine('ejs', engine);
 
 const Doctor = require("./models/doctor"); // Adjust the path as needed
+const Patient = require("./models/patient"); // Adjust the path as needed
+const Appointment = require("./models/appointment"); // Adjust the path as needed
 
 const MongoUrl = "mongodb://127.0.0.1:27017/aarogyam";
 
@@ -59,9 +61,24 @@ app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
 
-app.get('/admin/dashboard', async (req, res) => {
-  // const appointments = await getAppointments(); // Fetch from DB
-  const doctors = await Doctor.find(); // Fetch from DB
-  // const operations = await getOperations(); // Fetch from DB
-  res.render('admin/dashboard', { doctors });
+app.get("/admin/dashboard", async (req, res) => {
+  try {
+    const patients = await Patient.find(); // Fetch all patients from DB
+    const doctors = await Doctor.find(); // Fetch all doctors from DB
+    const appointments = await Appointment.find()
+      .populate({
+        path: 'patientId',
+        select: 'username' // Get the patient name
+      })
+      .populate({
+        path: 'doctorId',
+        select: 'username' // Get the doctor name
+      });
+
+    res.render("admin/dashboard", { patients, doctors, appointments });
+  } catch (err) {
+    console.error("Error fetching data for admin dashboard:", err);
+    res.status(500).send("Internal Server Error");
+  }
 });
+
