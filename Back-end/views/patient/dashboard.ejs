@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Patient Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1f1f2e;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #2d2d44;
+            padding: 20px;
+        }
+        .sidebar h1 {
+            color: #fff;
+        }
+        .sidebar a {
+            display: block;
+            color: #ccc;
+            text-decoration: none;
+            padding: 10px 0;
+            transition: 0.3s;
+        }
+        .sidebar a:hover {
+            color: #fff;
+        }
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+        .card {
+            background-color: #2d2d44;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .card h2 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h1>Patient Dashboard</h1>
+            <a href="#">Dashboard</a>
+            <a href="#">Appointments</a>
+            <a href="#">Doctors</a>
+            <a href="#">Profile</a>
+            <a href="#">Logout</a>
+        </div>
+        <div class="main-content">
+            <h1>Welcome, John Doe</h1>
+
+            <div class="card">
+                <h2>Upcoming Appointments</h2>
+                <p><strong>Doctor:</strong> Dr. Smith</p>
+                <p><strong>Date:</strong> Sun Mar 02 2025 17:00:00 GMT+0530 (India Standard Time)</p>
+                <p><strong>Reason:</strong> Routine Checkup</p>
+            </div>
+
+            <div class="card">
+                <h2>Medical History</h2>
+                <p><strong>Last Visit:</strong> Jan 15, 2025</p>
+                <p><strong>Diagnosis:</strong> Hypertension</p>
+                <p><strong>Treatment:</strong> Medication and Lifestyle Changes</p>
+            </div>
+
+            <div class="card">
+                <h2>Contact Information</h2>
+                <p><strong>Email:</strong> johndoe@example.com</p>
+                <p><strong>Phone:</strong> +91 9876543210</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

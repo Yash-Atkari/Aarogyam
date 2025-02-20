@@ -4,19 +4,10 @@
     <meta charset="UTF-8" />
     <title>Admin Dashboard</title>
     <!-- Bootstrap CSS -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
 
     <!-- Optional: Font Awesome for icons -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-      integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2Dhcn4s1urUqWf2c2F+3fbyGzwixQ08i9OR8Ep/67v6BM0BHTA4j4F4Xrl1Pb1Rsw=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2Dhcn4s1urUqWf2c2F+3fbyGzwixQ08i9OR8Ep/67v6BM0BHTA4j4F4Xrl1Pb1Rsw==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
 
     <!-- Custom CSS (you can move this to a separate .css file) -->
     <style>
@@ -163,52 +154,19 @@
   <body>
     <!-- SIDEBAR -->
     <div class="sidebar">
-      <div class="brand">
-        Aarogyam <!-- Or your app name -->
-      </div>
+      <div class="brand">Aarogyam</div>
       <div class="profile-section">
-        <img
-          src="https://via.placeholder.com/60"
-          alt="Admin Profile"
-        />
-        <h6 class="mt-2">Sarah Smith (Admin)</h6>
+        <img src="#" alt="admin_profile" />
+        <h6>Sarah Smith (Admin)</h6>
       </div>
       <ul>
-        <li>
-          <a href="#">
-            <i class="fas fa-home"></i> Dashboard
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <i class="fas fa-user-md"></i> Doctor Dashboard
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <i class="fas fa-user-injured"></i> Patient Dashboard
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <i class="fas fa-calendar-check"></i> Appointments
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <i class="fas fa-file-medical"></i> Health Records
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <i class="fas fa-file"></i> Certificate Generator
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <i class="fas fa-sign-out-alt"></i> Logout
-          </a>
-        </li>
+        <li><a href="#">Dashboard</a></li>
+        <li><a href="#">Doctor Dashboard</a></li>
+        <li><a href="#">Patient Dashboard</a></li>
+        <li><a href="#">Appointments</a></li>
+        <li><a href="#">Health Records</a></li>
+        <li><a href="#">Certificate Generator</a></li>
+        <li><a href="#">Logout</a></li>
       </ul>
     </div>
 
@@ -218,105 +176,149 @@
       <div class="top-nav">
         <h4 class="mb-0">Admin Dashboard</h4>
         <div class="user-info">
-          <img
-            src="https://via.placeholder.com/40"
-            alt="User Profile"
-          />
+          <img src="#" alt="user_profile"/>
           <span>Ellie Jones</span>
         </div>
       </div>
 
       <!-- DASHBOARD CARDS -->
       <div class="dashboard-cards">
-        <!-- Appointment Card -->
+        <!-- Total Appointments Card -->
         <div class="card-custom">
-          <div class="card-title">Appointments</div>
+          <div class="card-title">Total Appointments</div>
           <div class="card-body">
-            <h2>
-              <%= typeof totalappointments !== 'undefined' ? totalappointments : 'N/A' %>
-            </h2>                       
+            <h2><%= typeof totalappointments !== 'undefined' ? totalappointments : 'N/A' %></h2>
           </div>
         </div>
 
-        <!-- Operations Card -->
+        <!-- Total Doctors Card -->
         <div class="card-custom">
-          <div class="card-title">Operations</div>
+          <div class="card-title">Total Doctors</div>
           <div class="card-body">
-            <h2>
-              <!-- DB: Insert dynamic count of operations -->
-              80
-            </h2>
+            <h2><%= typeof totaldoctors !== 'undefined' ? totaldoctors : 'N/A' %></h2>
           </div>
         </div>
 
-        <!-- New Patients Card -->
+        <!-- Total Patients Card -->
         <div class="card-custom">
-          <div class="card-title">New Patients</div>
+          <div class="card-title">Total Patients</div>
           <div class="card-body">
-            <h2>
-              <!-- DB: Insert dynamic count of new patients -->
-              125
-            </h2>
-          </div>
-        </div>
-
-        <!-- Earnings Card -->
-        <div class="card-custom">
-          <div class="card-title">Earnings</div>
-          <div class="card-body">
-            <h2>
-              <!-- DB: Insert dynamic earnings -->
-              ₹50,600
-            </h2>
+            <h2><%= typeof totalpatients !== 'undefined' ? totalpatients : 'N/A' %></h2>
           </div>
         </div>
       </div>
 
-      <!-- HOSPITAL SURVEY / CHARTS -->
-      <div class="chart-container mb-4">
-        <h5 class="mb-3">Hospital Survey (Monthly)</h5>
-        <!-- DB: Insert chart or graph for new patients, etc. -->
-        <!-- Example placeholder for Chart.js or ApexCharts -->
-        <canvas id="hospitalChart" width="400" height="150"></canvas>
+      <!-- Appointments Section -->
+      <div class="col-md-8 mb-5">
+        <div class="card text-white bg-dark">
+            <div class="card-header d-flex justify-content-between">
+                <span>Appointments</span>
+                <a href="/appointments" class="text-white">View All</a>
+            </div>
+            <div class="card-body">
+                <table class="table text-white">
+                    <thead>
+                        <tr>
+                            <th>Patient Name</th>
+                            <th>Assigned Doctor</th>
+                            <th>Date</th>
+                            <th>Reason</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% appointments.forEach(appointment => { %>
+                            <tr>
+                                <td><%= appointment.patientId.username %></td>
+                                <td>
+                                    <a href="/doctor/<%= appointment.doctorId._id %>" class="text-primary">
+                                        <%= appointment.doctorId.username %>
+                                    </a>
+                                </td>
+                                <td><%= new Date(appointment.date).toDateString() %></td>
+                                <td><%= appointment.reason %></td>
+                                <td><%= appointment.status %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
       </div>
 
-      <!-- APPOINTMENTS STATS / EXAMPLE ROWS -->
-      <div class="row">
-        <div class="col-md-4">
-          <div class="card-custom">
-            <div class="card-title">Total Appointments</div>
-            <div class="card-body d-flex justify-content-between">
-              <div>
-                <p>Completed</p>
-                <h3>73</h3>
-                <!-- DB: dynamic completed appointments -->
-              </div>
-              <div>
-                <p>Upcoming</p>
-                <h3>55</h3>
-                <!-- DB: dynamic upcoming appointments -->
-              </div>
+      <!-- Doctors Section -->
+      <div class="col-md-8 mb-5">
+        <div class="card text-white bg-dark">
+            <div class="card-header d-flex justify-content-between">
+                <span>Doctors</span>
+                <a href="/doctors" class="text-white">View All</a>
             </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card-custom">
-            <div class="card-title">Revenue</div>
             <div class="card-body">
-              <h3>$4,589</h3>
-              <!-- DB: dynamic revenue -->
+                <table class="table text-white">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Specialization</th>
+                            <th>Experience (Years)</th>
+                            <th>Hospital</th>
+                            <th>Consultant Fees</th>
+                            <th>Phone</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% doctors.forEach(doctor => { %>
+                            <tr>
+                                <td><%= doctor.username %></td>
+                                <td><%= doctor.email %></td>
+                                <td><%= doctor.specialization %></td>
+                                <td><%= doctor.experience %></td>
+                                <td><%= doctor.hospital %></td>
+                                <td><%= doctor.consultantFees %></td>
+                                <td><%= doctor.phone %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
             </div>
-          </div>
         </div>
-        <div class="col-md-4">
-          <div class="card-custom">
-            <div class="card-title">Doctor Status</div>
-            <div class="card-body">
-              <!-- DB: Loop through doctor status or show count -->
-              <p>5 Active</p>
-              <p>2 On Leave</p>
+      </div>
+
+      <!-- Patients Section -->
+      <div class="col-md-8">
+        <div class="card text-white bg-dark">
+            <div class="card-header d-flex justify-content-between">
+                <span>Patients</span>
+                <a href="/patients" class="text-white">View All</a>
             </div>
-          </div>
+            <div class="card-body">
+                <table class="table text-white">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Gender</th>
+                            <th>Age</th>
+                            <th>Height (cm)</th>
+                            <th>Weight (kg)</th>
+                            <th>Blood Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% patients.forEach(patient => { %>
+                            <tr>
+                                <td><%= patient.username %></td>
+                                <td><%= patient.email %></td>
+                                <td><%= patient.gender %></td>
+                                <td><%= patient.age %></td>
+                                <td><%= patient.height %></td>
+                                <td><%= patient.weight %></td>
+                                <td><%= patient.bloodType %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
         </div>
       </div>
 
@@ -327,174 +329,5 @@
         </small>
       </div>
     </div>
-
-    <!-- Bootstrap JS (Optional but recommended if using Bootstrap components) -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-    ></script>
-
-    <!-- Optional: Chart.js or ApexCharts for charts -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"
-    ></script>
-    <script>
-      // Example chart initialization
-      const ctx = document.getElementById('hospitalChart').getContext('2d');
-      const hospitalChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-          datasets: [
-            {
-              label: 'New Patients',
-              data: [10, 20, 15, 25, 35, 30],
-              borderColor: '#4CAF50',
-              fill: false
-            },
-            {
-              label: 'Operations',
-              data: [5, 10, 7, 12, 9, 15],
-              borderColor: '#FF6600',
-              fill: false
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              labels: {
-                color: '#fff'
-              }
-            }
-          },
-          scales: {
-            x: {
-              ticks: { color: '#fff' },
-              grid: { color: 'rgba(255,255,255,0.1)' }
-            },
-            y: {
-              ticks: { color: '#fff' },
-              grid: { color: 'rgba(255,255,255,0.1)' }
-            }
-          }
-        }
-      });
-    </script>
-
-<!-- Appointments Section -->
-<div class="col-md-8">
-  <div class="card text-white bg-dark">
-      <div class="card-header d-flex justify-content-between">
-          <span>Appointments</span>
-          <a href="/appointments" class="text-white">View All</a>
-      </div>
-      <div class="card-body">
-          <table class="table text-white">
-              <thead>
-                  <tr>
-                      <th>Patient Name</th>
-                      <th>Assigned Doctor</th>
-                      <th>Date</th>
-                      <th>Reason</th>
-                      <th>Status</th>
-                  </tr>
-              </thead>
-              <tbody>
-                  <% appointments.forEach(appointment => { %>
-                      <tr>
-                          <td><%= appointment.patientId.username %></td>
-                          <td>
-                              <a href="/doctor/<%= appointment.doctorId._id %>" class="text-primary">
-                                  <%= appointment.doctorId.username %>
-                              </a>
-                          </td>
-                          <td><%= new Date(appointment.date).toDateString() %></td>
-                          <td><%= appointment.reason %></td>
-                          <td><%= appointment.status %></td>
-                      </tr>
-                  <% }) %>
-              </tbody>
-          </table>
-      </div>
-  </div>
-</div>
-
-<!-- Doctors Section -->
-<div class="col-md-8">
-  <div class="card text-white bg-dark">
-      <div class="card-header d-flex justify-content-between">
-          <span>Doctors</span>
-          <a href="/doctors" class="text-white">View All</a>
-      </div>
-      <div class="card-body">
-          <table class="table text-white">
-              <thead>
-                  <tr>
-                      <th>Username</th>
-                      <th>Email</th>
-                      <th>Specialization</th>
-                      <th>Experience (Years)</th>
-                      <th>Hospital</th>
-                      <th>Consultant Fees</th>
-                      <th>Phone</th>
-                  </tr>
-              </thead>
-              <tbody>
-                  <% doctors.forEach(doctor => { %>
-                      <tr>
-                          <td><%= doctor.username %></td>
-                          <td><%= doctor.email %></td>
-                          <td><%= doctor.specialization %></td>
-                          <td><%= doctor.experience %></td>
-                          <td><%= doctor.hospital %></td>
-                          <td><%= doctor.consultantFees %></td>
-                          <td><%= doctor.phone %></td>
-                      </tr>
-                  <% }) %>
-              </tbody>
-          </table>
-      </div>
-  </div>
-</div>
-
-<!-- Patients Section -->
-<div class="col-md-8">
-  <div class="card text-white bg-dark">
-      <div class="card-header d-flex justify-content-between">
-          <span>Patients</span>
-          <a href="/patients" class="text-white">View All</a>
-      </div>
-      <div class="card-body">
-          <table class="table text-white">
-              <thead>
-                  <tr>
-                      <th>Username</th>
-                      <th>Email</th>
-                      <th>Gender</th>
-                      <th>Age</th>
-                      <th>Height (cm)</th>
-                      <th>Weight (kg)</th>
-                      <th>Blood Type</th>
-                  </tr>
-              </thead>
-              <tbody>
-                  <% patients.forEach(patient => { %>
-                      <tr>
-                          <td><%= patient.username %></td>
-                          <td><%= patient.email %></td>
-                          <td><%= patient.gender %></td>
-                          <td><%= patient.age %></td>
-                          <td><%= patient.height %></td>
-                          <td><%= patient.weight %></td>
-                          <td><%= patient.bloodType %></td>
-                      </tr>
-                  <% }) %>
-              </tbody>
-          </table>
-      </div>
-  </div>
-</div>
-
 </body>
 </html>

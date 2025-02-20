@@ -82,3 +82,64 @@ app.get("/admin/dashboard", async (req, res) => {
   }
 });
 
+app.get("/doctor/dashboard", async (req, res) => {
+  try {
+    const doctorId = "67b6d17ab339e23694c73bfa"; // Ensure doctor authentication is working properly
+
+    // Fetch the doctor's details (including appointments and patients IDs)
+    const doctor = await Doctor.findById(doctorId).lean();
+    if (!doctor) {
+      return res.status(404).send("Doctor not found");
+    }
+
+    // Fetch appointments for this doctor from their appointments array
+    const appointments = await Appointment.find({
+      _id: { $in: doctor.appointments }
+    }).populate({
+      path: 'patientId',
+      select: 'username email phone' // Customize fields as needed
+    }).lean();
+
+    // Fetch patients from the patients array in the doctor document
+    const patients = await Patient.find({
+      _id: { $in: doctor.patients }
+    }).select('username email phone').lean();
+
+    // Render the doctor dashboard and pass relevant data
+    res.render("doctor/dashboard", { doctor, appointments, patients });
+  } catch (err) {
+    console.error("Error fetching data for doctor dashboard:", err);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.get("/patient/dashboard", async (req, res) => {
+  try {
+    const patientId = "67b6d14db339e23694c73bf8"; // Ensure patient authentication is working properly
+
+    // Fetch the patient's details (including doctors and appointments IDs)
+    const patient = await Patient.findById(patientId).lean();
+    if (!patient) {
+      return res.status(404).send("Patient not found");
+    }
+
+    // Fetch appointments for this patient from their appointments array
+    const appointments = await Appointment.find({
+      _id: { $in: patient.appointments }
+    }).populate({
+      path: 'doctorId',
+      select: 'username specialization email phone' // Customize fields as needed
+    }).lean();
+
+    // Fetch doctors from the doctors array in the patient document
+    const doctors = await Doctor.find({
+      _id: { $in: patient.doctors }
+    }).select('username specialization email phone').lean();
+
+    // Render the patient dashboard and pass relevant data
+    res.render("patient/dashboard", { patient, appointments, doctors });
+  } catch (err) {
+    console.error("Error fetching data for patient dashboard:", err);
+    res.status(500).send("Internal Server Error");
+  }
+});
