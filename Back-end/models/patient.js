@@ -45,7 +45,7 @@ const patientSchema = new Schema ({
         }
     ],
 }, {
-    timestamps: true // Adds createdAt and updatedAt fields
+    timestamps: true 
 });
 
 patientSchema.plugin(passportLocalMongoose);

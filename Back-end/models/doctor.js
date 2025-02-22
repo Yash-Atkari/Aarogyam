@@ -18,8 +18,8 @@ const doctorSchema = new Schema ({
     },
     availabilitySlots: [
         {
-            day: String,   // e.g., "Monday"
-            time: String   // e.g., "10:00 AM - 1:00 PM"
+            day: String,
+            time: String  
         }
     ],
     hospital: {
@@ -50,7 +50,7 @@ const doctorSchema = new Schema ({
         }
     ],
 }, {
-    timestamps: true // Automatically adds createdAt and updatedAt
+    timestamps: true 
 });
 
 doctorSchema.plugin(passportLocalMongoose);

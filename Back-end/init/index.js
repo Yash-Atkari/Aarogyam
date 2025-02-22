@@ -1,7 +1,6 @@
 const Patient = require("../models/patient");
 const Doctor = require("../models/doctor");
 
-// Sample patient and doctor data arrays
 const patients = [
     {
         username: "john_doe",
@@ -52,7 +51,6 @@ const doctors = [
     }
 ];
 
-// Insert data into MongoDB
 async function seedDB() {
     await Patient.insertMany(patients);
     console.log("Patients added!");

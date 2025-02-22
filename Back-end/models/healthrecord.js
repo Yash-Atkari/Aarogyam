@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const healthRecordSchema = new Schema({
     doc: {
-        type: String, // File URL or path
+        type: String,
         required: true,
     },
     summary: {
