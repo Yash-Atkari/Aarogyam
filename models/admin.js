@@ -38,7 +38,7 @@ const adminSchema = new Schema ({
         }
     ],
 }, {
-    timestamps: true // Automatically adds createdAt and updatedAt
+    timestamps: true
 });
 
 adminSchema.plugin(passportLocalMongoose);
