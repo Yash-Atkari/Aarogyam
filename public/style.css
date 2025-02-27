@@ -16,5 +16,7 @@
 
 .image-section {
     height: 100vh;
-    width: 50vw;
+    width: 45vw;
+    position: absolute;
+    left: 100px;
 }

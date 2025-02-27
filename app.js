@@ -105,36 +105,36 @@ app.get("/patient/signup", (req, res) => {
 //   }
 // });
 
-// app.get("/patient/dashboard", async (req, res) => {
-//   try {
-//     const patientId = "67b6d14db339e23694c73bf8"; // Ensure patient authentication is working properly
+app.get("/patient/dashboard", async (req, res) => {
+  try {
+    const patientId = "67b6d14db339e23694c73bf8"; // Ensure patient authentication is working properly
 
-//     // Fetch the patient's details (including doctors and appointments IDs)
-//     const patient = await Patient.findById(patientId).lean();
-//     if (!patient) {
-//       return res.status(404).send("Patient not found");
-//     }
+    // Fetch the patient's details (including doctors and appointments IDs)
+    const patient = await Patient.findById(patientId).lean();
+    if (!patient) {
+      return res.status(404).send("Patient not found");
+    }
 
-//     // Fetch appointments for this patient from their appointments array
-//     const appointments = await Appointment.find({
-//       _id: { $in: patient.appointments }
-//     }).populate({
-//       path: 'doctorId',
-//       select: 'username specialization email phone' // Customize fields as needed
-//     }).lean();
+    // Fetch appointments for this patient from their appointments array
+    const appointments = await Appointment.find({
+      _id: { $in: patient.appointments }
+    }).populate({
+      path: 'doctorId',
+      select: 'username specialization email phone' // Customize fields as needed
+    }).lean();
 
-//     // Fetch doctors from the doctors array in the patient document
-//     const doctors = await Doctor.find({
-//       _id: { $in: patient.doctors }
-//     }).select('username specialization email phone').lean();
+    // Fetch doctors from the doctors array in the patient document
+    const doctors = await Doctor.find({
+      _id: { $in: patient.doctors }
+    }).select('username specialization email phone').lean();
 
-//     // Render the patient dashboard and pass relevant data
-//     res.render("patient/dashboard", { patient, appointments, doctors });
-//   } catch (err) {
-//     console.error("Error fetching data for patient dashboard:", err);
-//     res.status(500).send("Internal Server Error");
-//   }
-// });
+    // Render the patient dashboard and pass relevant data
+    res.render("patient/dashboard", { patient, appointments, doctors });
+  } catch (err) {
+    console.error("Error fetching data for patient dashboard:", err);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
 app.listen(3000, () => {
   console.log(`Server is running on http://localhost:3000/aarogyam`);
