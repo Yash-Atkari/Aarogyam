@@ -11,9 +11,10 @@ app.use(express.static("public"));
 app.use(express.static(path.join(__dirname, "public")));
 app.engine('ejs', engine);
 
-const Doctor = require("./models/doctor"); // Adjust the path as needed
-const Patient = require("./models/patient"); // Adjust the path as needed
-const Appointment = require("./models/appointment"); // Adjust the path as needed
+const Doctor = require("./models/doctor");
+const Patient = require("./models/patient");
+const Appointment = require("./models/appointment");
+const HealthRecord = require("./models/healthrecord"); 
 
 const MongoUrl = "mongodb://127.0.0.1:27017/aarogyam";
 
@@ -54,86 +55,31 @@ app.get("/patient/signup", (req, res) => {
 // });
 
 // app.get("/admin/dashboard", async (req, res) => {
-//   try {
-//     const patients = await Patient.find(); // Fetch all patients from DB
-//     const doctors = await Doctor.find(); // Fetch all doctors from DB
-//     const appointments = await Appointment.find()
-//       .populate({
-//         path: 'patientId',
-//         select: 'username' // Get the patient name
-//       })
-//       .populate({
-//         path: 'doctorId',
-//         select: 'username' // Get the doctor name
-//       });
-
-//     res.render("admin/dashboard", { patients, doctors, appointments });
-//   } catch (err) {
-//     console.error("Error fetching data for admin dashboard:", err);
-//     res.status(500).send("Internal Server Error");
-//   }
+//   res.render("admin/dashboard");
 // });
 
 // app.get("/doctor/dashboard", async (req, res) => {
-//   try {
-//     const doctorId = "67b6d17ab339e23694c73bfa"; // Ensure doctor authentication is working properly
-
-//     // Fetch the doctor's details (including appointments and patients IDs)
-//     const doctor = await Doctor.findById(doctorId).lean();
-//     if (!doctor) {
-//       return res.status(404).send("Doctor not found");
-//     }
-
-//     // Fetch appointments for this doctor from their appointments array
-//     const appointments = await Appointment.find({
-//       _id: { $in: doctor.appointments }
-//     }).populate({
-//       path: 'patientId',
-//       select: 'username email phone' // Customize fields as needed
-//     }).lean();
-
-//     // Fetch patients from the patients array in the doctor document
-//     const patients = await Patient.find({
-//       _id: { $in: doctor.patients }
-//     }).select('username email phone').lean();
-
-//     // Render the doctor dashboard and pass relevant data
-//     res.render("doctor/dashboard", { doctor, appointments, patients });
-//   } catch (err) {
-//     console.error("Error fetching data for doctor dashboard:", err);
-//     res.status(500).send("Internal Server Error");
-//   }
+//   res.render("doctor/dashboard");
 // });
 
 app.get("/patient/dashboard", async (req, res) => {
   try {
-    const patientId = "67b6d14db339e23694c73bf8"; // Ensure patient authentication is working properly
+    req.user = "67b6d14db339e23694c73bf9";
 
-    // Fetch the patient's details (including doctors and appointments IDs)
-    const patient = await Patient.findById(patientId).lean();
-    if (!patient) {
-      return res.status(404).send("Patient not found");
-    }
+    const healthrecords = await HealthRecord.find({patientId: req.user});
+    const doctors = await Doctor.find({});
+    const appointments = await Appointment.find({ patientId: req.user});
 
-    // Fetch appointments for this patient from their appointments array
-    const appointments = await Appointment.find({
-      _id: { $in: patient.appointments }
-    }).populate({
-      path: 'doctorId',
-      select: 'username specialization email phone' // Customize fields as needed
-    }).lean();
+    // console.log(healthrecords);
+    // console.log(doctors);
+    // console.log(appointments);
 
-    // Fetch doctors from the doctors array in the patient document
-    const doctors = await Doctor.find({
-      _id: { $in: patient.doctors }
-    }).select('username specialization email phone').lean();
-
-    // Render the patient dashboard and pass relevant data
-    res.render("patient/dashboard", { patient, appointments, doctors });
+    
   } catch (err) {
-    console.error("Error fetching data for patient dashboard:", err);
-    res.status(500).send("Internal Server Error");
+    console.error("Error fetching patient data:", err);
+    res.status(500).json({ error: "Internal Server Error", details: err.message });
   }
+  res.render("patient/dashboard");
 });
 
 app.listen(3000, () => {

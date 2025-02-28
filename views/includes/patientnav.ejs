@@ -1,0 +1,78 @@
+<style>
+    body {
+      background-color: #ffffff;
+      color: #333333; /* Dark gray for readability */
+  }
+
+  .sidebar {
+      background-color: #ffffff; /* White background */
+      border-right: 1px solid #dcdcdc; /* Lighter border */
+      height: 100vh;
+      position: fixed;
+      width: 250px;
+  }
+
+  .nav-link {
+      color: #333333; /* Dark gray for contrast */
+      padding: 10px 15px;
+      border-radius: 8px;
+      margin-bottom: 5px;
+  }
+
+  .nav-link:hover, .nav-link.active {
+      background-color: #f0f0f0; /* Light gray hover effect */
+      color: #007bff; /* Bootstrap primary blue */
+  }
+
+  .nav-link i {
+      margin-right: 10px;
+  }
+
+  /* Profile Section */
+  .sidebar .text-center {
+      color: #333333;
+  }
+
+  .sidebar .text-muted {
+      color: #666666 !important;
+  }
+</style>
+
+<div class="col-auto sidebar">
+  <div class="text-center py-4">
+    <!-- <img src="https://via.placeholder.com/96" alt="Profile" class="profile-img mb-2"> -->
+    <i class="fa-solid fa-user"></i>
+    <h5 class="mb-0">Cara Stevens</h5>
+    <small class="text-muted">Patient</small>
+  </div>
+
+  <nav class="px-3 mt-4">
+    <hr>
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <a class="nav-link active" href="#"><i class="bi bi-house-door"></i>Dashboard</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#"><i class="bi bi-calendar"></i>Appointments</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#"><i class="bi bi-file-text"></i>Prescriptions</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#"><i class="bi bi-clipboard"></i>Medical Record</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#"><i class="bi bi-credit-card"></i>Billing</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#"><i class="bi bi-chat-square-text"></i>Chat</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#"><i class="bi bi-gear"></i>Settings</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#"><i class="bi bi-box-arrow-right"></i>Logout</a>
+      </li>
+    </ul>
+  </nav>
+</div>
