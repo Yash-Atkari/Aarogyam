@@ -2,17 +2,8 @@
 
 <style>
   .dashboard-container {
-    padding: 20px;
-    font-family: 'Arial', sans-serif;
+    padding: 0 20px 20px 20px;
     color: #333;
-}
-
-.dashboard-header {
-    font-size: 20px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    gap: 10px;
 }
 
 .dashboard-header span {
@@ -99,7 +90,7 @@
           <!-- <img src="/images/medical-team.png" alt="Doctors" class="welcome-image"> -->
           <div class="welcome-text">
               <h3>Welcome back</h3>
-              <h2 class="patient-name"><i class="fa-solid fa-user fs-5">&nbsp;</i>John Doe!</h2>
+              <h2 class="patient-name"><i class="fa-solid fa-user fs-5">&nbsp;&nbsp;</i><%= patient.username %></h2>
               <p>
                   We would like to take this opportunity to welcome you to our practice and 
                   thank you for choosing our physicians to participate in your healthcare. 
@@ -111,14 +102,13 @@
   </div>
 
   <div class="patient-info">
-      <h3>Personal Details:</h3>
+      <h3>Medical Details:</h3>
       <ul>
-          <li><strong>Email:</strong> johndoe@example.com</li>
-          <li><strong>Gender:</strong> Male</li>
-          <li><strong>Age:</strong> 30 years</li>
-          <li><strong>Height:</strong> 175 cm</li>
-          <li><strong>Weight:</strong> 70 kg</li>
-          <li><strong>Blood Type:</strong> O+</li>
+          <li><strong>Gender:</strong> <%= patient.gender %></li>
+          <li><strong>Age:</strong> <%= patient.age %> years old</li>
+          <li><strong>Height:</strong> <%= patient.height %> cm</li>
+          <li><strong>Weight:</strong> <%= patient.weight %> kg</li>
+          <li><strong>Blood Type:</strong> <%= patient.bloodType %></li>
       </ul>
   </div>
 </div>

@@ -40,7 +40,6 @@
 
 <div class="col-auto sidebar">
   <div class="text-center py-4">
-    <!-- <img src="https://via.placeholder.com/96" alt="Profile" class="profile-img mb-2"> -->
     <i class="fa-solid fa-user"></i>
     <h5 class="mb-0">Cara Stevens</h5>
     <small class="text-muted">Patient</small>
@@ -50,16 +49,26 @@
     <hr>
     <ul class="nav flex-column">
       <li class="nav-item">
-        <a class="nav-link active" href="#"><i class="bi bi-house-door"></i>Dashboard</a>
+        <a class="nav-link active" href="/patient/dashboard"><i class="bi bi-house-door"></i>Dashboard</a>
+      </li>
+
+      <!-- Appointments Dropdown -->
+      <li class="nav-item">
+        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#appointmentsDropdown">
+          <i class="bi bi-calendar"></i> Appointments
+        </a>
+        <ul class="collapse list-unstyled px-3" id="appointmentsDropdown">
+          <li><a class="nav-link" href="/patient/bookappointment">Book Appointment</a></li>
+          <li><a class="nav-link" href="/patient/appointments">Today's Appointments</a></li>
+          <li><a class="nav-link" href="#">Upcoming Appointments</a></li>
+          <li><a class="nav-link" href="#">Past Appointments</a></li>
+        </ul>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#"><i class="bi bi-calendar"></i>Appointments</a>
+        <a class="nav-link" href="#"><i class="bi bi-clipboard"></i>Medical Records</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#"><i class="bi bi-file-text"></i>Prescriptions</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#"><i class="bi bi-clipboard"></i>Medical Record</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#"><i class="bi bi-credit-card"></i>Billing</a>

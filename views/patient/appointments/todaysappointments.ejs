@@ -1,0 +1,103 @@
+<%- layout("./layouts/patientboilerplate") %>
+
+<style>
+    body { background-color: #f8f9fa; }
+    .appointments-container {
+        max-width: 95%;
+        /* margin: auto; */
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .appointment-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px;
+        border-radius: 10px;
+        background: #fff;
+        margin-bottom: 10px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .appointment-header {
+        font-size: 20px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .doctor-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    .doctor-info img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+    }
+    .status-confirm { color: green; font-weight: bold; }
+    .status-cancelled { color: red; font-weight: bold; }
+    .status-pending { color: orange; font-weight: bold; }
+    .actions i {
+        cursor: pointer;
+        font-size: 1.2rem;
+        margin-right: 10px;
+    }
+</style>
+
+<div class="container">
+    <div class="appointment-header">
+        <h2>Appointments</h2>
+    </div>
+    <div class="appointments-container mt-3">
+        <h5>Today's Appointments</h5>
+
+        <% appointments.forEach(appointment => { %>
+            <div class="appointment-card">
+                <div class="doctor-info">
+                    <div>
+                        <strong><%= appointment.doctorId.username %></strong> <br>
+                        <img src="<%= appointment.doctorId.profile %>" alt="Doctor Image">
+                    </div>
+                    <div>
+                        <strong>Specialization</strong> <br>
+                        <small><%= appointment.doctorId.specialization %></small>
+                    </div>
+                </div>
+                <div>
+                    <strong>Date</strong> <br>
+                    <small><%= appointment.date.toString().split(" ").slice(0, 4).join(" ") %></small>
+                </div>
+                <div>
+                    <strong>Time</strong> <br>
+                    <small><%= appointment.date.toString().split(" ").splice(4, 5).join(" ") %></small>
+                </div>
+                <div>
+                    <strong>Reason</strong> <br>
+                    <small><%= appointment.reason %></small>
+                </div>
+                <div>
+                    <strong>Contact</strong> <br>
+                    <small><%= appointment.doctorId.phone %></small>
+                </div>
+                <div>
+                    <strong>Status</strong> <br>
+                    <small><%= appointment.status %></small>
+                </div>
+                <div>
+                    <strong>Location</strong> <br>
+                    <small><%= appointment.doctorId.hospital %></small>
+                </div>
+                <div class="actions">
+                    <strong>Actions</strong> <br>
+                    <i class="bi bi-check-circle text-success"></i>
+                    <i class="bi bi-x-circle text-danger"></i>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+</div>
