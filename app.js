@@ -15,6 +15,7 @@ const Doctor = require("./models/doctor");
 const Patient = require("./models/patient");
 const Appointment = require("./models/appointment");
 const HealthRecord = require("./models/healthrecord"); 
+const appointment = require("./models/appointment");
 
 const MongoUrl = "mongodb://127.0.0.1:27017/aarogyam";
 
@@ -117,14 +118,16 @@ app.get("/patient/prescriptions", async (req, res) => {
     const patientId = "67b6d14db339e23694c73bf9";
 
     // Fetch only Prescription records with attachments
-    const records = await HealthRecord.find({ patientId: patientId });
+    const appointments = await Appointment.find({ patientId: patientId })
+    .populate("doctorId"); // Populates doctor details
 
-    res.render("patient/prescriptions", { records });
+    res.render("patient/prescriptions", { appointments });
   } catch (err) {
     console.error("Error fetching prescriptions:", err);
     res.status(500).json({ error: "Internal Server Error", details: err.message });
   }
 });
+
 app.get("/patient/billing",async (req, res) => {
   try {
     const patientId = "67b6d14db339e23694c73bf9";
