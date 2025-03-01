@@ -112,6 +112,33 @@ app.get("/patient/healthrecords", async (req, res) => {
   }
 });
 
+app.get("/patient/prescriptions", async (req, res) => {
+  try {
+    const patientId = "67b6d14db339e23694c73bf9";
+
+    // Fetch only Prescription records with attachments
+    const records = await HealthRecord.find({ patientId: patientId });
+
+    res.render("patient/prescriptions", { records });
+  } catch (err) {
+    console.error("Error fetching prescriptions:", err);
+    res.status(500).json({ error: "Internal Server Error", details: err.message });
+  }
+});
+app.get("/patient/billing",async (req, res) => {
+  try {
+    const patientId = "67b6d14db339e23694c73bf9";
+
+    // Fetch only Prescription records with attachments
+    const records = await HealthRecord.find({ patientId: patientId });
+
+    res.render("patient/biling", { records });
+  } catch (err) {
+    console.error("Error fetching prescriptions:", err);
+    res.status(500).json({ error: "Internal Server Error", details: err.message });
+  }
+});
+
 // app.get("/patient/doctors", async (req, res) => {
 //   try {
 //     const doctors = await Doctor.find();
