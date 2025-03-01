@@ -90,26 +90,27 @@ app.get("/patient/appointments", async (req, res) => {
   }
 });
 
-app.get("/patient/bookappointment", (req, res) => {
+app.get("/patient/bookappointment", async (req, res) => {
   try {
-    res.render("patient/appointments/bookappointment");
+    const doctors = await Doctor.find();
+    res.render("patient/appointments/bookappointment", { doctors });
   } catch (err) {
     console.error("Error rendering the appointment booking page:", err);
     res.status(500).render("error", { message: "Internal Server Error" });
   }
 });
 
-// app.get("/patient/healthrecords", async (req, res) => {
-//   try {
-//     const patientId = "67b6d14db339e23694c73bf9";
-//     const healthrecords = await HealthRecord.find({patientId: patientId});
+app.get("/patient/healthrecords", async (req, res) => {
+  try {
+    const patientId = "67b6d14db339e23694c73bf9";
+    const records = await HealthRecord.find({patientId: patientId});
 
-//     res.render("patient/healthrecords", { healthrecords });
-//   } catch (err) {
-//     console.error("Error fetching health records:", err);
-//     res.status(500).json({ error: "Internal Server Error", details: err.message });
-//   }
-// });
+    res.render("patient/healthrecords", { records });
+  } catch (err) {
+    console.error("Error fetching health records:", err);
+    res.status(500).json({ error: "Internal Server Error", details: err.message });
+  }
+});
 
 // app.get("/patient/doctors", async (req, res) => {
 //   try {
@@ -122,5 +123,5 @@ app.get("/patient/bookappointment", (req, res) => {
 // });
 
 app.listen(3000, () => {
-  console.log("Server is running on http://localhost:3000");
+  console.log("Server is running on http://localhost:3000/patient/dashboard");
 });

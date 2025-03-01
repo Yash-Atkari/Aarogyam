@@ -1,0 +1,83 @@
+<%- layout("./layouts/patientboilerplate") %>
+
+<style>
+    body { background-color: #f8f9fa; }
+
+    .record-container {
+        max-width: 100%;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .page-header {
+        font-size: 22px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .record-card {
+        background: #fff;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 15px;
+    }
+
+    .record-card h4 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .record-card p {
+        margin: 5px 0;
+        font-size: 14px;
+        color: #555;
+    }
+
+    .download-link {
+        display: inline-block;
+        color: #007bff;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .download-link:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<div class="container">
+    <div class="page-header">
+        <h2>Health Records</h2>
+    </div>
+    <div class="record-container mt-3">
+        <% if (records.length === 0) { %>
+            <p>No medical records found.</p>
+        <% } else { %>
+            <% records.forEach(record => { %>
+                <div class="record-card">
+                    <h4><%= record.recordType %></h4>
+                    <p><%= record.summary %></p>
+                    <p><strong>Doctor:</strong> <%= record.doctorName %></p>
+                    <% if (record.attachments && record.attachments.length > 0) { %>
+                        <p><strong>Attachments:</strong></p>
+                        <% record.attachments.forEach((attachment, index) => { %>
+                            <a href="<%= attachment %>" class="download-link" target="_blank">
+                                <i class="fas fa-file-download"></i> Download File <%= index + 1 %>
+                            </a><br>
+                        <% }); %>
+                    <% } else { %>
+                        <p>No attachments available.</p>
+                    <% } %>   
+                    <p><strong>Created On:</strong> <%= new Date(record.created_at).toDateString() %></p>                 
+                </div>
+            <% }); %>
+        <% } %>
+    </div>
+</div>
