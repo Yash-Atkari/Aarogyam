@@ -25,7 +25,7 @@
                     <% bills.forEach((bill) => { %>
                         <tr>
                             <td><%= bill.invoiceNo %></td>
-                            <td class="doctor-name"><%= bill.doctorName %></td>
+                            <td class="doctor-name"><%= bill.doctorId.username %></td>
                             <td><%= new Date(bill.date).toLocaleDateString() %></td>
                             <td>$<%= bill.amount %></td>
                             <td class="actions">

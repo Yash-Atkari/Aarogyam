@@ -1,4 +1,4 @@
-<%- include('../layouts/doctorboilerplate') %>
+<%- layout('./layouts/doctorboilerplate') %>
 
 <style>
     .dashboard-container {
@@ -12,18 +12,43 @@
         border-radius: 12px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+    }
+
+    .doctor-profile {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        margin-right: 20px;
+    }
+
+    .doctor-info {
+        display: flex;
+        flex-direction: column;
     }
 
     .doctor-title {
         color: #007bff;
         font-size: 28px;
         font-weight: bold;
-        margin: 10px 0;
+        margin: 5px 0;
     }
 
     .doctor-specialty {
         color: #666;
         font-size: 16px;
+    }
+
+    .doctor-hospital {
+        font-size: 14px;
+        color: #444;
+        margin-top: 5px;
+    }
+
+    .doctor-contact {
+        font-size: 14px;
+        color: #777;
     }
 
     .stats-container {
@@ -38,18 +63,7 @@
         padding: 20px;
         border-radius: 10px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    .stat-card.appointments {
-        background-color: #f0f4ff;
-    }
-
-    .stat-card.surgeries {
-        background-color: #fff0f0;
-    }
-
-    .stat-card.room-visits {
-        background-color: #f0fff4;
+        text-align: center;
     }
 
     .stat-number {
@@ -86,23 +100,27 @@
 
 <div class="dashboard-container">
     <div class="welcome-section">
-        <span>Welcome back</span>
-        <h1 class="doctor-title">DR. <%= doctor.name %>!</h1>
-        <p class="doctor-specialty"><%= doctor.specialty %></p>
+        <img src="<%= doctor.profile %>" alt="Doctor Profile" class="doctor-profile">
+        <div class="doctor-info">
+            <h1 class="doctor-title">DR. <%= doctor.username %></h1>
+            <p class="doctor-specialty"><%= doctor.specialization %> - <%= doctor.experience %> years experience</p>
+            <p class="doctor-hospital">Hospital: <%= doctor.hospital %></p>
+            <p class="doctor-contact">📞 <%= doctor.phone %> | ✉️ <%= doctor.email %></p>
+        </div>
     </div>
 
     <div class="stats-container">
-        <div class="stat-card appointments">
-            <div class="stat-number">12+</div>
+        <div class="stat-card">
+            <div class="stat-number"><%= doctor.appointments.length %>+</div>
             <div class="stat-label">Appointments</div>
         </div>
-        <div class="stat-card surgeries">
-            <div class="stat-number">3+</div>
-            <div class="stat-label">Surgeries</div>
+        <div class="stat-card">
+            <div class="stat-number"><%= doctor.patients.length %>+</div>
+            <div class="stat-label">Patients</div>
         </div>
-        <div class="stat-card room-visits">
-            <div class="stat-number">12+</div>
-            <div class="stat-label">Room Visit</div>
+        <div class="stat-card">
+            <div class="stat-number">$<%= doctor.consultantFees %></div>
+            <div class="stat-label">Consultant Fees</div>
         </div>
     </div>
 
@@ -171,4 +189,3 @@
         }
     });
 </script>
-
