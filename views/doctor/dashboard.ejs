@@ -1,0 +1,174 @@
+<%- include('../layouts/doctorboilerplate') %>
+
+<style>
+    .dashboard-container {
+        padding: 20px;
+        margin-left: 250px;
+    }
+
+    .welcome-section {
+        background: #fff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+    }
+
+    .doctor-title {
+        color: #007bff;
+        font-size: 28px;
+        font-weight: bold;
+        margin: 10px 0;
+    }
+
+    .doctor-specialty {
+        color: #666;
+        font-size: 16px;
+    }
+
+    .stats-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .stat-card {
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .stat-card.appointments {
+        background-color: #f0f4ff;
+    }
+
+    .stat-card.surgeries {
+        background-color: #fff0f0;
+    }
+
+    .stat-card.room-visits {
+        background-color: #f0fff4;
+    }
+
+    .stat-number {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .stat-label {
+        color: #666;
+        font-size: 14px;
+    }
+
+    .charts-container {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 20px;
+    }
+
+    .chart-card {
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .chart-title {
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="dashboard-container">
+    <div class="welcome-section">
+        <span>Welcome back</span>
+        <h1 class="doctor-title">DR. <%= doctor.name %>!</h1>
+        <p class="doctor-specialty"><%= doctor.specialty %></p>
+    </div>
+
+    <div class="stats-container">
+        <div class="stat-card appointments">
+            <div class="stat-number">12+</div>
+            <div class="stat-label">Appointments</div>
+        </div>
+        <div class="stat-card surgeries">
+            <div class="stat-number">3+</div>
+            <div class="stat-label">Surgeries</div>
+        </div>
+        <div class="stat-card room-visits">
+            <div class="stat-number">12+</div>
+            <div class="stat-label">Room Visit</div>
+        </div>
+    </div>
+
+    <div class="charts-container">
+        <div class="chart-card">
+            <h3 class="chart-title">Patients Survey</h3>
+            <canvas id="patientsSurveyChart"></canvas>
+        </div>
+        <div class="chart-card">
+            <h3 class="chart-title">Appointment Review</h3>
+            <canvas id="appointmentReviewChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Patients Survey Chart
+    const patientsSurveyCtx = document.getElementById('patientsSurveyChart').getContext('2d');
+    new Chart(patientsSurveyCtx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                label: 'New Patients',
+                data: [30, 35, 40, 45, 85, 80],
+                borderColor: '#8b5cf6',
+                backgroundColor: '#8b5cf620',
+                fill: true
+            }, {
+                label: 'Old Patients',
+                data: [20, 25, 45, 40, 50, 40],
+                borderColor: '#10b981',
+                backgroundColor: '#10b98120',
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                }
+            }
+        }
+    });
+
+    // Appointment Review Chart
+    const appointmentReviewCtx = document.getElementById('appointmentReviewChart').getContext('2d');
+    new Chart(appointmentReviewCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Completed', 'Pending', 'Cancelled'],
+            datasets: [{
+                data: [150, 70, 29],
+                backgroundColor: ['#3b82f6', '#10b981', '#ef4444']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+</script>
+
