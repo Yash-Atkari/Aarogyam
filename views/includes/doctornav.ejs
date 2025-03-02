@@ -10,6 +10,7 @@
         height: 100vh;
         position: fixed;
         width: 250px;
+        padding-top: 20px;
     }
 
     .nav-link {
@@ -17,9 +18,13 @@
         padding: 10px 15px;
         border-radius: 8px;
         margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+        text-decoration: none;
     }
 
-    .nav-link:hover, .nav-link.active {
+    .nav-link:hover,
+    .nav-link.active {
         background-color: #f0f0f0;
         color: #007bff;
     }
@@ -55,28 +60,28 @@
         <div class="text-muted small px-3 mb-2">MAIN</div>
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link href="/doctor/dashboard">
-                    <i class="bi bi-house-door"></i>Dashboard
+                <a class="nav-link" href="/doctor/dashboard">
+                    <i class="bi bi-house-door"></i> Dashboard
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link href="/doctor/appointments">
-                    <i class="bi bi-calendar"></i>Appointments
+                <a class="nav-link" href="/doctor/appointments">
+                    <i class="bi bi-calendar"></i> Appointments
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link href="/doctor/doctors">
-                    <i class="bi bi-people"></i>Doctors
+                <a class="nav-link" href="/doctor/doctors">
+                    <i class="bi bi-people"></i> Doctors
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link href="/doctor/patients">
-                    <i class="bi bi-person"></i>Patients
+                <a class="nav-link" href="/doctor/patients">
+                    <i class="bi bi-person"></i> Patients
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link href="/doctor/chat">
-                    <i class="bi bi-chat-dots"></i>Chat
+                <a class="nav-link" href="/doctor/chat">
+                    <i class="bi bi-chat-dots"></i> Chat
                 </a>
             </li>
         </ul>
@@ -85,7 +90,7 @@
         <ul class="nav flex-column">
             <li class="nav-item">
                 <a class="nav-link" href="/doctor/calendar">
-                    <i class="bi bi-calendar-week"></i>Calendar
+                    <i class="bi bi-calendar-week"></i> Calendar
                     <span class="badge bg-primary rounded-pill ms-2">New</span>
                 </a>
             </li>

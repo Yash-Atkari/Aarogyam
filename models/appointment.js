@@ -16,6 +16,10 @@ const appointmentSchema = new Schema({
         type: Date,
         required: true
     },
+    timeSlot: {
+        type: String,
+        required: true
+    },
     status: {
         type: String,
         enum: ["pending", "confirmed", "completed", "cancelled"],
@@ -29,15 +33,15 @@ const appointmentSchema = new Schema({
         type: String
     },
     disease: {
-        type: String // Disease diagnosed during appointment
+        type: String
     },
     summary: {
-        type: String // Doctor's summary after appointment
+        type: String
     },
     attachments: {
-        type: [String], // Array of file paths (PDFs, images, etc.)
+        type: [String],
         default: []
     }
-}, { timestamps: true }); // Enables `createdAt` and `updatedAt` fields
+}, { timestamps: true }); 
 
 module.exports = mongoose.model("Appointment", appointmentSchema);

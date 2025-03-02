@@ -50,43 +50,43 @@
         <h2>Book an Appointment</h2>
     </div>
     <div class="appointment-form-container mt-3">
-        <form action="#" method="POST">
+        <form action="/bookappointment" method="POST" enctype="application/x-www-form-urlencoded">
             <div class="row">
                 <div class="col-6 form-group">
                     <label>First Name</label>
-                    <input type="text" name="firstName" required>
+                    <input type="text" name="patient[firstName]" required>
                 </div>
     
                 <div class="col-6 form-group">
                     <label>Last Name</label>
-                    <input type="text" name="lastName">
+                    <input type="text" name="patient[lastName]" required>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-6 form-group">
                     <label>Gender</label>
-                    <select name="gender" required>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                        <option value="Other">Other</option>
+                    <select name="patient[gender]" required>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
                     </select>
                 </div>
     
                 <div class="col-6 form-group">
                     <label>Mobile</label>
-                    <input type="text" name="mobile" required>
+                    <input type="text" name="patient[mobile]" required>
                 </div>
             </div>
 
             <div class="form-group">
                 <label>Email</label>
-                <input type="email" name="email" required>
+                <input type="email" name="patient[email]" required>
             </div>
 
             <div class="form-group">
                 <label>Select Doctor</label>
-                <select name="doctorId" required>
+                <select name="patient[doctorId]" required>
                     <% doctors.forEach(doctor => { %>
                         <option value="<%= doctor._id %>"><%= doctor.username %></option>
                     <% }); %>
@@ -95,12 +95,12 @@
 
             <div class="form-group">
                 <label>Appointment Date</label>
-                <input type="date" name="appointmentDate" required>
+                <input type="date" name="patient[appointmentDate]" required>
             </div>
 
             <div class="form-group">
                 <label>Time Slot</label>
-                <select name="timeSlot" required>
+                <select name="patient[timeSlot]" required>
                     <option value="09:00-09:30">09:00 - 09:30 AM</option>
                     <option value="09:30-10:00">09:30 - 10:00 AM</option>
                     <option value="10:00-10:30">10:00 - 10:30 AM</option>
@@ -109,13 +109,8 @@
             </div>
 
             <div class="form-group">
-                <label>Injury/Condition</label>
-                <input type="text" name="injuryCondition">
-            </div>
-
-            <div class="form-group">
-                <label>Additional Notes</label>
-                <textarea name="note"></textarea>
+                <label>Reason/Condition</label>
+                <textarea name="patient[reason]"></textarea>
             </div>
 
             <button class="btn btn-primary" type="submit">Book Appointment</button>

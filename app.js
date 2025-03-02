@@ -5,18 +5,28 @@ const engine = require('ejs-mate');
 
 const app = express();
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static("public"));
 app.use(express.static(path.join(__dirname, "public")));
 app.engine('ejs', engine);
 
+// -----------------------------------
+// 🔹 MODELS
+// -----------------------------------
+
 const Doctor = require("./models/doctor");
 const Patient = require("./models/patient");
 const Appointment = require("./models/appointment");
 const HealthRecord = require("./models/healthrecord"); 
-const Billing = require("./models/billing"); 
-const appointment = require("./models/appointment");
+const Billing = require("./models/billing");
+
+// -----------------------------------
+// 🔹 MONGODB CONNECTION
+// -----------------------------------
 
 const MongoUrl = "mongodb://127.0.0.1:27017/aarogyam";
 
@@ -28,10 +38,16 @@ async function main() {
   await mongoose.connect(MongoUrl);
 }
 
+// -----------------------------------
 // 🔹 HOME PAGE
+// -----------------------------------
+
 app.get("/aarogyam", (req, res) => res.render("dashboard"));
 
+// -----------------------------------
 // 🔹 AUTH ROUTES
+// -----------------------------------
+
 app.get("/login", (req, res) => res.render("auth/login/login"));
 app.get("/signup", (req, res) => res.render("auth/signup/signup"));
 app.get("/doctor/signup", (req, res) => res.render("auth/signup/doctor"));
@@ -111,6 +127,43 @@ app.get("/patient/billings", async (req, res) => {
   } catch (err) {
     console.error("Error fetching billings:", err);
     res.status(500).json({ error: "Internal Server Error", details: err.message });
+  }
+});
+
+// ------------------------------------
+// 🔹 PATIENT POST ROUTES
+// ------------------------------------
+
+app.post("/bookappointment", /* isAuthenticated */ async (req, res) => {
+  try {
+      // Extract the logged-in patient's ID
+      const patientId = req.user && req.user._id ? req.user._id : "67b6d14db339e23694c73bf9"; // Assuming user is stored in req.user by Passport.js
+    
+      // Extract form data
+      const { firstName, lastName, gender, mobile, email, doctorId, appointmentDate, timeSlot, reason } = req.body.patient;
+
+      // Create a new appointment
+      const newAppointment = new Appointment({
+          patientId,
+          doctorId,
+          date: new Date(appointmentDate),
+          timeSlot,
+          status: "pending",
+          reason,
+          notes: "",
+          disease: "",
+          summary: "",
+          attachments: []
+      });
+
+      await newAppointment.save();
+      
+      req.flash("success", "Appointment booked successfully!");
+      redirect("/patient/bookappoinment");
+  } catch (error) {
+      console.error("Error booking appointment:", error);
+      req.flash("error", "Failed to book appointment. Please try again.");
+      res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
