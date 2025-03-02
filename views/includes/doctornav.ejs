@@ -55,32 +55,27 @@
         <div class="text-muted small px-3 mb-2">MAIN</div>
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link <%= path === '/doctor/dashboard' ? 'active' : '' %>" href="/doctor/dashboard">
+                <a class="nav-link href="/doctor/dashboard">
                     <i class="bi bi-house-door"></i>Dashboard
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link <%= path === '/doctor/appointments' ? 'active' : '' %>" href="/doctor/appointments">
+                <a class="nav-link href="/doctor/appointments">
                     <i class="bi bi-calendar"></i>Appointments
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link <%= path === '/doctor/doctors' ? 'active' : '' %>" href="/doctor/doctors">
+                <a class="nav-link href="/doctor/doctors">
                     <i class="bi bi-people"></i>Doctors
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link <%= path === '/doctor/patients' ? 'active' : '' %>" href="/doctor/patients">
+                <a class="nav-link href="/doctor/patients">
                     <i class="bi bi-person"></i>Patients
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link <%= path === '/doctor/settings' ? 'active' : '' %>" href="/doctor/settings">
-                    <i class="bi bi-gear"></i>Settings
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link <%= path === '/doctor/chat' ? 'active' : '' %>" href="/doctor/chat">
+                <a class="nav-link href="/doctor/chat">
                     <i class="bi bi-chat-dots"></i>Chat
                 </a>
             </li>
@@ -97,4 +92,3 @@
         </ul>
     </nav>
 </div>
-

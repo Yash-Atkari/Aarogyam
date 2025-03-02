@@ -15,6 +15,7 @@ const Doctor = require("./models/doctor");
 const Patient = require("./models/patient");
 const Appointment = require("./models/appointment");
 const HealthRecord = require("./models/healthrecord"); 
+const Billing = require("./models/billing"); 
 const appointment = require("./models/appointment");
 
 const MongoUrl = "mongodb://127.0.0.1:27017/aarogyam";
@@ -92,10 +93,7 @@ app.get("/patient/healthrecords", async (req, res) => {
 app.get("/patient/prescriptions", async (req, res) => {
   try {
     const patientId = "67b6d14db339e23694c73bf9";
-
-    // Fetch only Prescription records with attachments
-    const appointments = await Appointment.find({ patientId: patientId })
-    .populate("doctorId"); // Populates doctor details
+    const appointments = await Appointment.find({ patientId: patientId }).populate("doctorId");
 
     res.render("patient/prescriptions", { appointments });
   } catch (err) {
@@ -104,14 +102,14 @@ app.get("/patient/prescriptions", async (req, res) => {
   }
 });
 
-app.get("/patient/billing",async (req, res) => {
+app.get("/patient/billings", async (req, res) => {
   try {
     const patientId = "67b6d14db339e23694c73bf9";
-    const records = await HealthRecord.find({ patientId });
+    const bills = await Billing.find({ patientId: patientId }).populate("doctorId");
 
-    res.render("patient/billing", { records });
+    res.render("patient/billing", { bills });
   } catch (err) {
-    console.error("Error fetching billing data:", err);
+    console.error("Error fetching billings:", err);
     res.status(500).json({ error: "Internal Server Error", details: err.message });
   }
 });
@@ -122,10 +120,11 @@ app.get("/patient/billing",async (req, res) => {
 
 app.get("/doctor/dashboard", async (req, res) => {
   try {
-    const doctorId = "67b6d14db339e23694c73bf8";  // Change to dynamic session-based ID
+    const doctorId = "67b6d17ab339e23694c73bfb"; // Change to dynamic session-based ID
     const doctor = await Doctor.findById(doctorId);
     if (!doctor) return res.status(404).json({ error: "Doctor not found" });
 
+    // console.log(doctor);
     res.render("doctor/dashboard", { doctor });
   } catch (err) {
     console.error("Error fetching doctor data:", err);
