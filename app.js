@@ -92,14 +92,10 @@ app.get("/patient/healthrecords", async (req, res) => {
 app.get("/patient/prescriptions", async (req, res) => {
   try {
     const patientId = "67b6d14db339e23694c73bf9";
-<<<<<<< HEAD
-    const records = await HealthRecord.find({ patientId });
-=======
 
     // Fetch only Prescription records with attachments
     const appointments = await Appointment.find({ patientId: patientId })
     .populate("doctorId"); // Populates doctor details
->>>>>>> bc6882deb83b6e44273b0a0218786cfab959b77c
 
     res.render("patient/prescriptions", { appointments });
   } catch (err) {
@@ -108,11 +104,7 @@ app.get("/patient/prescriptions", async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
-app.get("/patient/billing", async (req, res) => {
-=======
 app.get("/patient/billing",async (req, res) => {
->>>>>>> bc6882deb83b6e44273b0a0218786cfab959b77c
   try {
     const patientId = "67b6d14db339e23694c73bf9";
     const records = await HealthRecord.find({ patientId });
