@@ -2,6 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
 const engine = require('ejs-mate');
+const flash = require("connect-flash");
+const session = require("express-session");
 
 const app = express();
 
@@ -37,6 +39,34 @@ main()
 async function main() {
   await mongoose.connect(MongoUrl);
 }
+
+// const sessionOptions = {
+//   store,
+//   secret: process.env.SECRET,
+//   resave: false,
+//   saveUninitialized: true,
+//   cookie: {
+//       expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+//       maxAge: 7 * 24 * 60 * 60 * 1000,
+//       httpOnly: true,
+//   }
+// };
+
+// app.use(session(sessionOptions));
+// app.use(flash());
+
+// app.use(passport.initialize());
+// app.use(passport.session());
+// passport.use(new LocalStrategy(User.authenticate()));
+
+// passport.serializeUser(User.serializeUser());
+// passport.deserializeUser(User.deserializeUser());
+
+// app.use((req, res, next) => {
+//   res.locals.success = req.flash("success");
+//   res.locals.error = req.flash("error");
+//   next();
+// });
 
 // -----------------------------------
 // 🔹 HOME PAGE
@@ -139,8 +169,8 @@ app.post("/bookappointment", /* isAuthenticated */ async (req, res) => {
       // Extract the logged-in patient's ID
       const patientId = req.user && req.user._id ? req.user._id : "67b6d14db339e23694c73bf9"; // Assuming user is stored in req.user by Passport.js
     
-      // Extract form data
-      const { firstName, lastName, gender, mobile, email, doctorId, appointmentDate, timeSlot, reason } = req.body.patient;
+      // Extract required form data
+      const { doctorId, appointmentDate, timeSlot, reason } = req.body.patient;
 
       // Create a new appointment
       const newAppointment = new Appointment({
@@ -158,11 +188,11 @@ app.post("/bookappointment", /* isAuthenticated */ async (req, res) => {
 
       await newAppointment.save();
       
-      req.flash("success", "Appointment booked successfully!");
-      redirect("/patient/bookappoinment");
+      // req.flash("success", "Appointment booked successfully!");
+      res.redirect("/patient/bookappointment");
   } catch (error) {
       console.error("Error booking appointment:", error);
-      req.flash("error", "Failed to book appointment. Please try again.");
+      // req.flash("error", "Failed to book appointment. Please try again.");
       res.status(500).json({ message: "Internal Server Error" });
   }
 });
