@@ -4,6 +4,7 @@ const path = require("path");
 const engine = require('ejs-mate');
 const flash = require("connect-flash");
 const session = require("express-session");
+const methodOverride = require("method-override");
 
 const app = express();
 
@@ -15,6 +16,8 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.static("public"));
 app.use(express.static(path.join(__dirname, "public")));
 app.engine('ejs', engine);
+app.use(methodOverride("_method"));
+app.use('/uploads', express.static('uploads'));
 
 // -----------------------------------
 // 🔹 MODELS
@@ -100,7 +103,7 @@ app.get("/patient/dashboard", async (req, res) => {
   }
 });
 
-app.get("/patient/appointments", async (req, res) => {
+app.get("/patient/todaysappointments", async (req, res) => {
   try {
     const patientId = "67b6d14db339e23694c73bf9";
     const appointments = await Appointment.find({ patientId })
@@ -111,6 +114,22 @@ app.get("/patient/appointments", async (req, res) => {
   } catch (err) {
     console.error("Error fetching appointments:", err);
     res.status(500).json({ error: "Internal Server Error", details: err.message });
+  }
+});
+
+// Appointment delete route
+
+app.delete("/patient/todaysappointments/:id/cancel", async (req, res) => {
+  try {
+      const { id } = req.params // Default ID if `id` is undefined
+      const deletedAppointment = await Appointment.findByIdAndDelete(id);
+
+      // req.flash("success", "Appointment canceled successfully!");
+      res.redirect("/patient/todaysappointments");
+  } catch (error) {
+      console.error("Error canceling appointment:", error);
+      // req.flash("error", "Internal Server Error");
+      res.redirect("/patient/todaysappointments");
   }
 });
 

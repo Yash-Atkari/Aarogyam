@@ -19,6 +19,7 @@
     "express-session": "^1.18.1",
     "firebase-admin": "^13.1.0",
     "google-gax": "^4.4.1",
+    "method-override": "^3.0.0",
     "mongoose": "^8.11.0",
     "moongose": "^1.0.0",
     "nodemon": "^3.1.9",
