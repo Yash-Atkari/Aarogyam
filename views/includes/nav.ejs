@@ -1,0 +1,15 @@
+<nav class="navbar bg-white border-bottom sticky-top container-fluid">
+    <div class="container-fluid">
+      <i id="toggleSidebar" class="bi bi-list btn btn-secondary"></i>
+      <a class="navbar-brand text-black fw-bold fs-4" href="#">
+        <!-- <img src="/docs/5.3/assets/brand/bootstrap-logo.svg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top"> -->
+        <strong>Aarogyam</strong>
+      </a>
+    </div>
+</nav>
+
+<script>
+  document.getElementById("toggleSidebar").addEventListener("click", function () {
+    document.querySelector(".sidebar").classList.toggle("active");
+  });
+</script>

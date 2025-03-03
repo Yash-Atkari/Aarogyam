@@ -27,10 +27,6 @@ const healthRecordSchema = new Schema({
         ref: "Doctor",
         required: true,
     },
-    doctorName: {
-        type: String,
-        required: true, // Store name for quick retrieval
-    },
     created_at: {
         type: Date,
         default: Date.now, // Renamed from created_at for clarity

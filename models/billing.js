@@ -26,11 +26,28 @@ const billingSchema = new Schema({
         type: Number,
         required: true
     },
+    reason: {
+        type: String, // e.g., "Consultation", "Surgery", "Lab Test"
+        required: true
+    },
+    attachments: {
+        type: [String], // Array of file paths for uploaded bills (PDFs, images)
+        default: []
+    },
+    status: {
+        type: String,
+        enum: ["pending", "paid", "due"], // Billing status
+        default: "pending"
+    },
+    paymentMethod: {
+        type: String,
+        enum: ["cash", "card", "UPI", "insurance"], // Payment method options
+        required: true
+    },
     createdAt: {
         type: Date,
         default: Date.now
     }
 });
 
-// Export the model
 module.exports = mongoose.model("Billing", billingSchema);

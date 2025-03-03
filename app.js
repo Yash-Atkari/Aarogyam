@@ -146,7 +146,8 @@ app.get("/patient/bookappointment", async (req, res) => {
 app.get("/patient/healthrecords", async (req, res) => {
   try {
     const patientId = "67b6d14db339e23694c73bf9";
-    const records = await HealthRecord.find({ patientId });
+    const records = await HealthRecord.find({ patientId })
+    .populate("doctorId");
 
     res.render("patient/healthrecords", { records });
   } catch (err) {
@@ -197,10 +198,35 @@ app.get("/patient/billings", async (req, res) => {
     const patientId = "67b6d14db339e23694c73bf9";
     const bills = await Billing.find({ patientId: patientId }).populate("doctorId");
 
-    res.render("patient/billing", { bills });
+    res.render("patient/billings", { bills });
   } catch (err) {
     console.error("Error fetching billings:", err);
     res.status(500).json({ error: "Internal Server Error", details: err.message });
+  }
+});
+
+// Billing delete route
+
+app.post('/patient/billings/delete/:id', async (req, res) => {
+  try {
+      const billingId = req.params.id;
+      const filePath = req.query.file; // Get file path from query params
+
+      // Find the appointment
+      const billing = await Billing.findById(billingId);
+
+      // Remove the file from attachments array
+      billing.attachments = billing.attachments.filter(file => file !== filePath);
+
+      // Save updated appointment
+      await billing.save();
+
+      // req.flash('success', 'Prescription deleted successfully.');
+      res.redirect('back'); // Redirect to the same page
+  } catch (error) {
+      console.error('Error deleting prescription:', error);
+      // req.flash('error', 'Something went wrong.');
+      res.redirect('back');
   }
 });
 

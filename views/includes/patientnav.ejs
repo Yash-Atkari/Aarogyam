@@ -5,11 +5,17 @@
   }
 
   .sidebar {
-      background-color: #ffffff; /* White background */
-      border-right: 1px solid #dcdcdc; /* Lighter border */
-      height: 100vh;
-      position: fixed;
-      width: 250px;
+    background-color: #ffffff; /* White background */
+    border-right: 1px solid #dcdcdc; /* Lighter border */
+    height: 100vh;
+    position: fixed;
+    width: 250px;
+    transition: margin-left 0.3s ease-in-out;
+    margin-left: -230px; /* Keep a small part visible for interaction */
+  }
+
+  .sidebar:hover, .sidebar.active {
+      margin-left: 0; /* Reveal the sidebar smoothly */
   }
 
   .nav-link {
@@ -38,7 +44,8 @@
   }
 </style>
 
-<div class="col-auto sidebar">
+<!-- Sidebar -->
+<div class="col-auto sidebar collapse show" id="sidebarMenu">
   <div class="text-center py-4">
     <i class="fa-solid fa-user"></i>
     <h5 class="mb-0">Cara Stevens</h5>
@@ -49,7 +56,7 @@
     <hr>
     <ul class="nav flex-column">
       <li class="nav-item">
-        <a class="nav-link active" href="/patient/dashboard"><i class="bi bi-house-door"></i>Dashboard</a>
+        <a class="nav-link active" href="/patient/dashboard"><i class="bi bi-house-door"></i> Dashboard</a>
       </li>
 
       <!-- Appointments Dropdown -->
@@ -65,24 +72,22 @@
         </ul>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/patient/healthrecords"><i class="bi bi-clipboard"></i>Medical Records</a>
+        <a class="nav-link" href="/patient/healthrecords"><i class="bi bi-clipboard"></i> Medical Records</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/patient/prescriptions"><i class="bi bi-file-text"></i>Prescriptions</a>
+        <a class="nav-link" href="/patient/prescriptions"><i class="bi bi-file-text"></i> Prescriptions</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/patient/doctors">
-            <i class="bi bi-people"></i> Doctors
-        </a>
-    </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/patient/billings"><i class="bi bi-receipt"></i>Billing</a>
+        <a class="nav-link" href="/patient/billings"><i class="bi bi-receipt"></i> Billing</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#"><i class="bi bi-chat-square-text"></i>Chat</a>
+        <a class="nav-link" href="#"><i class="bi bi-people"></i> Doctors</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#"><i class="bi bi-box-arrow-right"></i>Logout</a>
+        <a class="nav-link" href="#"><i class="bi bi-chat-square-text"></i> Chat</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#"><i class="bi bi-box-arrow-right"></i> Logout</a>
       </li>
     </ul>
   </nav>
