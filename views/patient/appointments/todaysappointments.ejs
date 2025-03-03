@@ -124,6 +124,6 @@
 
 <script>
     function setAppointmentId(appointmentId) {
-      document.getElementById("cancelForm").action = `/patient/todaysappointments/${appointmentId}/cancel?_method=DELETE`;
+      document.getElementById("cancelForm").action = `/patient/todaysappointments/cancel/${appointmentId}?_method=DELETE`;
     }
 </script>
