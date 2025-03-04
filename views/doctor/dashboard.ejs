@@ -77,6 +77,35 @@
         color: #666;
         font-size: 14px;
     }
+
+    .doctor-info {
+        margin-top: 20px;
+        background: white;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .doctor-info h3 {
+        margin-bottom: 10px;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .doctor-info ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .doctor-info li {
+        margin-bottom: 8px;
+        font-size: 16px;
+        color: #444;
+    }
+
+    .doctor-info li strong {
+        color: #222;
+    }
 </style>
 
 <div class="dashboard-container">
@@ -86,10 +115,11 @@
 
     <div class="welcome-card">
         <div class="welcome-content">
-            <img src="<%= doctor.profile %>" alt="Doctor Profile" class="doctor-profile">
+            <!-- <img src="<%= doctor.profile %>" alt="Doctor Profile" class="doctor-profile"> -->
             <div class="welcome-text">
                 <h3>Welcome back</h3>
-                <h2 class="doctor-name">DR. <%= doctor.username %></h2>
+                <i class="fa-solid fa-user fs-4"></i>
+                <span class="doctor-name">&nbsp;Dr. <%= doctor.username %></span>
                 <p>
                     Dedicated to providing the best healthcare services with <%= doctor.experience %> years of experience.
                 </p>
@@ -106,5 +136,16 @@
             <div class="stat-number"><%= doctor.patients.length %>+</div>
             <div class="stat-label">Patients</div>
         </div>
+    </div>
+
+    <div class="doctor-info">
+        <h3>Details:</h3>
+        <ul>
+            <li><strong>Specialization:</strong> <%= doctor.specialization %></li>
+            <li><strong>Experience:</strong> <%= doctor.experience %> years old</li>
+            <li><strong>Hospital:</strong> <%= doctor.hospital %> cm</li>
+            <li><strong>ConsultantFees:</strong> <%= doctor.consultantFees %> kg</li>
+            <li><strong>Phone:</strong> <%= doctor.phone %></li>
+        </ul>
     </div>
 </div>

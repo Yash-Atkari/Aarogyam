@@ -10,13 +10,14 @@
     height: 100vh;
     position: fixed;
     width: 250px;
-    transition: margin-left 0.3s ease-in-out;
-    margin-left: -230px; /* Keep a small part visible for interaction */
+    padding-top: 20px;
+    /* transition: margin-left 0.3s ease-in-out; */
+    /* margin-left: -230px;  */
   }
 
-  .sidebar:hover, .sidebar.active {
+  /* .sidebar:hover, .sidebar.active {
       margin-left: 0; /* Reveal the sidebar smoothly */
-  }
+  /* } */
 
   .nav-link {
       color: #333333; /* Dark gray for contrast */
@@ -47,8 +48,9 @@
 <!-- Sidebar -->
 <div class="col-auto sidebar collapse show" id="sidebarMenu">
   <div class="text-center py-4">
+    <!-- <img src="/images/doctor-profile.jpg" alt="Doctor Profile" class="profile-image"> -->
     <i class="fa-solid fa-user"></i>
-    <h5 class="mb-0">Cara Stevens</h5>
+    <h5 class="mb-0"></h5>
     <small class="text-muted">Patient</small>
   </div>
 
@@ -56,7 +58,7 @@
     <hr>
     <ul class="nav flex-column">
       <li class="nav-item">
-        <a class="nav-link active" href="/patient/dashboard"><i class="bi bi-house-door"></i> Dashboard</a>
+        <a class="nav-link" href="/patient/dashboard"><i class="bi bi-house-door"></i> Dashboard</a>
       </li>
 
       <!-- Appointments Dropdown -->

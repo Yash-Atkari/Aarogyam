@@ -90,7 +90,8 @@
           <!-- <img src="/images/medical-team.png" alt="Doctors" class="welcome-image"> -->
           <div class="welcome-text">
               <h3>Welcome back</h3>
-              <h2 class="patient-name"><i class="fa-solid fa-user fs-5">&nbsp;&nbsp;</i><%= patient.username %></h2>
+              <i class="fa-solid fa-user fs-5"></i>
+              <span class="patient-name">&nbsp;</i><%= patient.username %></span>
               <p>
                   We would like to take this opportunity to welcome you to our practice and 
                   thank you for choosing our physicians to participate in your healthcare. 
@@ -102,7 +103,7 @@
   </div>
 
   <div class="patient-info">
-      <h3>Medical Details:</h3>
+      <h3>Details:</h3>
       <ul>
           <li><strong>Gender:</strong> <%= patient.gender %></li>
           <li><strong>Age:</strong> <%= patient.age %> years old</li>
