@@ -5,6 +5,8 @@ const engine = require('ejs-mate');
 const flash = require("connect-flash");
 const session = require("express-session");
 const methodOverride = require("method-override");
+const multer = require("multer");
+const bodyParser = require("body-parser");
 
 const app = express();
 
@@ -28,6 +30,7 @@ const Patient = require("./models/patient");
 const Appointment = require("./models/appointment");
 const HealthRecord = require("./models/healthrecord"); 
 const Billing = require("./models/billing");
+const healthrecord = require("./models/healthrecord");
 
 // -----------------------------------
 // 🔹 MONGODB CONNECTION
@@ -42,6 +45,18 @@ main()
 async function main() {
   await mongoose.connect(MongoUrl);
 }
+
+// Configure Multer for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/"); // Ensure the "uploads" folder exists
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({ storage });
 
 // const sessionOptions = {
 //   store,
@@ -92,7 +107,7 @@ app.get("/patient/signup", (req, res) => res.render("auth/signup/patient"));
 
 app.get("/patient/dashboard", async (req, res) => {
   try {
-    const patientId = "67b6d14db339e23694c73bf9";
+    const patientId = req.user && req.user._id ? req.user._id : "67b6d14db339e23694c73bf9";
     const patient = await Patient.findById(patientId);
     if (!patient) return res.status(404).json({ error: "Patient not found" });
 
@@ -105,7 +120,7 @@ app.get("/patient/dashboard", async (req, res) => {
 
 app.get("/patient/todaysappointments", async (req, res) => {
   try {
-    const patientId = "67b6d14db339e23694c73bf9";
+    const patientId = req.user && req.user._id ? req.user._id : "67b6d14db339e23694c73bf9";
     const appointments = await Appointment.find({ patientId })
       .populate("patientId")
       .populate("doctorId");
@@ -145,7 +160,7 @@ app.get("/patient/bookappointment", async (req, res) => {
 
 app.get("/patient/healthrecords", async (req, res) => {
   try {
-    const patientId = "67b6d14db339e23694c73bf9";
+    const patientId = req.user && req.user._id ? req.user._id : "67b6d14db339e23694c73bf9";
     const records = await HealthRecord.find({ patientId })
     .populate("doctorId");
 
@@ -158,7 +173,7 @@ app.get("/patient/healthrecords", async (req, res) => {
 
 app.get("/patient/prescriptions", async (req, res) => {
   try {
-    const patientId = "67b6d14db339e23694c73bf9";
+    const patientId = req.user && req.user._id ? req.user._id : "67b6d14db339e23694c73bf9";
     const appointments = await Appointment.find({ patientId: patientId }).populate("doctorId");
 
     res.render("patient/prescriptions", { appointments });
@@ -195,7 +210,7 @@ app.post('/patient/prescriptions/delete/:id', async (req, res) => {
 
 app.get("/patient/billings", async (req, res) => {
   try {
-    const patientId = "67b6d14db339e23694c73bf9";
+    const patientId = req.user && req.user._id ? req.user._id : "67b6d14db339e23694c73bf9";
     const bills = await Billing.find({ patientId: patientId }).populate("doctorId");
 
     res.render("patient/billings", { bills });
@@ -273,11 +288,10 @@ app.post("/bookappointment", /* isAuthenticated */ async (req, res) => {
 
 app.get("/doctor/dashboard", async (req, res) => {
   try {
-    const doctorId = "67b6d17ab339e23694c73bfb"; // Change to dynamic session-based ID
+    const doctorId = req.user && req.user._id ? req.user._id : "67b6d17ab339e23694c73bfb";
     const doctor = await Doctor.findById(doctorId);
     if (!doctor) return res.status(404).json({ error: "Doctor not found" });
 
-    // console.log(doctor);
     res.render("doctor/dashboard", { doctor });
   } catch (err) {
     console.error("Error fetching doctor data:", err);
@@ -298,10 +312,107 @@ app.get("/doctor/appointments", async (req, res) => {
   }
 });
 
+app.get("/doctor/appointments/addAppointmentDetails/:id", async (req, res) => {
+  try {
+    const appointmentId = req.params.id;
+    const appointment = await Appointment.findById(appointmentId).populate("patientId");
+
+    // if (!appointment) {
+    //   return res.status(404).json({ error: "Appointment not found" });
+    // }
+
+    res.render("doctor/form", { appointment });
+  } catch (err) {
+    console.error("Error fetching appointment:", err);
+    res.status(500).json({ error: "Internal Server Error", details: err.message });
+  }
+});
+
+// ------------------------------------
+// 🔹 DOCTOR POST ROUTES
+// ------------------------------------
+
+app.post(
+  "/doctor/appointments/addAppointmentDetails/:id",
+  upload.fields([
+    { name: "patient[prescription]", maxCount: 1 },
+    { name: "patient[medicalReports]", maxCount: 5 },
+    { name: "patient[bill]", maxCount: 1 },
+  ]),
+  async (req, res) => {
+    try {
+      const appointmentId = req.params.id;
+      
+      const { username, email, gender, appointmentDate, timeSlot, symptoms, disease } = req.body.patient;
+
+      // Extract file paths
+      const prescriptionUrl = req.files["patient[prescription]"]
+        ? req.files["patient[prescription]"][0].path
+        : null;
+      const medicalReports = req.files["patient[medicalReports]"]
+        ? req.files["patient[medicalReports]"].map((file) => file.path)
+        : [];
+      const billUrl = req.files["patient[bill]"]
+        ? req.files["patient[bill]"][0].path
+        : null;
+
+      // Find appointment and update fields
+      const appointment = await Appointment.findById(appointmentId);
+
+      if (!appointment) {
+        return res.status(404).json({ error: "Appointment not found" });
+      }
+
+      appointment.disease = disease;
+      appointment.summary = symptoms;
+      if (prescriptionUrl) {
+        appointment.attachments.push(prescriptionUrl);
+      }
+      const updatedAppointment = await appointment.save();
+
+      // console.log(updatedAppointment);
+
+      // Create new health record
+      const healthRecord = new HealthRecord({
+        patientId: appointment.patientId,
+        doctorId: appointment.doctorId,
+        disease: disease,
+        symptoms: symptoms,
+        attachments: medicalReports,
+      });
+      await healthRecord.save();
+
+      // console.log(healthRecord);
+
+      // Create new billing record
+      const invoiceNo = `INV-${Math.floor(Math.random() * 9000) + 1000}`;
+      const billing = new Billing({
+        patientId: appointment.patientId,
+        doctorId: appointment.doctorId,
+        invoiceNo: invoiceNo,
+        date: new Date(),
+        amount: 0, // To be updated later
+        reason: disease,
+        status: "paid",
+        paymentMethod: "cash",
+        attachments: billUrl ? [billUrl] : [],
+      });
+      await billing.save();
+
+      // console.log(billing);
+
+      res.redirect("/doctor/appointments");
+    } catch (err) {
+      console.error("Error updating records:", err);
+      res.status(500).json({ error: "Internal Server Error", details: err.message });
+    }
+  }
+);
+
 // ------------------------------------
 // 🔹 SERVER LISTENING
 // ------------------------------------
-
-app.listen(3000, () => {
-  console.log("Server is running on http://localhost:3000/patient/dashboard");
+const port = 5000;
+app.listen(port, () => {
+  console.log("Server is running on http://localhost:5000/doctor/dashboard");
 });

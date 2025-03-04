@@ -2,7 +2,7 @@
 
 <style>
   .appointments-container {
-    padding: 20px;
+    padding: 0px 20px;
   }
   .appointments-table {
     width: 100%;
@@ -26,13 +26,12 @@
   <table class="appointments-table">
     <thead>
       <tr>
+        <th>#</th>
         <th>Patient Name</th>
         <th>Appointment Date</th>
-        <th>Email</th>
-        <th>Mobile</th>
         <th>Gender</th>
-        <th>Status</th>
         <th>Disease</th>
+        <th>Status</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -42,18 +41,20 @@
           <td colspan="8">No appointments found.</td>
         </tr>
       <% } else { %>
-        <% appointments.forEach(appt => { %>
+        <% appointments.forEach((appointment, idx) => { %>
           <tr>
-            <td><%= appt.patientId ? appt.patientId.username : "N/A" %></td>
-            <td><%= new Date(appt.date).toLocaleDateString() %></td>
-            <td><%= appt.patientId ? appt.patientId.email : "N/A" %></td>
-            <td><%= appt.patientId ? appt.patientId.phone : "N/A" %></td>
-            <td><%= appt.patientId ? appt.patientId.gender : "N/A" %></td>
-            <td><%= appt.status %></td>
-            <td><%= appt.disease || "N/A" %></td>
+            <td><%= idx+1 %></td>
+            <td><%= appointment.patientId ? appointment.patientId.username : "N/A" %></td>
+            <td><%= new Date(appointment.date).toLocaleDateString() %></td>
+            <td><%= appointment.patientId ? appointment.patientId.gender : "N/A" %></td>
+            <td><%= appointment.disease || "N/A" %></td>
+            <td><%= appointment.status %></td>
             <td class="actions">
-              <a href="/doctor/appointments/<%= appt._id %>/addRecord" class="btn btn-primary">
-                Insert Data
+              <a href="/doctor/appointments/addAppointmentDetails/<%= appointment._id %>" class="btn btn-primary">
+                Add
+              </a>
+              <a href="/doctor/appointments/confirm/<%= appointment._id %>" class="btn btn-success">
+                Confirm
               </a>
             </td>
           </tr>

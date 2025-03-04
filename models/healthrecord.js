@@ -2,12 +2,11 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const healthRecordSchema = new Schema({
-    recordType: {
+    disease: {
         type: String,
         required: true,
-        enum: ["Blood Test", "X-ray", "Consultation", "Prescription", "Other"], // Predefined types
     },
-    summary: {
+    symptoms: {
         type: String,
         required: true,
     },
@@ -29,7 +28,7 @@ const healthRecordSchema = new Schema({
     },
     created_at: {
         type: Date,
-        default: Date.now, // Renamed from created_at for clarity
+        default: Date.now, // Automatically sets the creation date
     },
 });
 
