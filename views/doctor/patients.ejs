@@ -1,0 +1,62 @@
+<%- layout("./layouts/doctorboilerplate") %>
+
+<style>
+    .filters {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .filter {
+        text-align: center;
+        margin-right: 2rem;
+        opacity: 0.7;
+    }
+    .filter p {
+        font-size: 0.9rem;
+    }
+    .filter:hover {
+        opacity: 1;
+        cursor: pointer;
+    }
+    .card {
+        border-radius: 15px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        transition: 0.3s;
+        padding: 1rem;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+    }
+    .btn-custom {
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+</style>
+
+<body>
+    <div class="container-fluid">
+        <h2 class="">My Patients</h2>
+        <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
+            <% for (let patient of patients) { %>
+                <div class="col">
+                    <div class="card">
+                        <h4 class="text-primary">
+                            <i class="fa-solid fa-user"></i> <%= patient.username %>
+                        </h4>
+                        <p><strong>Email:</strong> <%= patient.email %></p>
+                        <p><strong>Gender:</strong> <%= patient.gender %></p>
+                        <p><strong>Age:</strong> <%= patient.age %> years</p>
+                        <p><strong>Blood Type:</strong> <%= patient.bloodType %></p>
+
+                        <a href="/doctor/patient/<%= patient._id %>/healthrecords" class="btn btn-primary btn-custom">
+                            <i class="fa-solid fa-notes-medical"></i> Health Records
+                        </a>
+                        <a href="/doctor/patient/<%= patient._id %>/prescriptions" class="btn btn-success btn-custom">
+                            <i class="fa-solid fa-file-prescription"></i> Prescriptions
+                        </a>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</body>

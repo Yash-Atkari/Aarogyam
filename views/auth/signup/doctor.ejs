@@ -3,12 +3,13 @@
 <div class="container-fluid row mt-3">
     <h1 class="col-8 offset-2">Doctor Sign up</h1>
     <div class="col-8 offset-2 min-vh-100">
-        <form action="/doctor/signup" method="POST" class="needs-validation" novalidate>
+        <form action="/signup/doctor" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
             <!-- Email -->
             <div class="mb-3">
                 <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
                 <input type="email" name="doctor[email]" id="email" placeholder="Enter email" class="form-control" required>
             </div>
+            
             <div class="row">
                 <!-- Username -->
                 <div class="mb-3 col-6">
@@ -21,7 +22,7 @@
                     <input type="password" name="doctor[password]" id="password" placeholder="Enter password" class="form-control" required>
                 </div>
             </div>
-
+        
             <div class="row">
                 <!-- Specialization -->
                 <div class="mb-3 col-6">
@@ -34,7 +35,7 @@
                     <input type="number" name="doctor[experience]" id="experience" placeholder="Enter years of experience" class="form-control" required>
                 </div>
             </div>
-
+        
             <div class="row">
                 <!-- Hospital -->
                 <div class="mb-3 col-6">
@@ -47,7 +48,7 @@
                     <input type="number" name="doctor[consultantFees]" id="consultantFees" placeholder="Enter fees" class="form-control" required>
                 </div>
             </div>
-
+        
             <div class="row">
                 <!-- Phone -->
                 <div class="mb-3">
@@ -55,17 +56,17 @@
                     <input type="text" name="doctor[phone]" id="phone" placeholder="Enter phone number" class="form-control" required>
                 </div>
             </div>
-
+        
             <div class="mb-3">
-                <!-- Profile Image URL -->
-                <label for="profile" class="form-label">Profile Image URL</label>
-                <input type="text" name="doctor[profile]" id="profile" placeholder="Enter profile image URL" class="form-control">
+                <!-- Profile Image Upload -->
+                <label for="profile" class="form-label">Profile Image <span class="text-danger">*</span></label>
+                <input type="file" name="profile" id="profile" class="form-control" accept="image/*" required>
             </div>
-
+        
             <!-- Submit Button -->
             <div class="d-flex justify-content-center">
                 <button type="submit" class="btn btn-primary">Sign up</button>
             </div>
-        </form>
+        </form>        
     </div>
 </div>

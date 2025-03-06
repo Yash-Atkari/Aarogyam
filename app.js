@@ -8,6 +8,9 @@ const methodOverride = require("method-override");
 const multer = require("multer");
 const bodyParser = require("body-parser");
 
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+
 const app = express();
 
 app.use(express.json());
@@ -30,7 +33,6 @@ const Patient = require("./models/patient");
 const Appointment = require("./models/appointment");
 const HealthRecord = require("./models/healthrecord"); 
 const Billing = require("./models/billing");
-const healthrecord = require("./models/healthrecord");
 
 // -----------------------------------
 // 🔹 MONGODB CONNECTION
@@ -58,27 +60,32 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// const sessionOptions = {
-//   store,
-//   secret: process.env.SECRET,
-//   resave: false,
-//   saveUninitialized: true,
-//   cookie: {
-//       expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
-//       maxAge: 7 * 24 * 60 * 60 * 1000,
-//       httpOnly: true,
-//   }
-// };
+const sessionOptions = {
+  secret: "mysecretstring",
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+      expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+  }
+};
 
-// app.use(session(sessionOptions));
+app.use(session(sessionOptions));
 // app.use(flash());
 
-// app.use(passport.initialize());
-// app.use(passport.session());
-// passport.use(new LocalStrategy(User.authenticate()));
+app.use(passport.initialize());
+app.use(passport.session());
 
-// passport.serializeUser(User.serializeUser());
-// passport.deserializeUser(User.deserializeUser());
+// Configure Passport for Doctor authentication
+passport.use('doctor-local', new LocalStrategy(Doctor.authenticate()));
+passport.serializeUser(Doctor.serializeUser());
+passport.deserializeUser(Doctor.deserializeUser());
+
+// Configure Passport for Patient authentication
+passport.use('patient-local', new LocalStrategy(Patient.authenticate()));
+passport.serializeUser(Patient.serializeUser());
+passport.deserializeUser(Patient.deserializeUser());
 
 // app.use((req, res, next) => {
 //   res.locals.success = req.flash("success");
@@ -98,8 +105,78 @@ app.get("/aarogyam", (req, res) => res.render("dashboard"));
 
 app.get("/login", (req, res) => res.render("auth/login/login"));
 app.get("/signup", (req, res) => res.render("auth/signup/signup"));
-app.get("/doctor/signup", (req, res) => res.render("auth/signup/doctor"));
-app.get("/patient/signup", (req, res) => res.render("auth/signup/patient"));
+
+app.get("/signup/doctor", (req, res) => res.render("auth/signup/doctor"));
+app.get("/signup/patient", (req, res) => res.render("auth/signup/patient"));
+
+app.post("/login", passport.authenticate("local", {
+  failureRedirect: "/login",
+  failureFlash: true
+}), (req, res) => {
+  if (req.user.role === "doctor") {
+      res.redirect("/dashboard/doctor");
+  } else {
+      res.redirect("/dashboard/patient");
+  }
+});
+
+// Doctor Signup Route
+app.post("/signup/doctor", upload.single("profile"), async (req, res) => {
+  try {
+      // Extract doctor details from form submission
+      const { email, username, password, specialization, experience, hospital, consultantFees, phone } = req.body.doctor;
+
+      // Create new Doctor instance
+      const newDoctor = new Doctor({
+          email,
+          username,
+          specialization,
+          experience,
+          hospital,
+          consultantFees,
+          phone,
+          profile: req.file ? `/uploads/${req.file.filename}` : null  // Store image path
+      });
+
+      // Register doctor with hashed password
+      await Doctor.register(newDoctor, password);
+
+      // Authenticate and log in user after signup
+      req.login(newDoctor, (err) => {
+          if (err) return next(err);
+          res.render("doctor/dashboard");  // Redirect after successful signup
+      });
+  } catch (err) {
+      console.error("Error during doctor signup:", err);
+      res.redirect("/signup/doctor");  // Redirect back to signup form on failure
+  }
+});
+
+app.post("/signup/patient", async (req, res) => {
+  try {
+      const { username, email, password, gender, age, height, weight, bloodType } = req.body.patient;
+      const newPatient = new Patient({ username, email, gender, age, height, weight, bloodType });
+      const registeredPatient = await Patient.register(newPatient, password);
+      req.login(registeredPatient, (err) => {
+          if (err) return next(err);
+          res.redirect("/patient/dashboard");
+      });
+  } catch (error) {
+      res.status(500).send("Error registering patient: " + error.message);
+  }
+});
+
+app.get("/logout", (req, res) => {
+  req.logout((err) => {
+      if (err) {
+          console.error("Logout error:", err);
+          return res.redirect("/"); // Redirect to home or login page
+      }
+      req.session.destroy(() => {
+          res.redirect("/login"); // Redirect after session is cleared
+      });
+  });
+});
 
 // ------------------------------------
 // 🔹 PATIENT ROUTES
@@ -245,6 +322,25 @@ app.post('/patient/billings/delete/:id', async (req, res) => {
   }
 });
 
+app.get("/patient/doctors", async (req, res) => {
+  try {
+      const patientId = req.user ? req.user._id : "67b6d14db339e23694c73bf9"; // Get from req.user or default
+
+      const patient = await Patient.findById(patientId).populate("doctors"); // Populate doctors field
+
+      if (!patient) {
+          return res.status(404).send("Patient not found");
+      }
+
+      // console.log(patient.doctors);
+
+      res.render("patient/doctors", { doctors: patient.doctors });
+  } catch (error) {
+      console.error(error);
+      res.status(500).send("Internal Server Error");
+  }
+});
+
 // ------------------------------------
 // 🔹 PATIENT POST ROUTES
 // ------------------------------------
@@ -321,10 +417,89 @@ app.get("/doctor/appointments/addAppointmentDetails/:id", async (req, res) => {
     //   return res.status(404).json({ error: "Appointment not found" });
     // }
 
-    res.render("doctor/form", { appointment });
+    res.render("doctor/addAppointment", { appointment });
   } catch (err) {
     console.error("Error fetching appointment:", err);
     res.status(500).json({ error: "Internal Server Error", details: err.message });
+  }
+});
+
+app.get("/doctor/appointments/edit/:id", async (req, res) => {
+  try {
+    const appointmentId = req.params.id;
+
+    // Fetch appointment, health record, and billing data
+    const appointment = await Appointment.findById(appointmentId)
+    .populate("patientId");
+    if (!appointment) {
+      return res.status(404).send("Appointment not found");
+    }
+
+    const healthRecord = await HealthRecord.findOne({ patientId: appointment.patientId });
+    const billing = await Billing.findOne({ patientId: appointment.patientId });
+
+    // Render the edit form with existing data
+    res.render("doctor/editAppointment", {
+      appointment,
+      healthRecord,
+      billing,
+    });
+  } catch (err) {
+    console.error("Error fetching data for edit:", err);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.get("/doctor/patients", async (req, res) => {
+  try {
+    const doctorId = req.user?._id || "67b6d17ab339e23694c73bfb"; // Set default ID if req.user._id is missing
+
+    const doctor = await Doctor.findById(doctorId).populate("patients");
+
+    if (!doctor) {
+      return res.status(404).send("Doctor not found");
+    }
+
+    // console.log(doctor.patients);
+
+    res.render("doctor/patients", { patients: doctor.patients });
+  } catch (err) {
+    console.error("Error fetching patients:", err);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.get("/doctor/patient/:id/healthrecords", async (req, res) => {
+  try {
+      const patient = await Patient.findById(req.params.id)
+      .populate("healthRecord");
+
+      if (!patient) {
+          return res.status(404).send("Patient not found");
+      }
+
+      // console.log(patient);
+
+      res.render("doctor/healthrecords", { patient });
+  } catch (error) {
+      console.error(error);
+      res.status(500).send("Server Error");
+  }
+});
+
+app.get("/doctor/patient/:id/prescriptions", async (req, res) => {
+  try {
+      const patient = await Patient.findById(req.params.id)
+      .populate("appointments");
+
+      if (!patient) {
+        return res.status(404).send("Patient not found");
+      }
+
+      res.render("doctor/prescriptions", { patient });
+  } catch (error) {
+      console.error(error);
+      res.status(500).send("Server Error");
   }
 });
 
@@ -409,10 +584,95 @@ app.post(
   }
 );
 
+app.post(
+  "/doctor/appointments/edit/:id",
+  upload.fields([
+    { name: "patient[prescription]", maxCount: 1 },
+    { name: "patient[medicalReports]", maxCount: 5 },
+    { name: "patient[bill]", maxCount: 1 },
+  ]),
+  async (req, res) => {
+    try {
+      const appointmentId = req.params.id;
+      const { symptoms, disease } = req.body.patient;
+
+      if (!disease || !symptoms) {
+        return res.status(400).json({ error: "Disease and symptoms are required" });
+      }
+
+      // Extract file paths safely
+      const prescriptionUrl = req.files?.["patient[prescription]"]?.[0]?.path || null;
+      const medicalReports = req.files?.["patient[medicalReports]"]
+        ? req.files["patient[medicalReports]"].map((file) => file.path)
+        : [];
+      const billUrl = req.files?.["patient[bill]"]?.[0]?.path || null;
+
+      // Find and update appointment
+      const appointment = await Appointment.findById(appointmentId);
+      if (!appointment) return res.status(404).json({ error: "Appointment not found" });
+
+      appointment.disease = disease;
+      appointment.summary = symptoms;
+      if (prescriptionUrl) {
+        appointment.attachments = []; // Empty the array
+        appointment.attachments.push(prescriptionUrl);
+      }
+      await appointment.save();
+
+      // Find and update health record
+      const healthRecord = await HealthRecord.findOne({ patientId: appointment.patientId });
+      if (healthRecord) {
+        healthRecord.disease = disease;
+        healthRecord.symptoms = symptoms;
+        if (medicalReports.length > 0) {
+          healthRecord.attachments = medicalReports;
+        }
+        await healthRecord.save();
+      }
+
+      // Find and update billing record
+      const billing = await Billing.findOne({ patientId: appointment.patientId });
+      if (billing) {
+        billing.reason = disease;
+        if (billUrl) {
+          billing.attachments = [billUrl];
+        }
+        await billing.save();
+      }
+
+      res.redirect("/doctor/appointments");
+    } catch (err) {
+      console.error("Error updating records:", err);
+      res.status(500).json({ error: "Internal Server Error", details: err.message });
+    }
+  }
+);
+
+app.post("/doctor/appointments/confirm/:id", async (req, res) => {
+  try {
+    const appointmentId = req.params.id;
+
+    // Find the appointment by ID
+    const appointment = await Appointment.findById(appointmentId);
+    if (!appointment) {
+      return res.status(404).json({ error: "Appointment not found" });
+    }
+
+    // Update the status to 'confirmed'
+    appointment.status = "confirmed";
+    await appointment.save();
+
+    res.redirect("/doctor/appointments");
+  } catch (err) {
+    console.error("Error confirming appointment:", err);
+    res.status(500).json({ error: "Internal Server Error", details: err.message });
+  }
+});
+
 // ------------------------------------
 // 🔹 SERVER LISTENING
 // ------------------------------------
 const port = 5000;
 app.listen(port, () => {
-  console.log("Server is running on http://localhost:5000/doctor/dashboard");
+  console.log("Server is running on http://localhost:5000/aarogyam");
 });
