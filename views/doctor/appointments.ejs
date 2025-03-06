@@ -51,11 +51,14 @@
             <td><%= appointment.status %></td>
             <td class="actions">
               <a href="/doctor/appointments/addAppointmentDetails/<%= appointment._id %>" class="btn btn-primary">
-                Add
+                <i class="fa-solid fa-plus"></i>
               </a>
-              <a href="/doctor/appointments/confirm/<%= appointment._id %>" class="btn btn-success">
-                Confirm
+              <a href="/doctor/appointments/edit/<%= appointment._id %>" class="btn btn-secondary">
+                <i class="fa-solid fa-pen-to-square"></i>
               </a>
+              <form action="/doctor/appointments/confirm/<%= appointment._id %>" method="POST" style="display:inline;">
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmModal" onclick="setAppointmentId('<%= appointment._id %>')"><i class="fa-solid fa-circle-check"></i></button>
+              </form>              
             </td>
           </tr>
         <% }) %>
@@ -63,3 +66,30 @@
     </tbody>
   </table>
 </div>
+
+<!-- Cancel Confirmation Modal -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cancelModalLabel">Appointment Confirmation</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to confirm this appointment?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+        <form id="confirmForm" method="POST">
+          <button type="submit" class="btn btn-danger">Yes, Confirm</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function setAppointmentId(appointmentId) {
+    document.getElementById("confirmForm").action = `/doctor/appointments/confirm/${appointmentId}`;
+  }
+</script>

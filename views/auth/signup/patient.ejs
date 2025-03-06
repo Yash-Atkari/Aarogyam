@@ -3,7 +3,7 @@
 <div class="container-fluid row mt-3">
     <h1 class="col-8 offset-2">Patient Sign up</h1>
     <div class="col-8 offset-2 min-vh-100">
-        <form action="/patient/signup" method="POST" class="needs-validation" novalidate>
+        <form action="/signup/patient" method="POST" class="needs-validation" novalidate>
             <!-- Email -->
             <div class="mb-3">
                 <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
@@ -18,7 +18,7 @@
                 <!-- Password -->
                 <div class="mb-3 col-6">
                     <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
-                    <input type="password" name="patient[password]" id="password" placeholder="Enter password" class="form-control" required>
+                    <input type="password" name="patient[password]" id="password" placeholder="Enter password" class="form-control" required autocomplete="new-password">
                 </div>
             </div>
             <div class="row">
@@ -42,23 +42,33 @@
                 <!-- Height -->
                 <div class="mb-3 col-6">
                     <label for="height" class="form-label">Height (cm)</label>
-                    <input type="number" name="patient[height]" id="height" placeholder="Enter height" class="form-control">
+                    <input type="number" name="patient[height]" id="height" placeholder="Enter height in cm" class="form-control">
                 </div>
                 <!-- Weight -->
                 <div class="mb-3 col-6">
                     <label for="weight" class="form-label">Weight (kg)</label>
-                    <input type="number" name="patient[weight]" id="weight" placeholder="Enter weight" class="form-control">
+                    <input type="number" name="patient[weight]" id="weight" placeholder="Enter weight in kg" class="form-control">
                 </div>
             </div>
             <!-- Blood Type -->
             <div class="mb-3">
                 <label for="bloodType" class="form-label">Blood Type</label>
-                <input type="text" name="patient[bloodType]" id="bloodType" placeholder="Enter blood type" class="form-control">
+                <select name="patient[bloodType]" id="bloodType" class="form-control">
+                    <option value="">Select Blood Type</option>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                </select>
             </div>
             <!-- Submit Button -->
             <div class="d-flex justify-content-center">
                 <button type="submit" class="btn btn-primary">Sign up</button>
             </div>
-        </form>
+        </form>        
     </div>
 </div>
