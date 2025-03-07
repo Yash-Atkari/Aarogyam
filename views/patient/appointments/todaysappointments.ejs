@@ -56,48 +56,52 @@
     <div class="appointments-container mt-3">
         <h5>Today's Appointments</h5>
 
-        <% appointments.forEach(appointment => { %>
-            <div class="appointment-card">
-                <div class="doctor-info">
-                    <div>
-                        <strong><%= appointment.doctorId.username %></strong> <br>
-                        <img src="<%= appointment.doctorId.profile %>" alt="Doctor Image">
+        <% if (appointments && appointments.length > 0) { %> 
+            <% appointments.forEach(appointment => { %>
+                <div class="appointment-card">
+                    <div class="doctor-info">
+                        <div>
+                            <strong><%= appointment.doctorId.username %></strong> <br>
+                            <img src="<%= appointment.doctorId.profile %>" alt="Doctor Image">
+                        </div>
+                        <div>
+                            <strong>Specialization</strong> <br>
+                            <small><%= appointment.doctorId.specialization %></small>
+                        </div>
                     </div>
                     <div>
-                        <strong>Specialization</strong> <br>
-                        <small><%= appointment.doctorId.specialization %></small>
+                        <strong>Date</strong> <br>
+                        <small><%= appointment.date.toString().split(" ").slice(0, 4).join(" ") %></small>
+                    </div>
+                    <div>
+                        <strong>Time</strong> <br>
+                        <small><%= appointment.timeSlot %></small>
+                    </div>
+                    <div>
+                        <strong>Reason</strong> <br>
+                        <small><%= appointment.reason %></small>
+                    </div>
+                    <div>
+                        <strong>Contact</strong> <br>
+                        <small><%= appointment.doctorId.phone %></small>
+                    </div>
+                    <div>
+                        <strong>Status</strong> <br>
+                        <small><%= appointment.status %></small>
+                    </div>
+                    <div>
+                        <strong>Location</strong> <br>
+                        <small><%= appointment.doctorId.hospital %></small>
+                    </div>
+                    <div class="actions">
+                        <strong>Action</strong> <br>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelModal" onclick="setAppointmentId('<%= appointment._id %>')">Cancel</button>                                      
                     </div>
                 </div>
-                <div>
-                    <strong>Date</strong> <br>
-                    <small><%= appointment.date.toString().split(" ").slice(0, 4).join(" ") %></small>
-                </div>
-                <div>
-                    <strong>Time</strong> <br>
-                    <small><%= appointment.date.toString().split(" ").splice(4, 5).join(" ") %></small>
-                </div>
-                <div>
-                    <strong>Reason</strong> <br>
-                    <small><%= appointment.reason %></small>
-                </div>
-                <div>
-                    <strong>Contact</strong> <br>
-                    <small><%= appointment.doctorId.phone %></small>
-                </div>
-                <div>
-                    <strong>Status</strong> <br>
-                    <small><%= appointment.status %></small>
-                </div>
-                <div>
-                    <strong>Location</strong> <br>
-                    <small><%= appointment.doctorId.hospital %></small>
-                </div>
-                <div class="actions">
-                    <strong>Action</strong> <br>
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelModal" onclick="setAppointmentId('<%= appointment._id %>')">Cancel</button>                                      
-                </div>
-            </div>
-        <% }) %>
+            <% }) %>
+        <% } else { %>
+            No appointments found.
+        <% } %>
     </div>
 </div>
 

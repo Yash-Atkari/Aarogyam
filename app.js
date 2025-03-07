@@ -9,7 +9,7 @@ const multer = require("multer");
 const bodyParser = require("body-parser");
 
 const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
+const LocalStrategy = require("passport-local");
 
 const app = express();
 
@@ -72,20 +72,33 @@ const sessionOptions = {
 };
 
 app.use(session(sessionOptions));
-// app.use(flash());
-
 app.use(passport.initialize());
 app.use(passport.session());
 
 // Configure Passport for Doctor authentication
-passport.use('doctor-local', new LocalStrategy(Doctor.authenticate()));
-passport.serializeUser(Doctor.serializeUser());
-passport.deserializeUser(Doctor.deserializeUser());
+passport.use("doctor-local", new LocalStrategy(Doctor.authenticate()));
 
 // Configure Passport for Patient authentication
-passport.use('patient-local', new LocalStrategy(Patient.authenticate()));
-passport.serializeUser(Patient.serializeUser());
-passport.deserializeUser(Patient.deserializeUser());
+passport.use("patient-local", new LocalStrategy(Patient.authenticate()));
+
+// 🛠️ Custom serializeUser & deserializeUser to distinguish user types
+passport.serializeUser((user, done) => {
+  done(null, { id: user.id, role: user instanceof Doctor ? "doctor" : "patient" });
+});
+
+passport.deserializeUser(async (data, done) => {
+  try {
+    if (data.role === "doctor") {
+      const doctor = await Doctor.findById(data.id);
+      done(null, doctor);
+    } else {
+      const patient = await Patient.findById(data.id);
+      done(null, patient);
+    }
+  } catch (err) {
+    done(err);
+  }
+});
 
 // app.use((req, res, next) => {
 //   res.locals.success = req.flash("success");
@@ -109,14 +122,52 @@ app.get("/signup", (req, res) => res.render("auth/signup/signup"));
 app.get("/signup/doctor", (req, res) => res.render("auth/signup/doctor"));
 app.get("/signup/patient", (req, res) => res.render("auth/signup/patient"));
 
-app.post("/login", passport.authenticate("local", {
-  failureRedirect: "/login",
-  failureFlash: true
-}), (req, res) => {
-  if (req.user.role === "doctor") {
-      res.redirect("/dashboard/doctor");
-  } else {
-      res.redirect("/dashboard/patient");
+app.post("/login", async (req, res, next) => {
+  try {
+    const { username } = req.body;
+
+    // Check if the user exists as a Doctor
+    const doctor = await Doctor.findOne({ username });
+    if (doctor) {
+      passport.authenticate("doctor-local", async (err, user, info) => {
+        if (err) return next(err);
+        if (!user) return res.redirect("/login"); // Failed login
+
+        req.logIn(user, async (err) => {
+          if (err) return next(err);
+
+          // Fetch full doctor details using ID
+          const loggedInDoctor = await Doctor.findById(user._id);
+          return res.render("doctor/dashboard", { doctor: loggedInDoctor });
+        });
+      })(req, res, next);
+      return;
+    }
+
+    // Check if the user exists as a Patient
+    const patient = await Patient.findOne({ username });
+    if (patient) {
+      passport.authenticate("patient-local", async (err, user, info) => {
+        if (err) return next(err);
+        if (!user) return res.redirect("/login"); // Failed login
+
+        req.logIn(user, async (err) => {
+          if (err) return next(err);
+
+          // Fetch full patient details using ID
+          const loggedInPatient = await Patient.findById(user._id);
+          return res.render("patient/dashboard", { patient: loggedInPatient });
+        });
+      })(req, res, next);
+      return;
+    }
+
+    // If neither a doctor nor a patient, redirect to login
+    res.redirect("/login");
+
+  } catch (error) {
+    console.error("Error during login:", error);
+    res.redirect("/login");
   }
 });
 
@@ -142,9 +193,18 @@ app.post("/signup/doctor", upload.single("profile"), async (req, res) => {
       await Doctor.register(newDoctor, password);
 
       // Authenticate and log in user after signup
-      req.login(newDoctor, (err) => {
+      req.login(newDoctor, async (err) => {
           if (err) return next(err);
-          res.render("doctor/dashboard");  // Redirect after successful signup
+
+          // Fetch the doctor from the database using req.user._id
+          const doctor = await Doctor.findById(req.user._id);
+
+          if (!doctor) {
+            return res.redirect("/signup/doctor"); // Redirect if doctor is not found
+          }
+
+          // Pass the doctor object to the dashboard
+          res.render("doctor/dashboard", { doctor });
       });
   } catch (err) {
       console.error("Error during doctor signup:", err);
@@ -347,9 +407,14 @@ app.get("/patient/doctors", async (req, res) => {
 
 app.post("/bookappointment", /* isAuthenticated */ async (req, res) => {
   try {
-      // Extract the logged-in patient's ID
-      const patientId = req.user && req.user._id ? req.user._id : "67b6d14db339e23694c73bf9"; // Assuming user is stored in req.user by Passport.js
-    
+      // Ensure user is authenticated
+      if (!req.user) {
+          return res.status(401).json({ message: "Unauthorized: Please log in." });
+      }
+
+      // Extract the logged-in patient's ID from req.user
+      const patientId = req.user._id;
+
       // Extract required form data
       const { doctorId, appointmentDate, timeSlot, reason } = req.body.patient;
 
@@ -367,8 +432,15 @@ app.post("/bookappointment", /* isAuthenticated */ async (req, res) => {
           attachments: []
       });
 
-      await newAppointment.save();
-      
+      // Save the new appointment
+      const savedAppointment = await newAppointment.save();
+
+      // Add this appointment's ID to the doctor's appointments array
+      await Doctor.findByIdAndUpdate(doctorId, { $push: { appointments: savedAppointment._id } });
+
+      // Add this appointment's ID to the patient's appointments array
+      await Patient.findByIdAndUpdate(patientId, { $push: { appointments: savedAppointment._id } });
+
       // req.flash("success", "Appointment booked successfully!");
       res.redirect("/patient/bookappointment");
   } catch (error) {
@@ -399,7 +471,7 @@ app.get("/doctor/dashboard", async (req, res) => {
 
 app.get("/doctor/appointments", async (req, res) => {
   try {
-    const doctorId = "67b6d17ab339e23694c73bfb";  // Change to dynamic session-based ID
+    const doctorId = req.user._id;  // Change to dynamic session-based ID
     const appointments = await Appointment.find({ doctorId })
       .populate("patientId")
 
