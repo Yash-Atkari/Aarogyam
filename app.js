@@ -469,7 +469,7 @@ app.get("/doctor/dashboard", async (req, res) => {
 
 app.get("/doctor/appointments", async (req, res) => {
   try {
-    const doctorId = "67b6d17ab339e23694c73bfb";  // Change to dynamic session-based ID
+    const doctorId = req.user._id;  // Change to dynamic session-based ID
     const appointments = await Appointment.find({ doctorId })
       .populate("patientId")
 
