@@ -9,7 +9,7 @@ const multer = require("multer");
 const bodyParser = require("body-parser");
 
 const passport = require("passport");
-const LocalStrategy = require("passport-local");
+const LocalStrategy = require("passport-local").Strategy;
 
 const app = express();
 
@@ -388,6 +388,8 @@ app.get("/doctor/dashboard", async (req, res) => {
     const doctor = await Doctor.findById(doctorId);
     if (!doctor) return res.status(404).json({ error: "Doctor not found" });
 
+    // console.log(doctorId);
+    // console.log(doctor);
     res.render("doctor/dashboard", { doctor });
   } catch (err) {
     console.error("Error fetching doctor data:", err);
