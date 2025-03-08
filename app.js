@@ -72,6 +72,7 @@ const sessionOptions = {
 };
 
 app.use(session(sessionOptions));
+
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -524,17 +525,14 @@ app.get("/doctor/appointments/edit/:id", async (req, res) => {
 
 app.get("/doctor/patients", async (req, res) => {
   try {
-    const doctorId = req.user?._id || "67b6d17ab339e23694c73bfb"; // Set default ID if req.user._id is missing
+    const doctorId = req.user._id;
 
     const doctor = await Doctor.findById(doctorId).populate("patients");
-
     if (!doctor) {
       return res.status(404).send("Doctor not found");
     }
 
-    // console.log(doctor.patients);
-
-    res.render("doctor/patients", { patients: doctor.patients });
+    res.render("doctor/patients", { doctor });
   } catch (err) {
     console.error("Error fetching patients:", err);
     res.status(500).send("Internal Server Error");
@@ -543,32 +541,33 @@ app.get("/doctor/patients", async (req, res) => {
 
 app.get("/doctor/patient/:id/healthrecords", async (req, res) => {
   try {
-      const patient = await Patient.findById(req.params.id)
-      .populate("healthRecord");
+      const patientId = req.params.id;
 
-      if (!patient) {
-          return res.status(404).send("Patient not found");
-      }
+      const patient = await Patient.findById(patientId);
+      const healthrecords = await HealthRecord.find({ patientId: patientId });
 
-      // console.log(patient);
-
-      res.render("doctor/healthrecords", { patient });
+      res.render("doctor/healthrecords", { healthrecords, patient });
   } catch (error) {
       console.error(error);
       res.status(500).send("Server Error");
   }
 });
 
-app.get("/doctor/patient/:id/prescriptions", async (req, res) => {
+app.get("/doctor/:doctorId/patient/:patientId/prescriptions", async (req, res) => {
   try {
-      const patient = await Patient.findById(req.params.id)
-      .populate("appointments");
+      const { doctorId, patientId } = req.params;
 
+      // Fetch the patient details
+      const patient = await Patient.findById(patientId);
       if (!patient) {
-        return res.status(404).send("Patient not found");
+          return res.status(404).send("Patient not found");
       }
 
-      res.render("doctor/prescriptions", { patient });
+      // Fetch all appointments between this doctor and patient
+      const appointments = await Appointment.find({ doctorId: doctorId, patientId: patientId })
+          .populate("attachments"); // Attachments contain prescriptions
+
+      res.render("doctor/prescriptions", { appointments, patient });
   } catch (error) {
       console.error(error);
       res.status(500).send("Server Error");
@@ -730,9 +729,19 @@ app.post("/doctor/appointments/confirm/:id", async (req, res) => {
       return res.status(404).json({ error: "Appointment not found" });
     }
 
-    // Update the status to 'confirmed'
+    // Update appointment status to "confirmed"
     appointment.status = "confirmed";
     await appointment.save();
+
+    // Add patientId to the doctor's `patients` array
+    await Doctor.findByIdAndUpdate(appointment.doctorId, {
+      $addToSet: { patients: appointment.patientId } // Prevents duplicates
+    });
+
+    // Add doctorId to the patient's `doctors` array
+    await Patient.findByIdAndUpdate(appointment.patientId, {
+      $addToSet: { doctors: appointment.doctorId } // Prevents duplicates
+    });
 
     res.redirect("/doctor/appointments");
   } catch (err) {

@@ -21,8 +21,8 @@
     <div class="container-fluid">
         <h2 class="">Health Records for <%= patient.username %></h2>
         <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
-            <% if (patient.healthRecord && patient.healthRecord.length > 0) { %>
-                <% for (let record of patient.healthRecord) { %>
+            <% if (healthrecords && healthrecords.length > 0) { %>
+                <% for (let record of healthrecords) { %>
                     <div class="col">
                         <div class="card">
                             <h5 class="text-dark">
