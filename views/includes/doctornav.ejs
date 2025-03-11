@@ -2,8 +2,10 @@
     body {
         background-color: #ffffff;
         color: #333333;
+        transition: margin-left 0.3s ease-in-out;
     }
 
+    /* Sidebar Styles */
     .sidebar {
         background-color: #ffffff;
         border-right: 1px solid #dcdcdc;
@@ -11,16 +13,64 @@
         position: fixed;
         width: 250px;
         padding-top: 20px;
+        transition: left 0.4s cubic-bezier(0.25, 1, 0.5, 1); /* Smooth easing */
+        left: -250px; /* Initially hidden */
     }
 
+    /* Show Sidebar */
+    .sidebar.show {
+        left: 0;
+    }
+
+    /* Content shifts when sidebar is visible */
+    .content {
+        margin-left: 0;
+        transition: margin-left 0.4s cubic-bezier(0.25, 1, 0.5, 1); /* Smooth easing */
+    }
+
+    .content.shifted {
+        margin-left: 250px;
+    }
+
+    /* Sidebar Toggle Button */
+    .sidebar-toggle {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 1050;
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: left 0.4s cubic-bezier(0.25, 1, 0.5, 1), background 0.3s;
+    }
+
+    /* Move toggle button when sidebar is visible */
+    .sidebar.show ~ .sidebar-toggle {
+        left: 260px;
+    }
+
+    /* Hover Effect */
+    .sidebar-toggle:hover {
+        background: #0056b3;
+    }
+
+    .sidebar-toggle:focus {
+        outline: none;
+    }
+
+    /* Navigation Link Styles */
     .nav-link {
         color: #333333;
-        padding: 10px 15px;
+        padding: 12px 18px;
         border-radius: 8px;
-        margin-bottom: 5px;
+        margin-bottom: 6px;
         display: flex;
         align-items: center;
         text-decoration: none;
+        transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
     }
 
     .nav-link:hover,
@@ -30,9 +80,10 @@
     }
 
     .nav-link i {
-        margin-right: 10px;
+        margin-right: 12px;
     }
 
+    /* Text Styling */
     .sidebar .text-center {
         color: #333333;
     }
@@ -41,17 +92,28 @@
         color: #666666 !important;
     }
 
+    /* Profile Image */
     .profile-image {
         width: 80px;
         height: 80px;
         border-radius: 10px;
-        margin-bottom: 10px;
+        margin-bottom: 12px;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .profile-image:hover {
+        transform: scale(1.05); /* Subtle hover effect */
     }
 </style>
 
+<!-- Sidebar toggle button -->
+<button class="sidebar-toggle">
+    <i class="bi bi-list"></i>
+</button>
+
+<!-- Sidebar -->
 <div class="col-auto sidebar">
     <div class="text-center py-4">
-        <!-- <img src="/images/doctor-profile.jpg" alt="Doctor Profile" class="profile-image"> -->
         <i class="fa-solid fa-user"></i>
         <h5 class="mb-0"></h5>
         <small class="text-muted">Doctor</small>
@@ -98,3 +160,17 @@
         </ul>
     </nav>
 </div>
+
+<!-- JavaScript for Sidebar Toggle -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const sidebar = document.querySelector(".sidebar");
+    const toggleButton = document.querySelector(".sidebar-toggle");
+    const content = document.querySelector(".content");
+
+    toggleButton.addEventListener("click", function () {
+        sidebar.classList.toggle("show");
+        content.classList.toggle("shifted");
+    });
+});
+</script>

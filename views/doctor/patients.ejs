@@ -23,6 +23,8 @@
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
         transition: 0.3s;
         padding: 1rem;
+        position: relative;
+        z-index: -1;
     }
     .card:hover {
         transform: translateY(-5px);
@@ -34,7 +36,7 @@
 </style>
 
 <body>
-    <div class="container-fluid">
+    <div class="container-fluid container">
         <h2 class="">My Patients</h2>
         <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
             <% if (doctor.patients.length > 0) { %> 
@@ -55,6 +57,9 @@
                             <a href="/doctor/<%= doctor._id %>/patient/<%= patient._id %>/prescriptions" class="btn btn-success btn-custom">
                                 <i class="fa-solid fa-file-prescription"></i> Prescriptions
                             </a>
+                            <a href="#" class="btn btn-secondary btn-custom" onclick="openCertificateModal('<%= patient._id %>')">
+                                <i class="fa-solid fa-file-prescription"></i> Generate Certificate
+                            </a>                            
                         </div>
                     </div>
                 <% } %>
@@ -64,3 +69,66 @@
         </div>
     </div>
 </body>
+
+<!-- Modal for Admission & Discharge Dates -->
+<div class="modal fade" id="certificateModal" tabindex="-1" aria-labelledby="certificateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="certificateModalLabel">Enter Admission & Discharge Dates</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <label for="admissionDate">Admission Date:</label>
+                <input type="date" id="admissionDate" class="form-control">
+                <label for="dischargeDate" class="mt-2">Discharge Date:</label>
+                <input type="date" id="dischargeDate" class="form-control">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="submitCertificate()">Generate PDF</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let selectedPatientId = null;
+
+    function openCertificateModal(patientId) {
+        selectedPatientId = patientId;
+        const modal = new bootstrap.Modal(document.getElementById('certificateModal'));
+        modal.show();
+    }
+
+    async function submitCertificate() {
+        const admissionDate = document.getElementById('admissionDate').value;
+        const dischargeDate = document.getElementById('dischargeDate').value;
+
+        if (!admissionDate || !dischargeDate) {
+            alert('Please enter both dates.');
+            return;
+        }
+
+        generateMedicalCertificate(selectedPatientId, admissionDate, dischargeDate);
+    }
+
+    async function generateMedicalCertificate(patientId, admissionDate, dischargeDate) {
+        try {
+            const response = await fetch(`/generate-certificate/${patientId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ admissionDate, dischargeDate })
+            });
+
+            if (response.ok) {
+                const { fileUrl } = await response.json();
+                window.location.href = fileUrl; // Automatically download the PDF
+            } else {
+                console.error('Failed to generate certificate');
+            }
+        } catch (error) {
+            console.error('Error generating certificate:', error);
+        }
+    }
+</script>

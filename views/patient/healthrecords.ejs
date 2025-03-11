@@ -20,7 +20,7 @@
         margin-bottom: 15px;
     }
 
-    .record-card {
+    .card {
         background: #fff;
         padding: 15px;
         border-radius: 8px;
@@ -62,7 +62,7 @@
             <div class="alert alert-warning text-center">No medical records found.</div>
         <% } else { %>
             <% records.forEach(record => { %>
-                <div class="card shadow-sm mb-3">
+                <div class="shadow-sm mb-3">
                     <div class="card-body">
                         <h4 class="card-title"><%= record.recordType %></h4>
                         <p class="card-text"><%= record.summary %></p>
