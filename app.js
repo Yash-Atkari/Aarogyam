@@ -7,9 +7,13 @@ const session = require("express-session");
 const methodOverride = require("method-override");
 const multer = require("multer");
 const bodyParser = require("body-parser");
+const PDFDocument = require('pdfkit');
+const fs = require('fs');
+require('dotenv').config();
 
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
+// const GoogleStrategy = require("passport-google-oauth20").Strategy;
 
 const app = express();
 
@@ -78,8 +82,6 @@ app.use(passport.session());
 
 // Configure Passport for Doctor authentication
 passport.use("doctor-local", new LocalStrategy(Doctor.authenticate()));
-
-// Configure Passport for Patient authentication
 passport.use("patient-local", new LocalStrategy(Patient.authenticate()));
 
 // 🛠️ Custom serializeUser & deserializeUser to distinguish user types
@@ -100,6 +102,78 @@ passport.deserializeUser(async (data, done) => {
     done(err);
   }
 });
+
+// // Google OAuth Strategy
+// passport.use(
+//   new GoogleStrategy(
+//     {
+//       clientID: process.env.GOOGLE_CLIENT_ID,
+//       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+//       callbackURL: "http://localhost:5000/aarogyam/auth/google/callback",
+//     },
+//     async (accessToken, refreshToken, profile, done) => {
+//       if (!profile.emails || profile.emails.length === 0) {
+//         return done(new Error("No email associated with this Google account"));
+//       }
+
+//       const email = profile.emails[0].value;
+
+//       // Check if user exists in Doctor or Patient collections
+//       let user = await Doctor.findOne({ email }) || await Patient.findOne({ email });
+
+//       if (!user) {
+//         // Determine user type (Implement this function)
+//         const userType = determineUserType(email);
+
+//         if (userType === "doctor") {
+//           user = new Doctor({
+//             googleId: profile.id,
+//             email,
+//             username: profile.displayName,
+//             profile: profile.photos?.[0]?.value || "", // Profile picture
+//             role: "doctor",
+//           });
+//         } else {
+//           user = new Patient({
+//             googleId: profile.id,
+//             email,
+//             username: profile.displayName,
+//             profile: profile.photos?.[0]?.value || "",
+//             role: "patient",
+//           });
+//         }
+
+//         await user.save();
+//       }
+
+//       return done(null, user);
+//     }
+//   )
+// );
+
+// // ✅ Single serializeUser & deserializeUser definition
+// passport.serializeUser((user, done) => {
+//   done(null, { id: user.id, type: user.constructor.modelName });
+// });
+
+// passport.deserializeUser(async (obj, done) => {
+//   try {
+//     const { id, type } = obj;
+//     const Model = type === "Doctor" ? Doctor : Patient;
+//     const user = await Model.findById(id);
+//     done(null, user);
+//   } catch (err) {
+//     done(err);
+//   }
+// });
+
+// // ✅ Implement this function to categorize users correctly
+// function determineUserType(email) {
+//   if (email.includes("hospital") || email.includes("clinic")) {
+//     return "doctor";
+//   }
+//   return "patient";
+// }
 
 // app.use((req, res, next) => {
 //   res.locals.success = req.flash("success");
@@ -180,15 +254,15 @@ app.post("/signup/doctor", upload.single("profile"), async (req, res) => {
 
       // Create new Doctor instance
       const newDoctor = new Doctor({
-          email,
-          username,
-          specialization,
-          experience,
-          hospital,
-          consultantFees,
-          phone,
-          profile: req.file ? `/uploads/${req.file.filename}` : null  // Store image path
-      });
+        email,
+        username,
+        specialization,
+        experience,
+        hospital,
+        consultantFees,
+        phone,
+        profile: req.file ? `/uploads/${req.file.filename}` : null  // Store image path
+    });
 
       // Register doctor with hashed password
       await Doctor.register(newDoctor, password);
@@ -238,6 +312,134 @@ app.get("/logout", (req, res) => {
       });
   });
 });
+
+// // ✅ Login Route (Fixed)
+// app.post("/login/:role", async (req, res, next) => {
+//   const { role } = req.params;
+
+//   if (role !== "doctor" && role !== "patient") {
+//     return res.status(400).send("Invalid role specified");
+//   }
+
+//   passport.authenticate(`${role}-local`, async (err, user, info) => {
+//     if (err) return next(err);
+//     if (!user) return res.redirect("/login");
+
+//     req.login(user, async (err) => {
+//       if (err) return next(err);
+//       return res.redirect(`/${role}/dashboard`);
+//     });
+//   })(req, res, next);
+// });
+
+// // ✅ Google OAuth Login Route
+// app.get(
+//   "/aarogyam/auth/google",
+//   passport.authenticate("google", { scope: ["profile", "email"] })
+// );
+
+// // ✅ Google OAuth Callback
+// app.get(
+//   "/aarogyam/auth/google/callback",
+//   passport.authenticate("google", { failureRedirect: "/login" }),
+//   (req, res) => {
+//     // Redirect based on user type
+//     if (req.user instanceof Doctor) {
+//       return res.redirect("/doctor/dashboard");
+//     } else {
+//       return res.redirect("/patient/dashboard");
+//     }
+//   }
+// );
+
+// // ✅ Dashboard Route (Checks User Type)
+// app.get("/dashboard", (req, res) => {
+//   if (!req.isAuthenticated()) return res.redirect("/login");
+
+//   if (req.user instanceof Doctor) {
+//     return res.redirect("/doctor/dashboard");
+//   } else {
+//     return res.redirect("/patient/dashboard");
+//   }
+// });
+
+// // ✅ Doctor Signup Route
+// app.post("/signup/doctor", upload.single("profile"), async (req, res, next) => {
+//   try {
+//     const {
+//       email,
+//       username,
+//       password,
+//       specialization,
+//       experience,
+//       hospital,
+//       consultantFees,
+//       phone,
+//     } = req.body.doctor;
+
+//     const newDoctor = new Doctor({
+//       email,
+//       username,
+//       specialization,
+//       experience,
+//       hospital,
+//       consultantFees,
+//       phone,
+//       profile: req.file ? `/uploads/${req.file.filename}` : null, // Store image path
+//     });
+
+//     const registeredDoctor = await Doctor.register(newDoctor, password);
+
+//     req.login(registeredDoctor, async (err) => {
+//       if (err) return next(err);
+//       res.redirect("/doctor/dashboard");
+//     });
+//   } catch (err) {
+//     console.error("Error during doctor signup:", err);
+//     res.redirect("/signup/doctor");
+//   }
+// });
+
+// // ✅ Patient Signup Route
+// app.post("/signup/patient", async (req, res, next) => {
+//   try {
+//     const { username, email, password, gender, age, height, weight, bloodType } =
+//       req.body.patient;
+
+//     const newPatient = new Patient({
+//       username,
+//       email,
+//       gender,
+//       age,
+//       height,
+//       weight,
+//       bloodType,
+//     });
+
+//     const registeredPatient = await Patient.register(newPatient, password);
+
+//     req.login(registeredPatient, (err) => {
+//       if (err) return next(err);
+//       res.redirect("/patient/dashboard");
+//     });
+//   } catch (error) {
+//     console.error("Error registering patient:", error);
+//     res.status(500).send("Error registering patient: " + error.message);
+//   }
+// });
+
+// // ✅ Logout Route (Fixed)
+// app.get("/logout", async (req, res, next) => {
+//   try {
+//     await req.logout();
+//     req.session.destroy(() => {
+//       res.redirect("/login");
+//     });
+//   } catch (err) {
+//     console.error("Logout error:", err);
+//     return next(err); // Pass error to Express error handler
+//   }
+// });
 
 // ------------------------------------
 // 🔹 PATIENT ROUTES
@@ -573,6 +775,57 @@ app.get("/doctor/:doctorId/patient/:patientId/prescriptions", async (req, res) =
   } catch (error) {
       console.error(error);
       res.status(500).send("Server Error");
+  }
+});
+
+// Serve certificates statically
+app.use('/certificates', express.static(path.join(__dirname, 'certificates')));
+
+app.post('/generate-certificate/:patientId', async (req, res) => {
+  try {
+      const { admissionDate, dischargeDate } = req.body;
+      const patient = await Patient.findById(req.params.patientId).populate('doctors');
+
+      if (!patient) return res.status(404).json({ error: 'Patient not found' });
+
+      const fileName = `medical_certificate_${patient._id}.pdf`;
+      const filePath = path.join(__dirname, 'certificates', fileName);
+
+      // Create certificates folder if it doesn't exist
+      if (!fs.existsSync(path.join(__dirname, 'certificates'))) {
+          fs.mkdirSync(path.join(__dirname, 'certificates'));
+      }
+
+      // Create PDF document
+      const doc = new PDFDocument();
+      const stream = fs.createWriteStream(filePath);
+      doc.pipe(stream);
+
+      // PDF Content
+      doc.fontSize(20).text('Medical Leave Certificate', { align: 'center' }).moveDown();
+      doc.fontSize(12).text(`Patient Name: ${patient.username}`);
+      doc.text(`Email: ${patient.email}`);
+      doc.text(`Gender: ${patient.gender}`);
+      doc.text(`Age: ${patient.age}`);
+      doc.text(`Blood Type: ${patient.bloodType}`);
+      doc.text(`Doctor: ${patient.doctors[0]?.name || 'N/A'}`);
+      doc.text(`Admission Date: ${admissionDate}`);
+      doc.text(`Discharge Date: ${dischargeDate}`);
+      doc.moveDown();
+      doc.text(`This is to certify that ${patient.username} was admitted from ${admissionDate} to ${dischargeDate} and requires medical leave.`);
+
+      // Signature Placeholder
+      doc.moveDown();
+      doc.text('_________________________');
+      doc.text("Doctor's Signature");
+
+      doc.end();
+
+      stream.on('finish', () => res.json({ fileUrl: `/certificates/${fileName}` }));
+      stream.on('error', err => res.status(500).json({ error: 'Error generating certificate' }));
+
+  } catch (error) {
+      res.status(500).json({ error: 'Internal server error' });
   }
 });
 
