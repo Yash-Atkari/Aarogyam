@@ -34,37 +34,39 @@ router.post("/login", async (req, res, next) => {
     // Check if the user exists as a Doctor
     const doctor = await Doctor.findOne({ username });
     if (doctor) {
-      return passport.authenticate("doctor-local", async (err, user, info) => {
+      passport.authenticate("doctor-local", (err, user, info) => {
         if (err) return next(err);
         if (!user) {
           req.flash("error", "Invalid username or password");
           return res.redirect("/auth/login"); // Failed login
         }
 
-        req.logIn(user, async (err) => {
+        req.login(user, (err) => {
           if (err) return next(err);
           req.flash("success", "Welcome back to Aarogyam!");
           return res.redirect("/doctor/dashboard");
         });
       })(req, res, next);
+      return;
     }
 
     // Check if the user exists as a Patient
     const patient = await Patient.findOne({ username });
     if (patient) {
-      return passport.authenticate("patient-local", async (err, user, info) => {
+      passport.authenticate("patient-local", (err, user, info) => {
         if (err) return next(err);
         if (!user) {
           req.flash("error", "Invalid username or password");
           return res.redirect("/auth/login"); // Failed login
         }
 
-        req.logIn(user, async (err) => {
+        req.login(user, (err) => {
           if (err) return next(err);
           req.flash("success", "Welcome back to Aarogyam!");
           return res.redirect("/patient/dashboard");
         });
       })(req, res, next);
+      return;
     }
 
     // If neither doctor nor patient is found
