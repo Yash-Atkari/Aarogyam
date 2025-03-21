@@ -199,9 +199,7 @@ router.get("/doctors", isAuthenticated, async (req, res) => {
   }
 });
 
-// ------------------------------------
-// 🔹 PATIENT POST ROUTES
-// ------------------------------------
+// PATIENT POST ROUTES
 
 router.post("/bookappointment", isAuthenticated, async (req, res) => {
   try {

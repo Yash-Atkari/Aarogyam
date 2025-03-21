@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
+const fs = require("fs");
+const path = require("path");
+const PDFDocument = require("pdfkit");
 
 const Doctor = require("../models/doctor");
 const Patient = require("../models/patient");
@@ -100,7 +103,6 @@ router.get("/appointments/edit/:id", isAuthenticated, async (req, res) => {
   }
 });
 
-  
 router.get("/patients", isAuthenticated, async (req, res) => {
   try {
       const doctorId = req.user._id;
@@ -143,7 +145,6 @@ router.get("/patient/:id/healthrecords", isAuthenticated, async (req, res) => {
       res.redirect("/doctor/dashboard");
   }
 });
-
   
 router.get("/:doctorId/patient/:patientId/prescriptions", isAuthenticated, async (req, res) => {
   try {
@@ -173,10 +174,6 @@ router.get("/:doctorId/patient/:patientId/prescriptions", isAuthenticated, async
       res.redirect("/doctor/dashboard");
   }
 });
-  
-const fs = require("fs");
-const path = require("path");
-const PDFDocument = require("pdfkit");
 
 router.post("/generate-certificate/:patientId", isAuthenticated, async (req, res) => {
     try {
@@ -240,9 +237,7 @@ router.post("/generate-certificate/:patientId", isAuthenticated, async (req, res
     }
 });
   
-  // ------------------------------------
-  // 🔹 DOCTOR POST ROUTES
-  // ------------------------------------
+  // DOCTOR POST ROUTES
   
   router.post(
     "/appointments/addAppointmentDetails/:id",

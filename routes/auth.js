@@ -3,13 +3,9 @@ const router = express.Router();
 const multer = require("multer");
 
 const passport = require("passport");
-const LocalStrategy = require("passport-local");
 
 const Doctor = require("../models/doctor");
 const Patient = require("../models/patient");
-const Appointment = require("../models/appointment");
-const HealthRecord = require("../models/healthrecord"); 
-const Billing = require("../models/billing");
 
 // Configure Multer for file uploads
 const storage = multer.diskStorage({
@@ -28,6 +24,8 @@ router.get("/signup", (req, res) => res.render("auth/signup/signup"));
 
 router.get("/signup/doctor", (req, res) => res.render("auth/signup/doctor"));
 router.get("/signup/patient", (req, res) => res.render("auth/signup/patient"));
+
+// Login
 
 router.post("/login", async (req, res, next) => {
   try {
@@ -79,7 +77,8 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
-// Doctor Signup Route
+// Doctor signup route
+
 router.post("/signup/doctor", upload.single("profile"), async (req, res, next) => {
   try {
     // Extract doctor details from form submission
@@ -125,6 +124,8 @@ router.post("/signup/doctor", upload.single("profile"), async (req, res, next) =
   }
 });
 
+// Patient signup route
+
 router.post("/signup/patient", async (req, res, next) => {
   try {
     const { username, email, password, gender, age, height, weight, bloodType } = req.body.patient;
@@ -151,6 +152,8 @@ router.post("/signup/patient", async (req, res, next) => {
     return res.redirect("/auth/signup/patient"); // Redirect back to signup form on failure
   }
 });
+
+// Logout
 
 router.get("/logout", (req, res, next) => {
   req.logout((err) => {
