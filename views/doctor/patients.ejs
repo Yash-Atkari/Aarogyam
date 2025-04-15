@@ -36,7 +36,7 @@
 <body>
     <div class="container-fluid container">
         <h2 class="">My Patients</h2>
-        <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
+        <div class="row my-3 row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
             <% if (doctor.patients.length > 0) { %> 
                 <% for (let patient of doctor.patients) { %>
                     <div class="col">
@@ -121,7 +121,7 @@
 
             if (response.ok) {
                 const { fileUrl } = await response.json();
-                window.location.href = fileUrl; // Automatically download the PDF
+                window.open(fileUrl, '_blank'); // Automatically download the PDF
             } else {
                 console.error('Failed to generate certificate');
             }

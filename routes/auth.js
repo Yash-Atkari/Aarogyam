@@ -1,11 +1,16 @@
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
+const path = require("path");
+
 
 const passport = require("passport");
 
+const { patientSchema, doctorSchema } = require("../schema");
+
 const Doctor = require("../models/doctor");
 const Patient = require("../models/patient");
+const ExpressError = require("../utils/ExpressError");
 
 // Configure Multer for file uploads
 const storage = multer.diskStorage({
@@ -37,13 +42,14 @@ router.post("/login", async (req, res, next) => {
       passport.authenticate("doctor-local", (err, user, info) => {
         if (err) return next(err);
         if (!user) {
-          req.flash("error", "Invalid username or password");
+          req.flash("danger", "Invalid username or password.");
           return res.redirect("/auth/login"); // Failed login
         }
 
         req.login(user, (err) => {
           if (err) return next(err);
           req.flash("success", "Welcome back to Aarogyam!");
+          // Redirect using a parameterized route so that the isAuthorized middleware can do its job
           return res.redirect("/doctor/dashboard");
         });
       })(req, res, next);
@@ -56,13 +62,14 @@ router.post("/login", async (req, res, next) => {
       passport.authenticate("patient-local", (err, user, info) => {
         if (err) return next(err);
         if (!user) {
-          req.flash("error", "Invalid username or password");
+          req.flash("danger", "Invalid username or password.");
           return res.redirect("/auth/login"); // Failed login
         }
 
         req.login(user, (err) => {
           if (err) return next(err);
           req.flash("success", "Welcome back to Aarogyam!");
+          // Redirect using a parameterized route including the patient ID
           return res.redirect("/patient/dashboard");
         });
       })(req, res, next);
@@ -70,11 +77,11 @@ router.post("/login", async (req, res, next) => {
     }
 
     // If neither doctor nor patient is found
-    req.flash("error", "Invalid username or password");
+    req.flash("danger", "Invalid username or password.");
     return res.redirect("/auth/login");
   } catch (error) {
     console.error("Error during login:", error);
-    req.flash("error", "Something went wrong. Please try again.");
+    req.flash("danger", "Something went wrong. Please try again.");
     return res.redirect("/auth/login");
   }
 });
@@ -83,6 +90,15 @@ router.post("/login", async (req, res, next) => {
 
 router.post("/signup/doctor", upload.single("profile"), async (req, res, next) => {
   try {
+    // Validate data using Joi
+    const { error, value } = doctorSchema.validate(req.body);
+
+    if (error) {
+      const messages = error.details.map(err => err.message).join(', ');
+      console.error("Doctor Validation Error:", messages);
+      return next(new ExpressError(400, messages)); // Add `return` to prevent further execution
+    }
+
     // Extract doctor details from form submission
     const { email, username, password, specialization, experience, hospital, consultantFees, phone } = req.body.doctor;
 
@@ -130,6 +146,14 @@ router.post("/signup/doctor", upload.single("profile"), async (req, res, next) =
 
 router.post("/signup/patient", async (req, res, next) => {
   try {
+    const { error, value } = patientSchema.validate(req.body);
+
+    if (error) {
+      const messages = error.details.map(err => err.message).join(', ');
+      console.error("Patient Validation Error:", messages);
+      return next(new ExpressError(400, messages));
+    }
+
     const { username, email, password, gender, age, height, weight, bloodType } = req.body.patient;
 
     // Create new Patient instance
@@ -162,18 +186,17 @@ router.get("/logout", (req, res, next) => {
     if (err) {
       console.error("Logout error:", err);
       req.flash("error", "Logout failed. Please try again.");
-      return res.redirect("/");
+      return res.redirect("back"); // Stay on same page
     }
 
     req.session.regenerate((err) => {
       if (err) {
         console.error("Session regeneration error:", err);
         req.flash("error", "Error clearing session. Please try again.");
-        return res.redirect("/");
+        return res.redirect("back"); // Stay on same page
       }
 
-      req.flash("success", "You have been logged out successfully.");
-      res.redirect("/auth/login");
+      return res.redirect("/auth/login"); // Successful logout
     });
   });
 });

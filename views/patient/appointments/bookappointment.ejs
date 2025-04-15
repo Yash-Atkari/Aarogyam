@@ -17,7 +17,6 @@
         display: flex;
         align-items: center;
         gap: 10px;
-        margin-bottom: 15px;
     }
 
     .form-group {
@@ -49,71 +48,96 @@
     <div class="form-header">
         <h2>Book an Appointment</h2>
     </div>
-    <div class="appointment-form-container mt-3">
-        <form action="/patient/bookappointment" method="POST" enctype="application/x-www-form-urlencoded">
+    <div class="appointment-form-container mb-3">
+        <form id="appointmentForm" action="/patient/bookappointment" method="POST" enctype="application/x-www-form-urlencoded" class="needs-validation" novalidate>
             <div class="row">
-                <div class="col-6 form-group">
-                    <label>First Name</label>
-                    <input type="text" name="patient[firstName]" required>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">First Name</label>
+                    <input type="text" name="patient[firstName]" class="form-control" required>
+                    <div class="invalid-feedback">First name is required.</div>
                 </div>
-    
-                <div class="col-6 form-group">
-                    <label>Last Name</label>
-                    <input type="text" name="patient[lastName]" required>
+        
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Last Name</label>
+                    <input type="text" name="patient[lastName]" class="form-control" required>
+                    <div class="invalid-feedback">Last name is required.</div>
                 </div>
             </div>
-
+        
             <div class="row">
-                <div class="col-6 form-group">
-                    <label>Gender</label>
-                    <select name="patient[gender]" required>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Gender</label>
+                    <select name="patient[gender]" class="form-select" required>
+                        <option value="" selected disabled>Select a gender</option>
                         <option value="male">Male</option>
                         <option value="female">Female</option>
                         <option value="other">Other</option>
                     </select>
+                    <div class="invalid-feedback">Please select a gender.</div>
                 </div>
-    
-                <div class="col-6 form-group">
-                    <label>Mobile</label>
-                    <input type="text" name="patient[mobile]" required>
+        
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Mobile</label>
+                    <input type="text" name="patient[mobile]" class="form-control" required pattern="^\d{10}$">
+                    <div class="invalid-feedback">Enter a valid 10-digit mobile number.</div>
                 </div>
             </div>
-
-            <div class="form-group">
-                <label>Email</label>
-                <input type="email" name="patient[email]" required>
+        
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" name="patient[email]" class="form-control" required>
+                <div class="invalid-feedback">Please enter a valid email.</div>
             </div>
-
-            <div class="form-group">
-                <label>Select Doctor</label>
-                <select name="patient[doctorId]" required>
+        
+            <div class="mb-3">
+                <label class="form-label">Select Doctor</label>
+                <select name="patient[doctorId]" class="form-select" required>
+                    <option value="" selected disabled>Select a doctor</option>
                     <% doctors.forEach(doctor => { %>
                         <option value="<%= doctor._id %>"><%= doctor.username %></option>
                     <% }); %>
                 </select>
+                <div class="invalid-feedback">Please select a doctor.</div>
             </div>
-
-            <div class="form-group">
-                <label>Appointment Date</label>
-                <input type="date" name="patient[appointmentDate]" required>
+        
+            <div class="mb-3">
+                <label class="form-label">Appointment Date</label>
+                <input type="date" name="patient[appointmentDate]" class="form-control" required min="<%= new Date().toISOString().split('T')[0] %>">
+                <div class="invalid-feedback">Please select a date.</div>
             </div>
-
-            <div class="form-group">
-                <label>Time Slot</label>
-                <select name="patient[timeSlot]" required>
+        
+            <div class="mb-3">
+                <label class="form-label">Time Slot</label>
+                <select name="patient[timeSlot]" class="form-select" required>
+                    <option value="" selected disabled>Select a time</option>
                     <option value="09:00-09:30">09:00 - 09:30 AM</option>
                     <option value="09:30-10:00">09:30 - 10:00 AM</option>
                     <option value="10:00-10:30">10:00 - 10:30 AM</option>
                     <option value="10:30-11:00">10:30 - 11:00 AM</option>
                 </select>
+                <div class="invalid-feedback">Please choose a time slot.</div>
             </div>
-
-            <div class="form-group">
-                <label>Reason/Condition</label>
-                <textarea name="patient[reason]"></textarea>
+        
+            <div class="mb-3">
+                <label class="form-label">Reason/Condition</label>
+                <textarea name="patient[reason]" class="form-control" rows="3"></textarea>
             </div>
-
+        
             <button class="btn btn-primary" type="submit">Book Appointment</button>
-        </form>
+        </form>        
     </div>
 </div>
+
+<!-- Bootstrap Form Validation Script -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("appointmentForm");
+        form.addEventListener("submit", function (event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add("was-validated");
+        });
+    });
+</script>

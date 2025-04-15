@@ -44,7 +44,7 @@
       padding: 8px 12px;
       border-radius: 5px;
       cursor: pointer;
-      transition: left 0.4s cubic-bezier(0.25, 1, 0.5, 1), background 0.3s;
+      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), background 0.3s;
   }
 
   /* Move toggle button when sidebar is visible */
@@ -54,7 +54,7 @@
 
   /* Hover Effect */
   .sidebar-toggle:hover {
-      background: #0056b3;
+    background: #0266d1;
   }
 
   .sidebar-toggle:focus {
@@ -124,7 +124,7 @@
       <ul class="nav flex-column">
           <li class="nav-item">
               <a class="nav-link" href="/patient/dashboard">
-                  <i class="bi bi-house-door"></i> Dashboard
+                <i class="bi bi-house-door"></i> Dashboard
               </a>
           </li>
 
@@ -135,9 +135,9 @@
               </a>
               <ul class="collapse list-unstyled px-3" id="appointmentsDropdown">
                   <li><a class="nav-link" href="/patient/bookappointment">Book Appointment</a></li>
+                  <li><a class="nav-link" href="/patient/upcomingappointments">Upcoming Appointments</a></li>
                   <li><a class="nav-link" href="/patient/todaysappointments">Today's Appointments</a></li>
-                  <li><a class="nav-link" href="#">Upcoming Appointments</a></li>
-                  <li><a class="nav-link" href="#">Past Appointments</a></li>
+                  <li><a class="nav-link" href="/patient/pastappointments">Past Appointments</a></li>
               </ul>
           </li>
           

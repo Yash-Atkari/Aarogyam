@@ -11,7 +11,7 @@ const Appointment = require("../models/appointment");
 const HealthRecord = require("../models/healthrecord");
 const Billing = require("../models/billing");
 
-const { isAuthenticated } = require("../middleware");
+const { isAuthenticated, isAuthorized, isPatientOfDoctor, isDoctorOfPatient, isDoctorOfPatientBySession } = require("../middleware");
 
 // Configure Multer for file uploads
 const storage = multer.diskStorage({
@@ -25,157 +25,170 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-router.get("/dashboard", isAuthenticated, async (req, res) => {
-  try {
-    const doctor = await Doctor.findById(req.user._id);
-
-    if (!doctor) {
-      req.flash("error", "Doctor profile not found.");
-      return res.redirect("/auth/login");
+router.get(
+  "/dashboard", 
+  isAuthenticated,
+  async (req, res) => {
+    try {
+      console.log(req.session);
+      const doctor = await Doctor.findById(req.user._id);
+      res.render("doctor/dashboard", { doctor });
+    } catch (err) {
+      console.error("Error fetching doctor data:", err);
+      req.flash("danger", "Internal Server Error.");
+      res.redirect("/auth/login");
     }
-
-    res.render("doctor/dashboard", { doctor });
-  } catch (err) {
-    console.error("Error fetching doctor data:", err);
-    req.flash("error", "Unable to load dashboard. Please try again later.");
-    res.redirect("/auth/login");
   }
-});
-  
-router.get("/appointments", isAuthenticated, async (req, res) => {
+);
+
+router.get(
+  "/appointments", 
+  isAuthenticated, 
+  async (req, res) => {
   try {
-      const doctorId = req.user._id;  // Ensure user is logged in
-      const appointments = await Appointment.find({ doctorId }).populate("patientId");
+    const doctorId = req.user._id;
+    const appointments = await Appointment.find({ doctorId }).populate("patientId");
 
-      res.render("doctor/appointments", { appointments });
+    res.render("doctor/appointments", { appointments });
   } catch (err) {
-      console.error("Error fetching doctor appointments:", err);
-      req.flash("error", "Failed to load appointments. Please try again.");
-      res.redirect("/doctor/dashboard");
+    console.error("Error fetching doctor appointments:", err);
+    req.flash("error", "Failed to load appointments. Please try again.");
+    res.redirect("/doctor/dashboard");
   }
 });
-  
-router.get("/appointments/addAppointmentDetails/:id", isAuthenticated, async (req, res) => {
+
+router.get(
+  "/appointments/addAppointmentDetails/:id", 
+  isAuthenticated, 
+  isAuthorized(Appointment, "id", "doctorId"), 
+  async (req, res) => {
   try {
     const appointmentId = req.params.id;
+
+    // Fetch appointment data along with patient details
     const appointment = await Appointment.findById(appointmentId).populate("patientId");
 
     if (!appointment) {
-      req.flash("error", "Appointment not found.");
-      return res.redirect("/appointments"); // Prevent rendering with invalid data
+        req.flash("error", "Appointment not found.");
+        return res.redirect("/doctor/appointments");
     }
 
     res.render("doctor/addAppointment", { appointment });
   } catch (err) {
     console.error("Error fetching appointment:", err);
     req.flash("error", "Failed to load appointment details. Please try again.");
-    res.redirect("/doctor/appointments"); // Redirecting to avoid broken pages
+    res.redirect("/doctor/appointments");
   }
 });
 
-router.get("/appointments/edit/:id", isAuthenticated, async (req, res) => {
+router.get("/appointments/edit/:id", 
+  isAuthenticated, 
+  isAuthorized(Appointment, "id", "doctorId"), 
+  async (req, res) => {
   try {
-      const appointmentId = req.params.id;
+    const appointmentId = req.params.id;
 
-      // Fetch appointment data along with patient details
-      const appointment = await Appointment.findById(appointmentId).populate("patientId");
+    // Fetch appointment data along with patient details
+    const appointment = await Appointment.findById(appointmentId).populate("patientId");
 
-      if (!appointment) {
-          req.flash("error", "Appointment not found.");
-          return res.redirect("/appointments");
-      }
+    if (!appointment) {
+        req.flash("error", "Appointment not found.");
+        return res.redirect("/doctor/appointments");
+    }
 
-      // Fetch associated health record and billing data
-      const healthRecord = await HealthRecord.findOne({ patientId: appointment.patientId });
-      const billing = await Billing.findOne({ patientId: appointment.patientId });
+    // Fetch associated health record and billing data
+    const healthRecord = await HealthRecord.findOne({ patientId: appointment.patientId });
+    const billing = await Billing.findOne({ patientId: appointment.patientId });
 
-      // Render edit page with existing data
-      res.render("doctor/editAppointment", {
-          appointment,
-          healthRecord,
-          billing,
-      });
-
+    // Render edit page with existing data
+    res.render("doctor/editAppointment", { appointment, healthRecord, billing });
   } catch (err) {
-      console.error("Error fetching data for edit:", err);
-      req.flash("error", "Failed to load appointment details. Please try again.");
-      res.redirect("/doctor/appointments"); // Redirecting to avoid broken pages
+    console.error("Error fetching data for edit:", err);
+    req.flash("error", "Failed to load appointment details. Please try again.");
+    res.redirect("/doctor/appointments");
   }
 });
 
-router.get("/patients", isAuthenticated, async (req, res) => {
+router.get(
+  "/patients", 
+  isAuthenticated, 
+  async (req, res) => {
   try {
-      const doctorId = req.user._id;
+    const doctorId = req.user._id;
 
-      // Fetch doctor along with their patients
-      const doctor = await Doctor.findById(doctorId).populate("patients");
+    // Fetch doctor along with their patients
+    const doctor = await Doctor.findById(doctorId).populate("patients");
 
-      if (!doctor) {
-          req.flash("error", "Doctor not found.");
-          return res.redirect("/doctor/dashboard");
-      }
+    if (!doctor) {
+        req.flash("error", "Doctor not found.");
+        return res.redirect("/doctor/dashboard");
+    }
 
-      res.render("doctor/patients", { doctor });
-
+    res.render("doctor/patients", { doctor });
   } catch (err) {
-      console.error("Error fetching patients:", err);
-      req.flash("error", "Failed to load patients. Please try again.");
-      res.redirect("/doctor/dashboard"); // Redirecting to avoid broken pages
+    console.error("Error fetching patients:", err);
+    req.flash("error", "Failed to load patients. Please try again.");
+    res.redirect("/doctor/dashboard");
   }
 });
 
-router.get("/patient/:id/healthrecords", isAuthenticated, async (req, res) => {
+router.get(
+  "/patient/:id/healthrecords", 
+  isAuthenticated, 
+  isPatientOfDoctor,
+  async (req, res) => {
   try {
-      const patientId = req.params.id;
+    const patientId = req.params.id;
 
-      // Fetch patient details
-      const patient = await Patient.findById(patientId);
-      if (!patient) {
-          req.flash("error", "Patient not found.");
-          return res.redirect("/doctor/patients");
-      }
+    // Fetch patient details
+    const patient = await Patient.findById(patientId);
+    if (!patient) {
+        req.flash("error", "Patient not found.");
+        return res.redirect("/doctor/patients");
+    }
 
-      // Fetch health records for the patient
-      const healthrecords = await HealthRecord.find({ patientId });
-      
-      res.render("doctor/healthrecords", { healthrecords, patient });
+    // Fetch health records for the patient
+    const healthrecords = await HealthRecord.find({ patientId });
+    
+    res.render("doctor/healthrecords", { healthrecords, patient });
   } catch (error) {
-      console.error("Error fetching health records:", error);
-      req.flash("error", "Failed to load health records. Please try again.");
-      res.redirect("/doctor/dashboard");
+    console.error("Error fetching health records:", error);
+    req.flash("error", "Failed to load health records. Please try again.");
+    res.redirect("/doctor/patients");
   }
 });
-  
-router.get("/:doctorId/patient/:patientId/prescriptions", isAuthenticated, async (req, res) => {
+
+router.get(
+  "/:doctorId/patient/:patientId/prescriptions", 
+  isAuthenticated, 
+  isDoctorOfPatient, 
+  async (req, res) => {
   try {
-      const { doctorId, patientId } = req.params;
+    const { doctorId, patientId } = req.params;
 
-      // Ensure the logged-in doctor is accessing their own patients' prescriptions
-      if (doctorId !== req.user._id.toString()) {
-          req.flash("error", "Unauthorized access.");
-          return res.redirect("/doctor/dashboard");
-      }
+    // Fetch the patient details
+    const patient = await Patient.findById(patientId);
+    if (!patient) {
+        req.flash("error", "Patient not found.");
+        return res.redirect("/doctor/patients");
+    }
 
-      // Fetch the patient details
-      const patient = await Patient.findById(patientId);
-      if (!patient) {
-          req.flash("error", "Patient not found.");
-          return res.redirect("/doctor/patients");
-      }
+    // Fetch all appointments between this doctor and patient
+    const appointments = await Appointment.find({ doctorId, patientId }); // Attachments contain prescriptions
 
-      // Fetch all appointments between this doctor and patient
-      const appointments = await Appointment.find({ doctorId, patientId })
-          .populate("attachments"); // Attachments contain prescriptions
-
-      res.render("doctor/prescriptions", { appointments, patient });
+    res.render("doctor/prescriptions", { appointments, patient });
   } catch (error) {
-      console.error("Error fetching prescriptions:", error);
-      req.flash("error", "Failed to load prescriptions. Please try again.");
-      res.redirect("/doctor/dashboard");
+    console.error("Error fetching prescriptions:", error);
+    req.flash("error", "Failed to load prescriptions. Please try again.");
+    res.redirect("/doctor/patients");
   }
 });
 
-router.post("/generate-certificate/:patientId", isAuthenticated, async (req, res) => {
+router.post(
+  "/generate-certificate/:patientId", 
+  isAuthenticated,
+  isDoctorOfPatientBySession(Appointment),
+  async (req, res) => {
     try {
         const { admissionDate, dischargeDate } = req.body;
         const patient = await Patient.findById(req.params.patientId).populate("doctors");
@@ -220,28 +233,28 @@ router.post("/generate-certificate/:patientId", isAuthenticated, async (req, res
         doc.end();
 
         stream.on("finish", () => {
-            req.flash("success", "Medical certificate generated successfully.");
-            res.redirect(`/doctor/patients/${patient._id}`);
+          const fileUrl = `/certificates/${fileName}`;
+          res.status(200).json({ fileUrl });
         });
 
         stream.on("error", (err) => {
-            console.error("Error generating certificate:", err);
-            req.flash("error", "Error generating certificate. Please try again.");
-            res.redirect(`/doctor/patients/${patient._id}`);
+          console.error("Error generating certificate:", err);
+          req.flash("error", "Error generating certificate. Please try again.");
+          res.redirect(`/doctor/patients/${patient._id}`);
         });
-
     } catch (error) {
         console.error("Server error:", error);
         req.flash("error", "Internal server error.");
-        res.redirect("/doctor/dashboard");
+        res.redirect("/doctor/patients");
     }
 });
-  
-  // DOCTOR POST ROUTES
-  
-  router.post(
+
+// DOCTOR POST ROUTES
+
+router.post(
     "/appointments/addAppointmentDetails/:id",
     isAuthenticated,  // Ensuring only logged-in users can access
+    isAuthorized(Appointment, "id", "doctorId"),
     upload.fields([
         { name: "patient[prescription]", maxCount: 1 },
         { name: "patient[medicalReports]", maxCount: 5 },
@@ -299,7 +312,6 @@ router.post("/generate-certificate/:patientId", isAuthenticated, async (req, res
 
             req.flash("success", "Appointment details added successfully.");
             res.redirect("/doctor/appointments");
-
         } catch (err) {
             console.error("Error updating records:", err);
             req.flash("error", "An error occurred while updating appointment details.");
@@ -311,6 +323,7 @@ router.post("/generate-certificate/:patientId", isAuthenticated, async (req, res
 router.post(
   "/appointments/edit/:id",
   isAuthenticated, // Ensures only logged-in users can edit
+  isAuthorized(Appointment, "id", "doctorId"),
   upload.fields([
       { name: "patient[prescription]", maxCount: 1 },
       { name: "patient[medicalReports]", maxCount: 5 },
@@ -318,98 +331,100 @@ router.post(
   ]),
   async (req, res) => {
       try {
-          const appointmentId = req.params.id;
-          const { symptoms, disease } = req.body.patient;
+        const appointmentId = req.params.id;
+        const { symptoms, disease } = req.body.patient;
 
-          // Validate required fields
-          if (!disease || !symptoms) {
-              req.flash("error", "Disease and symptoms are required.");
-              return res.redirect("/doctor/appointments");
-          }
+        // Validate required fields
+        if (!disease || !symptoms) {
+            req.flash("error", "Disease and symptoms are required.");
+            return res.redirect("back");
+        }
 
-          // Extract uploaded file paths safely
-          const prescriptionUrl = req.files?.["patient[prescription]"]?.[0]?.path || null;
-          const medicalReports = req.files?.["patient[medicalReports]"]?.map(file => file.path) || [];
-          const billUrl = req.files?.["patient[bill]"]?.[0]?.path || null;
+        // Extract uploaded file paths safely
+        const prescriptionUrl = req.files?.["patient[prescription]"]?.[0]?.path || null;
+        const medicalReports = req.files?.["patient[medicalReports]"]?.map(file => file.path) || [];
+        const billUrl = req.files?.["patient[bill]"]?.[0]?.path || null;
 
-          // Find and update appointment
-          const appointment = await Appointment.findById(appointmentId);
-          if (!appointment) {
-              req.flash("error", "Appointment not found.");
-              return res.redirect("/doctor/appointments");
-          }
+        // Find and update appointment
+        const appointment = await Appointment.findById(appointmentId);
+        if (!appointment) {
+            req.flash("error", "Appointment not found.");
+            return res.redirect("/doctor/appointments");
+        }
 
-          appointment.disease = disease;
-          appointment.summary = symptoms;
-          if (prescriptionUrl) {
-              appointment.attachments = [prescriptionUrl]; // Replace previous prescription
-          }
-          await appointment.save();
+        appointment.disease = disease;
+        appointment.summary = symptoms;
+        if (prescriptionUrl) {
+            appointment.attachments = [prescriptionUrl]; // Replace previous prescription
+        }
+        await appointment.save();
 
-          // Find and update health record
-          const healthRecord = await HealthRecord.findOne({ patientId: appointment.patientId });
-          if (healthRecord) {
-              healthRecord.disease = disease;
-              healthRecord.symptoms = symptoms;
-              if (medicalReports.length > 0) {
-                  healthRecord.attachments = medicalReports;
-              }
-              await healthRecord.save();
-          }
+        // Find and update health record
+        const healthRecord = await HealthRecord.findOne({ patientId: appointment.patientId });
+        if (healthRecord) {
+            healthRecord.disease = disease;
+            healthRecord.symptoms = symptoms;
+            if (medicalReports.length > 0) {
+                healthRecord.attachments = medicalReports;
+            }
+            await healthRecord.save();
+        }
 
-          // Find and update billing record
-          const billing = await Billing.findOne({ patientId: appointment.patientId });
-          if (billing) {
-              billing.reason = disease;
-              if (billUrl) {
-                  billing.attachments = [billUrl]; // Replace previous bill attachment
-              }
-              await billing.save();
-          }
+        // Find and update billing record
+        const billing = await Billing.findOne({ patientId: appointment.patientId });
+        if (billing) {
+            billing.reason = disease;
+            if (billUrl) {
+                billing.attachments = [billUrl]; // Replace previous bill attachment
+            }
+            await billing.save();
+        }
 
-          req.flash("success", "Appointment details updated successfully.");
-          res.redirect("/doctor/appointments");
-
-      } catch (err) {
-          console.error("Error updating records:", err);
-          req.flash("error", "Internal Server Error while updating appointment.");
-          res.redirect("/doctor/appointments");
-      }
+        req.flash("success", "Appointment details updated successfully.");
+        res.redirect("/doctor/appointments");
+    } catch (err) {
+        console.error("Error updating records:", err);
+        req.flash("error", "Internal Server Error while updating appointment.");
+        res.redirect("/doctor/appointments");
+    }
   }
 );
 
-router.post("/appointments/confirm/:id", isAuthenticated, async (req, res) => {
+router.post(
+  "/appointments/confirm/:id", 
+  isAuthenticated,
+  isAuthorized(Appointment, "id", "doctorId"),
+  async (req, res) => {
   try {
-      const appointmentId = req.params.id;
+    const appointmentId = req.params.id;
 
-      // Find the appointment by ID
-      const appointment = await Appointment.findById(appointmentId);
-      if (!appointment) {
-          req.flash("error", "Appointment not found.");
-          return res.redirect("/doctor/appointments");
-      }
+    // Find the appointment by ID
+    const appointment = await Appointment.findById(appointmentId);
+    if (!appointment) {
+        req.flash("error", "Appointment not found.");
+        return res.redirect("/doctor/appointments");
+    }
 
-      // Update appointment status to "confirmed"
-      appointment.status = "confirmed";
-      await appointment.save();
+    // Update appointment status to "confirmed"
+    appointment.status = "confirmed";
+    await appointment.save();
 
-      // Update doctor's patients array
-      await Doctor.findByIdAndUpdate(appointment.doctorId, {
-          $addToSet: { patients: appointment.patientId } // Ensures no duplicates
-      });
+    // Update doctor's patients array
+    await Doctor.findByIdAndUpdate(appointment.doctorId, {
+        $addToSet: { patients: appointment.patientId } // Ensures no duplicates
+    });
 
-      // Update patient's doctors array
-      await Patient.findByIdAndUpdate(appointment.patientId, {
-          $addToSet: { doctors: appointment.doctorId } // Ensures no duplicates
-      });
+    // Update patient's doctors array
+    await Patient.findByIdAndUpdate(appointment.patientId, {
+        $addToSet: { doctors: appointment.doctorId } // Ensures no duplicates
+    });
 
-      req.flash("success", "Appointment confirmed successfully.");
-      res.redirect("/doctor/appointments");
-
+    req.flash("success", "Appointment confirmed successfully.");
+    res.redirect("/doctor/appointments");
   } catch (err) {
-      console.error("Error confirming appointment:", err);
-      req.flash("error", "Internal Server Error while confirming appointment.");
-      res.redirect("/doctor/appointments");
+    console.error("Error confirming appointment:", err);
+    req.flash("error", "Internal Server Error while confirming appointment.");
+    res.redirect("/doctor/appointments");
   }
 });
 

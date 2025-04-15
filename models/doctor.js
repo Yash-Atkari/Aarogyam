@@ -37,6 +37,11 @@ const doctorSchema = new Schema ({
     profile: {
         type: String,
     },
+    role: {
+        type: String,
+        enum: ['admin', 'doctor', 'patient'],
+        default: 'doctor'
+    },
     appointments: [
         {
             type: Schema.Types.ObjectId,

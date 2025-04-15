@@ -14,13 +14,15 @@ require('dotenv').config();
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 
+const ExpressError = require("./utils/ExpressError");
+
 const app = express();
 
 // Serve certificates statically
 app.use('/certificates', express.static(path.join(__dirname, 'certificates')));
 
-app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -105,6 +107,8 @@ passport.deserializeUser(async (data, done) => {
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
+  res.locals.danger = req.flash("danger");
+  res.locals.currUser = req.user;
   next();
 });
 
@@ -127,10 +131,20 @@ app.use("/patient", patientRouter);
 const doctorRouter = require("./routes/doctor");
 app.use("/doctor", doctorRouter);
 
+// ERROR HANDLER
+
+app.all("*", (req, res, next) => {
+  next(new ExpressError(404, "Page not found!"));
+});
+
+app.use((err, req, res, next) => {
+  let { statusCode=500, message="Something went wrong!" } = err;
+  res.status(statusCode).render("error.ejs", { err });
+});
+
 // SERVER LISTENING
 
 const port = 5000;
-
 app.listen(port, () => {
   console.log("Server is running on http://localhost:5000/aarogyam");
 });

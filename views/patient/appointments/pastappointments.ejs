@@ -78,7 +78,7 @@
 
 <div class="container">
     <div class="appointment-header">
-        <h2>Today's Appointments</h2>
+        <h2>Past Appointments</h2>
     </div>
 
     <!-- Search and Filter Section -->
@@ -191,6 +191,6 @@
 
 <script>
     function setAppointmentId(appointmentId) {
-      document.getElementById("cancelForm").action = `/patient/todaysappointments/cancel/${appointmentId}?_method=DELETE`;
+      document.getElementById("cancelForm").action = `/patient/pastappointments/cancel/${appointmentId}?_method=DELETE`;
     }
 </script>

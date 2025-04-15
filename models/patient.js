@@ -26,6 +26,11 @@ const patientSchema = new Schema ({
     bloodType: {
         type: String,
     },
+    role: {
+        type: String,
+        enum: ['admin', 'doctor', 'patient'],
+        default: 'patient'
+    },
     healthRecord: [
         {
             type: Schema.Types.ObjectId,
