@@ -39,10 +39,10 @@
                             <td>
                                 <% if (bill.attachments.length > 0) { %>
                                         <% bill.attachments.forEach((file) => { %>
-                                            <a href="/<%= file %>" class="action-icon view" title="View" target="_blank">
+                                            <a href="<%= file %>" class="action-icon view" title="View" target="_blank">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="/<%= file %>" class="action-icon download" title="Download" download>
+                                            <a href="<%= file %>" class="action-icon download" title="Download" target="_blank" download>
                                                 <i class="fas fa-download"></i>
                                             </a>
                                             <a href="#" class="action-icon delete" title="Delete" data-bs-toggle="modal" data-bs-target="#cancelModal" onclick="setAppointmentId('<%= bill._id %>', '<%= file %>')">
@@ -155,7 +155,7 @@
 
     .download { color: #6f42c1; }
     .view { color: #28a745; }
-    .print { color: #007bff; }
+    .delete { color: #dc3545; }
 
     .action-icon:hover {
         opacity: 0.7;

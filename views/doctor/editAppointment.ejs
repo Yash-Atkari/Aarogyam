@@ -96,7 +96,7 @@
           <label>Prescription</label>
           <input type="file" class="form-control-file" name="patient[prescription]" />
           <% if (appointment.attachments.length > 0) { %>
-            <p>Current File: <a class="btn btn-success mt-3" target="_blank" href="/<%= appointment.attachments[0] %>">View</a></p>
+            <p>Current File: <a class="btn btn-success mt-3" target="_blank" href="<%= appointment.attachments[0] %>">View</a></p>
           <% } %>
         </div>
       
@@ -106,7 +106,7 @@
           <% if (healthRecord.attachments.length > 0) { %>
             <p>Current Reports:
               <% healthRecord.attachments.forEach((report) => { %>
-                <a class="btn btn-success mt-3" target="_blank" href="/<%= report %>">View</a>
+                <a class="btn btn-success mt-3" target="_blank" href="<%= report %>">View</a>
               <% }) %>
             </p>
           <% } %>
@@ -116,7 +116,7 @@
           <label>Billing Invoice</label>
           <input type="file" class="form-control-file" name="patient[bill]" />
           <% if (billing && billing.attachments.length > 0) { %>
-            <p>Current Bill: <a class="btn btn-success mt-3" target="_blank" href="/<%= billing.attachments[0] %>">View</a></p>
+            <p>Current Bill: <a class="btn btn-success mt-3" target="_blank" href="<%= billing.attachments[0] %>">View</a></p>
           <% } %>
         </div>
       

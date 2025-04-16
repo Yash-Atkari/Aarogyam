@@ -75,7 +75,7 @@ module.exports.isPatientOfDoctor = async (req, res, next) => {
   }
 };
 
-module.exports.isDoctorOfPatient = async (req, res, next) => {
+module.exports.isDoctorOfPatient = (Appointment) => async (req, res, next) => {
   const { doctorId, patientId } = req.params;
 
   // Check if doctor in session is trying to access their own patient's data

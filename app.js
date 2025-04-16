@@ -1,15 +1,19 @@
+if(process.env.NODE_ENV != "production") {
+  require('dotenv').config();
+}
+
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
 const engine = require('ejs-mate');
 const session = require("express-session");
+const MongoStore = require('connect-mongo');
 const flash = require("connect-flash");
 const methodOverride = require("method-override");
 const multer = require("multer");
 const bodyParser = require("body-parser");
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
-require('dotenv').config();
 
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
@@ -42,14 +46,15 @@ const Billing = require("./models/billing");
 
 // MONGODB CONNECTION
 
-const MongoUrl = "mongodb://127.0.0.1:27017/aarogyam";
+// const MongoUrl = "mongodb://127.0.0.1:27017/aarogyam";
+const dbUrl = process.env.ATLASDB_URL;
 
 main()
   .then(() => console.log("Connected to DB"))
   .catch((err) => console.error("Error:", err));
 
 async function main() {
-  await mongoose.connect(MongoUrl);
+  await mongoose.connect(dbUrl);
 }
 
 // Configure Multer for file uploads
@@ -64,8 +69,21 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
+const store = MongoStore.create({
+  mongoUrl: dbUrl,
+  crypto: {
+      secret: "process.env.SECRET",
+  },
+  touchAfter: 24 * 3600,
+});
+
+store.on("error", () => {
+  console.log("ERROR in MONGO SESSION STORE");
+});
+
 const sessionOptions = {
-  secret: "mysecretstring", // process.env.SECRET
+  store,
+  secret: "process.env.SECRET",
   resave: false,
   saveUninitialized: true,
   cookie: {

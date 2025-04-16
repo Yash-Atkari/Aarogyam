@@ -62,7 +62,6 @@
             <div class="alert alert-warning text-center">No medical records found.</div>
         <% } else { %>
             <% records.forEach(record => { %>
-                <div class="shadow-sm mb-3">
                     <div class="card-body">
                         <h4 class="card-title"><%= record.recordType %></h4>
                         <p class="card-text"><%= record.summary %></p>
@@ -73,12 +72,12 @@
                             <ul class="list-unstyled">
                                 <% record.attachments.forEach((attachment, index) => { %>
                                     <li>
-                                        <a href="/<%= attachment %>" class="btn btn-success" target="_blank">
+                                        <a href="<%= attachment %>" class="btn btn-success" target="_blank">
                                             <i class="fas fa-eye"></i> View 
                                         </a>
-                                        <a href="/<%= attachment %>" class="btn btn-primary" download>
+                                        <a href="<%= attachment %>" class="btn btn-primary" title="Download" target="_blank" download>
                                             <i class="fas fa-file-download"></i> Download
-                                        </a><br>
+                                        </a>
                                     </li>
                                 <% }); %>
                             </ul>
@@ -87,7 +86,6 @@
                         <% } %>   
                         
                         <p class="text-muted"><strong>Created On:</strong> <%= new Date(record.created_at).toDateString() %></p>
-                    </div>
                 </div>
             <% }); %>
         <% } %>
