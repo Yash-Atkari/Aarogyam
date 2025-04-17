@@ -132,7 +132,7 @@ app.use((req, res, next) => {
 
 // HOME PAGE
 
-app.get("/aarogyam", (req, res) => res.render("dashboard"));
+app.get("/", (req, res) => res.render("dashboard"));
 
 // AUTH ROUTES
 
