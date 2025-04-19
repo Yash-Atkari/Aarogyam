@@ -2,6 +2,7 @@ if(process.env.NODE_ENV != "production") {
   require('dotenv').config();
 }
 
+const axios = require("axios");
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
@@ -148,6 +149,46 @@ app.use("/patient", patientRouter);
 
 const doctorRouter = require("./routes/doctor");
 app.use("/doctor", doctorRouter);
+
+app.post("/chat", async (req, res) => {
+  try {
+    const { message } = req.body;
+
+    const payload = {
+      model: "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are a kind, empathetic mental health assistant. Respond politely and respectfully even if the user uses rude language.",
+        },
+        {
+          role: "user",
+          content: message,
+        },
+      ],
+      temperature: 0.7,
+    };
+
+    const response = await axios.post(
+      "https://api.together.xyz/v1/chat/completions",
+      payload,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.TOGETHER_API_KEY}`,
+        },
+      }
+    );
+
+    const botResponse = response.data.choices?.[0]?.message?.content || "Sorry, I couldn't understand that.";
+
+    res.json({ choices: [{ message: { content: botResponse } }] });
+  } catch (error) {
+    console.error("Together API Error:", error.response?.data || error.message);
+    res.status(500).json({ error: "Failed to fetch AI response" });
+  }
+});
 
 // ERROR HANDLER
 

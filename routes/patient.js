@@ -51,4 +51,8 @@ router
   .route("/bookappointment")
   .post(isAuthenticated, patientController.bookAppointment);
 
+router.get("/chat", (req, res) => {
+  res.render("patient/chat");
+});  
+
 module.exports = router;
