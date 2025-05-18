@@ -9,10 +9,10 @@
   .sidebar {
       background-color: #ffffff;
       border-right: 1px solid #dcdcdc;
-      height: 100vh;
-      position: fixed;
+      min-height: 100vh;
+      position: absolute;
+      top: 60px;
       width: 250px;
-      padding-top: 20px;
       transition: left 0.4s cubic-bezier(0.25, 1, 0.5, 1); /* Smooth transition */
       left: -250px; /* Initially hidden */
   }
@@ -112,7 +112,7 @@
 </button>
 
 <!-- Sidebar -->
-<div class="col-auto sidebar">
+<div class="sidebar py-2">
   <div class="text-center py-4">
       <i class="fa-solid fa-user"></i>
       <h5 class="mb-0"></h5>

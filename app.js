@@ -15,10 +15,8 @@ const multer = require("multer");
 const bodyParser = require("body-parser");
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
-
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
-
 const ExpressError = require("./utils/ExpressError");
 
 const app = express();
@@ -41,21 +39,22 @@ app.use('/uploads', express.static('uploads'));
 
 const Doctor = require("./models/doctor");
 const Patient = require("./models/patient");
-const Appointment = require("./models/appointment");
-const HealthRecord = require("./models/healthrecord"); 
-const Billing = require("./models/billing");
 
 // MONGODB CONNECTION
 
-// const MongoUrl = "mongodb://127.0.0.1:27017/aarogyam";
-const dbUrl = process.env.ATLASDB_URL;
+const MongoUrl = "mongodb://127.0.0.1:27017/aarogyam";
+// const dbUrl = process.env.ATLASDB_URL;
 
 main()
   .then(() => console.log("Connected to DB"))
   .catch((err) => console.error("Error:", err));
 
+// async function main() {
+//   await mongoose.connect(dbUrl);
+// }
+
 async function main() {
-  await mongoose.connect(dbUrl);
+  await mongoose.connect(MongoUrl);
 }
 
 // Configure Multer for file uploads
@@ -70,20 +69,20 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-const store = MongoStore.create({
-  mongoUrl: dbUrl,
-  crypto: {
-      secret: "process.env.SECRET",
-  },
-  touchAfter: 24 * 3600,
-});
+// const store = MongoStore.create({
+//   mongoUrl: dbUrl,
+//   crypto: {
+//       secret: "process.env.SECRET",
+//   },
+//   touchAfter: 24 * 3600,
+// });
 
-store.on("error", () => {
-  console.log("ERROR in MONGO SESSION STORE");
-});
+// store.on("error", () => {
+//   console.log("ERROR in MONGO SESSION STORE");
+// });
 
 const sessionOptions = {
-  store,
+  // store,
   secret: "process.env.SECRET",
   resave: false,
   saveUninitialized: true,
@@ -129,6 +128,81 @@ app.use((req, res, next) => {
   res.locals.danger = req.flash("danger");
   res.locals.currUser = req.user;
   next();
+});
+
+async function handleGoogleSignIn(req, res, Model, defaultRole) {
+  const { email, username } = req.body;
+  try {
+    let user = await Model.findOne({ email });
+    let isNewUser = false;
+
+    if (!user) {
+      user = new Model({ email, username, role: defaultRole });
+      await user.save();
+      isNewUser = true;
+    }
+
+    req.logIn(user, (err) => {
+      if (err) {
+        console.error('Passport logIn error:', err);
+        return res.status(500).json({ success: false });
+      }
+      return res.json({ success: true, role: user.role, isNewUser });
+    });
+  } catch (err) {
+    console.error(`🔥 Google Auth error (${defaultRole}):`, err);
+    return res.status(500).json({ success: false });
+  }
+}
+
+app.post('/auth/google/patient', (req, res) => {
+  handleGoogleSignIn(req, res, Patient, 'patient');
+});
+
+app.post('/auth/google/doctor', (req, res) => {
+  handleGoogleSignIn(req, res, Doctor, 'doctor');
+});
+
+app.post('/auth/google-login', async (req, res) => {
+  const { email } = req.body;
+  try {
+    // Try to find patient by email
+    let user = await Patient.findOne({ email });
+
+    if (!user) {
+      // If not found in patients, try doctors
+      user = await Doctor.findOne({ email });
+
+      if (!user) {
+        // No user found at all
+        return res.status(404).json({ 
+          success: false, 
+          message: "No account found with this email 😕"
+        });
+      }
+    }
+
+    // Log the user in using Passport
+    req.logIn(user, (err) => {
+      if (err) {
+        console.error("Log in error", err);
+        return res.status(500).json({ 
+          success: false, 
+          message: 'An error occurred while logging you in. Please try again.' 
+        });
+      }
+
+      // Successful login
+      return res.json({ success: true });
+    });
+  }
+  catch (err) {
+    console.error("/auth/google-login error", err);
+    return res.status(500).json({ 
+      success: false, 
+      message: 'Server error occurred. Please try again later.' 
+    });
+  }
 });
 
 // HOME PAGE
@@ -205,7 +279,5 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
+  console.log(`Server listening on http://localhost:${PORT}/`);
 });
-
-// trigger redeploy

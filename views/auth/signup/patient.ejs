@@ -6,6 +6,7 @@
   <title>Aarogyam</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" crossorigin="anonymous"/>
+  <link rel="jsdelivr" href=""/>
   <style>
     * {
       font-family: "Poppins", sans-serif;
@@ -163,18 +164,34 @@
         <div class="d-flex justify-content-center">
           <button type="submit" class="btn btn-primary">Sign up</button>
         </div>
-      
-        <!-- Optional Google Sign Up -->
-        <!--
-        <div class="d-flex justify-content-center my-3">
-          <a href="/aarogyam/auth/google" class="btn btn-danger">
-            <i class="fab fa-google"></i> Sign up with Google
-          </a>
-        </div>
-        -->
-      </form>  
+      </form> 
+
+      <!-- Optional Google Sign Up -->
+      <div class="text-center">
+        <button class="btn btn-outline-danger mt-4 m-1" onclick="googleSignIn()"><i class="fa-brands fa-google"></i> oogle</button>
+        <button class="btn btn-outline-primary mt-4 m-1" onclick=""><i class="fa-brands fa-facebook-f"></i> acebook</button>
+        <button class="btn btn-outline-warning mt-4 m-1" onclick=""><i class="fa-brands fa-microsoft"></i> icrosoft</button>
+      </div>
     </div>
   </div>
+
+  <!-- Beautiful Bootstrap Alert -->
+  <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100;">
+    <!-- User Exist Alert -->
+    <div id="userExistAlert" class="alert alert-warning alert-dismissible fade show d-none mt-3 mx-3" role="alert">
+      <strong>👋 Welcome back!</strong> You already have an account.
+    </div>
+    <!-- Save Error in DB Alert -->
+    <div id="saveErrorAlert" class="alert alert-danger alert-dismissible fade show d-none mt-3 mx-3" role="alert">
+      <strong>⚠️ Something went wrong while creating your account. Please try again later.</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  </div>
+
+  <!-- Firebase App (the core Firebase SDK) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <!-- Firebase Auth -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 
   <script>
     // Bootstrap custom validation script
@@ -195,6 +212,60 @@
         });
       }, false);
     })();
+
+    // Your Firebase config from Step 3
+    const firebaseConfig = {
+      apiKey: "AIzaSyBL1BHmP43qqUQlOWIMGQ27WtMoLai8Klg",
+      authDomain: "aarogyam-71fdd.firebaseapp.com",
+      projectId: "aarogyam-71fdd",
+      storageBucket: "aarogyam-71fdd.firebasestorage.app",
+      messagingSenderId: "672290909959",
+      appId: "1:672290909959:web:cb07d4832e2137ae2cdfa2"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    const auth = firebase.auth();
+
+    function googleSignIn() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider)
+        .then((result) => {
+          const user = result.user;
+          fetch('/auth/google/patient', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({  // Passed as a JSON object
+              email: user.email,
+              username:  user.displayName,
+              uid:  user.uid
+            })
+          })
+          .then(res => res.json()) // Convert into js object
+          .then(data => {
+            if (!data.success) {
+              document.getElementById("saveErrorAlert").classList.remove("d-none");
+              return;
+            }
+            // if they already existed we show popup and logged in
+            if (!data.isNewUser) {
+              document.getElementById("userExistAlert").classList.remove("d-none");
+            }
+            // role-based redirect
+            // Redirect after short delay so user can see toast
+            setTimeout(() => {
+              const destination = data.role === 'doctor'
+                ? '/doctor/dashboard'
+                : '/patient/dashboard';
+              window.location.href = destination;
+            }, 2000);  // Wait 2 seconds before redirect
+          });
+        })
+        .catch((error) => {
+          console.error('Google Sign-in error:', error);
+        });
+    }
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>

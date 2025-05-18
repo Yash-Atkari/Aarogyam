@@ -1,3 +1,4 @@
+const { required } = require("joi");
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const passportLocalMongoose = require("passport-local-mongoose");
@@ -9,12 +10,10 @@ const doctorSchema = new Schema ({
         unique: true
     },
     specialization: {
-        type: String,
-        required: true
+        type: String
     },
     experience: {
-        type: Number,
-        required: true
+        type: Number
     },
     availabilitySlots: [
         {
@@ -23,16 +22,13 @@ const doctorSchema = new Schema ({
         }
     ],
     hospital: {
-        type: String,
-        required: true
+        type: String
     },
     consultantFees: {
-        type: Number,
-        required: true
+        type: Number
     },
     phone: {
-        type: String,
-        required: true
+        type: String
     },
     profile: {
         type: String,
