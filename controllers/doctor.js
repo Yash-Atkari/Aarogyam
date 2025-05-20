@@ -189,7 +189,7 @@ module.exports.generateCertificate = async (req, res, next) => {
 module.exports.addAppointmentDetails = async (req, res, next) => {
   try {
     const appointmentId = req.params.id;
-    const { username, email, gender, appointmentDate, timeSlot, symptoms, disease } = req.body.patient;
+    const { username, email, gender, appointmentDate, timeSlot, symptoms, disease, billAmount } = req.body.patient;
 
     // Find the appointment by id
     const appointment = await Appointment.findById(appointmentId);
@@ -228,10 +228,10 @@ module.exports.addAppointmentDetails = async (req, res, next) => {
       doctorId: appointment.doctorId,
       invoiceNo,
       date: new Date(),
-      amount: 0, // Update this later as needed
+      amount: billAmount, // Update this later as needed
       reason: disease,
-      status: "paid",
-      paymentMethod: "cash",
+      status: "pending",
+      paymentMethod: "UPI",
       attachments: billUrl ? [billUrl] : [],
     });
     await billing.save();
@@ -249,7 +249,7 @@ module.exports.addAppointmentDetails = async (req, res, next) => {
 module.exports.editAppointment = async (req, res, next) => {
   try {
     const appointmentId = req.params.id;
-    const { symptoms, disease } = req.body.patient;
+    const { symptoms, disease, amount } = req.body.patient;
 
     // Validate mandatory fields
     if (!disease || !symptoms) {
@@ -290,6 +290,7 @@ module.exports.editAppointment = async (req, res, next) => {
     const billing = await Billing.findOne({ patientId: appointment.patientId });
     if (billing) {
       billing.reason = disease;
+      billing.amount = amount;
       if (billUrl) {
         billing.attachments = [billUrl];
       }

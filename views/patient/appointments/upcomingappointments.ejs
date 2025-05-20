@@ -54,6 +54,8 @@
         background-color: #ffffff;
         border-radius: 10px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        position: absolute;
+        z-index: -1;
     }
 
     .filter-container .form-control,
@@ -74,54 +76,51 @@
             margin-bottom: 10px;
         }
     }
-</style>
+</style> 
 
 <div class="container">
     <div class="appointment-header">
         <h2>Upcoming Appointments</h2>
     </div>
 
-    <!-- Search and Filter Section -->
-    <div class="card p-3 mb-3 filter-container">
-        <form id="filterForm" method="GET" action="/patient/filterappointments">
-            <div class="row g-2">
-                <div class="col-md-3">
-                    <input type="text" class="form-control" name="search" placeholder="Search by Doctor, Reason, Disease">
-                </div>
-                <div class="col-md-2">
-                    <input type="date" class="form-control" name="date">
-                </div>
-                <div class="col-md-2">
-                    <select class="form-control" name="status">
-                        <option value="">All Statuses</option>
-                        <option value="pending">Pending</option>
-                        <option value="confirmed">Confirmed</option>
-                        <option value="completed">Completed</option>
-                        <option value="cancelled">Cancelled</option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <select class="form-control" name="timeSlot">
-                        <option value="">All Time Slots</option>
-                        <option value="09:00-09:30">09:00 - 09:30 AM</option>
-                        <option value="09:30-10:00">09:30 - 10:00 AM</option>
-                        <option value="10:00-10:30">10:00 - 10:30 AM</option>
-                        <option value="10:30-11:00">10:30 - 11:00 AM</option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <button type="submit" class="btn btn-primary w-100">Filter</button>
-                </div>
+    <form id="filterForm" method="GET" action="/patient/filterappointments">
+        <div class="row g-2">
+            <div class="col-md-3">
+                <input type="text" class="form-control" name="search" placeholder="Search by Doctor, Reason, Disease">
             </div>
-        </form>
-    </div>
+            <div class="col-md-2">
+                <input type="date" class="form-control" name="date">
+            </div>
+            <div class="col-md-2">
+                <select class="form-control" name="status">
+                    <option value="">All Statuses</option>
+                    <option value="pending">Pending</option>
+                    <option value="confirmed">Confirmed</option>
+                    <option value="completed">Completed</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select class="form-control" name="timeSlot">
+                    <option value="">All Time Slots</option>
+                    <option value="09:00-09:30">09:00 - 09:30 AM</option>
+                    <option value="09:30-10:00">09:30 - 10:00 AM</option>
+                    <option value="10:00-10:30">10:00 - 10:30 AM</option>
+                    <option value="10:30-11:00">10:30 - 11:00 AM</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Filter</button>
+            </div>
+        </div>
+    </form>
 
     <div class="appointments-container mt-3">
         <h5>Appointments</h5>
 
         <% if (appointments && appointments.length > 0) { %> 
             <% appointments.forEach(appointment => { %>
-                <div class="appointment-card">
+                <div class="appointment-card card">
                     <div class="doctor-info">
                         <div>
                             <strong><%= appointment.doctorId.username %></strong> <br>

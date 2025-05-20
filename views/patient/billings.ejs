@@ -53,6 +53,15 @@
                                     No files
                                 <% } %>
                             </td>
+                            <td>
+                                <button 
+                                class="rzp-button btn btn-primary" 
+                                data-amount="<%= bill.amount %>" 
+                                data-billingid="<%= bill._id %>"
+                                >
+                                Pay ₹<%= bill.amount %>
+                                </button>                            
+                            </td>
                         </tr>
                     <% }); %>
                 <% } %>
@@ -60,6 +69,67 @@
         </table>
     </div>
 </div>
+
+<!-- Include Razorpay checkout script -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+  document.querySelectorAll('.rzp-button').forEach(button => {
+    button.addEventListener('click', async function () {
+      const amountToPay = parseInt(this.getAttribute('data-amount'));
+      const billingId = this.getAttribute('data-billingid');
+
+      // 1. Create order on backend
+      const res = await fetch(`/create-order`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: amountToPay })
+      });
+
+      const { success, order } = await res.json();
+      if (!success) return alert('Could not initiate payment.');
+
+      // 2. Configure Razorpay checkout
+      const options = {
+        key: 'rzp_test_84nS8Ya9sCwynn',
+        amount: order.amount,
+        currency: order.currency,
+        name: 'Aarogyam',
+        description: 'Health Services',
+        order_id: order.id,
+        handler: async function (response) {
+          const verifyRes = await fetch(`/verify-payment/${billingId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(response)
+          });
+
+          const verifyData = await verifyRes.json();
+          if (verifyData.success) {
+            alert('Payment successful!');
+            window.location.href = '/patient/dashboard';
+          } else {
+            alert('Payment verification failed.');
+          }
+        },
+        theme: { color: '#1A73E8' },
+        method: {
+          upi: true,
+          card: true,
+          netbanking: true,
+          wallet: true
+        }
+      };
+
+      const rzp = new Razorpay(options);
+      rzp.open();
+    });
+  });
+</script>
+
+<!-- <a href="upi://pay?pa=9529623010@ibl&pn=Aarogyam&tn=Consultation&am=500&cu=INR">
+  <button class="btn btn-success mt-2">Pay via UPI (No Fee)</button>
+</a> -->
 
 <!-- Delete Confirmation Modal -->
 <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">

@@ -2,6 +2,13 @@ if(process.env.NODE_ENV != "production") {
   require('dotenv').config();
 }
 
+const RazorPay = require("razorpay");
+const crypto = require('crypto');
+const razorpay = new RazorPay({
+  key_id: process.env.RZP_KEY_ID,
+  key_secret: process.env.RZP_KEY_SECRET
+});
+
 const axios = require("axios");
 const express = require("express");
 const mongoose = require("mongoose");
@@ -39,6 +46,7 @@ app.use('/uploads', express.static('uploads'));
 
 const Doctor = require("./models/doctor");
 const Patient = require("./models/patient");
+const Billing = require("./models/billing");
 
 // MONGODB CONNECTION
 
@@ -261,6 +269,53 @@ app.post("/chat", async (req, res) => {
   } catch (error) {
     console.error("Together API Error:", error.response?.data || error.message);
     res.status(500).json({ error: "Failed to fetch AI response" });
+  }
+});
+
+// Create an order endpoint
+app.post('/create-order', async (req, res) => {
+  try {
+    const { amount } = req.body;      // amount in INR, e.g. 500 for ₹500
+    const options = {
+      amount: amount * 100,           // convert to paise
+      currency: 'INR',
+      receipt: `receipt_${Date.now()}`,
+    };
+    const order = await razorpay.orders.create(options);
+    res.json({ success: true, order });
+  } catch (err) {
+    console.error('Razorpay order creation failed:', err);
+    res.status(500).json({ success: false, error: 'Order creation failed' });
+  }
+});
+
+app.post('/verify-payment/:billingId', async (req, res) => {
+  // Extracts the details sent by the Razorpay handler on the frontend.
+  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+  // Creates a secure HMAC SHA256 signature using your secret key - This mirrors what Razorpay sends in razorpay_signature.
+  const hmac = crypto.createHmac('sha256', process.env.RZP_KEY_SECRET);
+  hmac.update(`${razorpay_order_id}|${razorpay_payment_id}`);
+  const expectedSignature = hmac.digest('hex');
+
+// Compares your generated signature with Razorpay's - If they match: payment is legit.
+  if (expectedSignature === razorpay_signature) {
+   try {
+      const billingId = req.params.billingId;
+
+      // ✅ Replace with your actual Mongoose model
+      const billing = await Billing.findById(billingId);
+      if (!billing) return res.status(404).json({ success: false, error: 'Billing record not found' });
+
+      billing.status = 'paid';
+      await billing.save();
+
+      return res.json({ success: true });
+    } catch (err) {
+      console.error('Error updating billing status:', err);
+      return res.status(500).json({ success: false, error: 'Failed to update billing status' });
+    }
+  } else {
+    return res.status(400).json({ success: false, error: 'Invalid signature' });
   }
 });
 

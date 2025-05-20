@@ -48,16 +48,16 @@
     <div class="form-header">
         <h2>Book an Appointment</h2>
     </div>
-    <div class="appointment-form-container mb-3">
+    <div class="appointment-form-container mb-2">
         <form id="appointmentForm" action="/patient/bookappointment" method="POST" enctype="application/x-www-form-urlencoded" class="needs-validation" novalidate>
             <div class="row">
-                <div class="col-md-6 mb-3">
+                <div class="col-md-6 mb-2">
                     <label class="form-label">First Name</label>
                     <input type="text" name="patient[firstName]" class="form-control" required>
                     <div class="invalid-feedback">First name is required.</div>
                 </div>
         
-                <div class="col-md-6 mb-3">
+                <div class="col-md-6 mb-2">
                     <label class="form-label">Last Name</label>
                     <input type="text" name="patient[lastName]" class="form-control" required>
                     <div class="invalid-feedback">Last name is required.</div>
@@ -65,7 +65,7 @@
             </div>
         
             <div class="row">
-                <div class="col-md-6 mb-3">
+                <div class="col-md-6 mb-2">
                     <label class="form-label">Gender</label>
                     <select name="patient[gender]" class="form-select" required>
                         <option value="" selected disabled>Select a gender</option>
@@ -76,20 +76,20 @@
                     <div class="invalid-feedback">Please select a gender.</div>
                 </div>
         
-                <div class="col-md-6 mb-3">
+                <div class="col-md-6 mb-2">
                     <label class="form-label">Mobile</label>
                     <input type="text" name="patient[mobile]" class="form-control" required pattern="^\d{10}$">
                     <div class="invalid-feedback">Enter a valid 10-digit mobile number.</div>
                 </div>
             </div>
         
-            <div class="mb-3">
+            <div class="mb-2">
                 <label class="form-label">Email</label>
                 <input type="email" name="patient[email]" class="form-control" required>
                 <div class="invalid-feedback">Please enter a valid email.</div>
             </div>
         
-            <div class="mb-3">
+            <div class="mb-2">
                 <label class="form-label">Select Doctor</label>
                 <select name="patient[doctorId]" class="form-select" required>
                     <option value="" selected disabled>Select a doctor</option>
@@ -100,13 +100,13 @@
                 <div class="invalid-feedback">Please select a doctor.</div>
             </div>
         
-            <div class="mb-3">
+            <div class="mb-2">
                 <label class="form-label">Appointment Date</label>
                 <input type="date" name="patient[appointmentDate]" class="form-control" required min="<%= new Date().toISOString().split('T')[0] %>">
                 <div class="invalid-feedback">Please select a date.</div>
             </div>
         
-            <div class="mb-3">
+            <div class="mb-2">
                 <label class="form-label">Time Slot</label>
                 <select name="patient[timeSlot]" class="form-select" required>
                     <option value="" selected disabled>Select a time</option>
@@ -118,7 +118,7 @@
                 <div class="invalid-feedback">Please choose a time slot.</div>
             </div>
         
-            <div class="mb-3">
+            <div class="mb-2">
                 <label class="form-label">Reason/Condition</label>
                 <textarea name="patient[reason]" class="form-control" rows="3"></textarea>
             </div>
