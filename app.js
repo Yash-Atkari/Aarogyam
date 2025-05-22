@@ -50,20 +50,20 @@ const Billing = require("./models/billing");
 
 // MONGODB CONNECTION
 
-const MongoUrl = "mongodb://127.0.0.1:27017/aarogyam";
-// const dbUrl = process.env.ATLASDB_URL;
+// const MongoUrl = "mongodb://127.0.0.1:27017/aarogyam";
+const dbUrl = process.env.ATLASDB_URL;
 
 main()
   .then(() => console.log("Connected to DB"))
   .catch((err) => console.error("Error:", err));
 
-// async function main() {
-//   await mongoose.connect(dbUrl);
-// }
-
 async function main() {
-  await mongoose.connect(MongoUrl);
+  await mongoose.connect(dbUrl);
 }
+
+// async function main() {
+//   await mongoose.connect(MongoUrl);
+// }
 
 // Configure Multer for file uploads
 const storage = multer.diskStorage({
@@ -77,20 +77,20 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// const store = MongoStore.create({
-//   mongoUrl: dbUrl,
-//   crypto: {
-//       secret: "process.env.SECRET",
-//   },
-//   touchAfter: 24 * 3600,
-// });
+const store = MongoStore.create({
+  mongoUrl: dbUrl,
+  crypto: {
+      secret: "process.env.SECRET",
+  },
+  touchAfter: 24 * 3600,
+});
 
-// store.on("error", () => {
-//   console.log("ERROR in MONGO SESSION STORE");
-// });
+store.on("error", () => {
+  console.log("ERROR in MONGO SESSION STORE");
+});
 
 const sessionOptions = {
-  // store,
+  store,
   secret: "process.env.SECRET",
   resave: false,
   saveUninitialized: true,
