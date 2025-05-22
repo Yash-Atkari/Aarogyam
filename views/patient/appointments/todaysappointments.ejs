@@ -115,12 +115,12 @@
             </div>
         </form>
     
-    <div class="appointments-container mt-3">
+    <div class="appointments-container mt-3 table-responsive">
         <h5>Appointments</h5>
 
         <% if (appointments && appointments.length > 0) { %> 
             <% appointments.forEach(appointment => { %>
-                <div class="appointment-card card">
+                <div class="appointment-card">
                     <div class="doctor-info">
                         <div>
                             <strong><%= appointment.doctorId.username %></strong> <br>

@@ -111,54 +111,47 @@
     <i class="bi bi-list"></i>
 </button>
 
-<!-- Sidebar -->
-<div class="col-auto sidebar">
-    <div class="text-center py-4">
-        <i class="fa-solid fa-user"></i>
-        <h5 class="mb-0"></h5>
-        <small class="text-muted">Doctor</small>
-    </div>
+<div class="sidebar table-responsive bg-white border-end" style="width:250px; position:fixed; top:60px; padding-top:1.5rem;">
+  <table class="table table-borderless ms-3">
+    <tbody>
+      <tr>
+        <td class="text-center" colspan="2">
+          <i class="fa-solid fa-user-doctor fa-2x mb-2 me-4"></i><br>
+          <small class="text-muted me-4">Doctor</small>
+        </td>
+      </tr>
 
-    <nav class="px-3 mt-4">
-        <hr>
-        <ul class="nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link" href="/doctor/dashboard">
-                    <i class="bi bi-house-door"></i> Dashboard
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/doctor/appointments">
-                    <i class="bi bi-calendar"></i> Appointments
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/doctor/patients">
-                    <i class="bi bi-person"></i> Patients
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <i class="bi bi-chat-dots"></i> Chat
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/auth/logout">
-                    <i class="bi bi-box-arrow-right"></i> Logout
-                </a>
-            </li>
-        </ul>
+      <tr>
+        <td><i class="bi bi-house-door"></i></td>
+        <td><a href="/doctor/dashboard" class="text-decoration-none">Dashboard</a></td>
+      </tr>
 
-        <div class="text-muted small px-3 mb-2 mt-4">Apps</div>
-        <ul class="nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <i class="bi bi-calendar-week"></i> Calendar
-                    <span class="badge bg-primary rounded-pill ms-2">New</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
+      <tr>
+        <td><i class="bi bi-calendar"></i></td>
+        <td><a href="/doctor/appointments" class="text-decoration-none">Appointments</a></td>
+      </tr>
+
+      <tr>
+        <td><i class="bi bi-person"></i></td>
+        <td><a href="/doctor/patients" class="text-decoration-none">Patients</a></td>
+      </tr>
+
+      <tr>
+        <td><i class="bi bi-chat-dots"></i></td>
+        <td><a href="/doctor/chat" class="text-decoration-none">Chat</a></td>
+      </tr>
+
+      <tr>
+        <td><i class="bi bi-calendar-week"></i></td>
+        <td><a href="/doctor/calendar" class="text-decoration-none">Calendar <span class="badge bg-primary rounded-pill ms-2">New</span></a></td>
+      </tr>
+
+      <tr>
+        <td><i class="bi bi-box-arrow-right text-danger"></i></td>
+        <td><a href="/auth/logout" class="text-decoration-none text-danger">Logout</a></td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 
 <!-- JavaScript for Sidebar Toggle -->

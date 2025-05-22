@@ -113,85 +113,61 @@
 </button>
 
 <!-- Sidebar -->
-<div class="sidebar py-2">
-  <div class="text-center py-4">
-      <i class="fa-solid fa-user"></i>
-      <h5 class="mb-0"></h5>
-      <small class="text-muted">Patient</small>
-  </div>
-
-  <nav class="px-3 mt-4">
-      <hr>
-      <ul class="nav flex-column">
-          <li class="nav-item">
-              <a class="nav-link" href="/patient/dashboard">
-                <i class="bi bi-house-door"></i> Dashboard
-              </a>
-          </li>
-
-          <!-- Appointments Dropdown -->
-          <li class="nav-item">
-              <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#appointmentsDropdown">
-                  <i class="bi bi-calendar"></i> Appointments
-              </a>
-              <ul class="collapse list-unstyled px-3" id="appointmentsDropdown">
-                  <li><a class="nav-link" href="/patient/bookappointment">Book Appointment</a></li>
-                  <li><a class="nav-link" href="/patient/upcomingappointments">Upcoming Appointments</a></li>
-                  <li><a class="nav-link" href="/patient/todaysappointments">Today's Appointments</a></li>
-                  <li><a class="nav-link" href="/patient/pastappointments">Past Appointments</a></li>
-              </ul>
-          </li>
-          
-          <li class="nav-item">
-              <a class="nav-link" href="/patient/healthrecords">
-                  <i class="bi bi-clipboard"></i> Medical Records
-              </a>
-          </li>
-
-          <li class="nav-item">
-              <a class="nav-link" href="/patient/prescriptions">
-                  <i class="bi bi-file-text"></i> Prescriptions
-              </a>
-          </li>
-
-          <li class="nav-item">
-              <a class="nav-link" href="/patient/billings">
-                  <i class="bi bi-receipt"></i> Billing
-              </a>
-          </li>
-
-          <li class="nav-item">
-              <a class="nav-link" href="/patient/doctors">
-                  <i class="bi bi-people"></i> Doctors
-              </a>
-          </li>
-
-          <li class="nav-item">
-              <a class="nav-link" href="/patient/chat">
-                  <i class="bi bi-chat-square-text"></i> Chat
-              </a>
-          </li>
-
-          <li class="nav-item">
-              <a class="nav-link" href="/auth/logout">
-                  <i class="bi bi-box-arrow-right"></i> Logout
-              </a>
-          </li>
-          <li class="nav-item">
-              <a class="nav-link" href="/auth/logout">
-                  <i class="bi bi-exclamation-circle" style="opacity: 0.1;"></i>
-
-              </a>
-          </li>
-          <li class="nav-item">
-              <a class="nav-link" href="/auth/logout">
-                  <i class="bi bi-exclamation-circle" style="opacity: 0.1;"></i>
-
-              </a>
-          </li>
-          
-      </ul>
-  </nav>
+<div
+  class="sidebar table-responsive bg-white border-end"
+  style="width:250px; position:fixed; padding-top:1.5rem;"
+>
+  <!-- Now everything inside will scroll vertically if it grows past the viewport -->
+  <table class="table table-borderless ms-3">
+    <tbody>
+      <tr>
+        <td class="text-center" colspan="2">
+          <i class="fa-solid fa-user fa-2x mb-2 me-4"></i><br>
+          <small class="text-muted me-4">Patient</small>
+        </td>
+      </tr>
+      <tr>
+        <td><i class="bi bi-house-door"></i></td>
+        <td><a href="/patient/dashboard" class="text-decoration-none">Dashboard</a></td>
+      </tr>
+      <tr>
+        <td><i class="bi bi-calendar"></i></td>
+        <td>
+          <!-- simply indent submenu with a nested table -->
+          <table class="table table-borderless mb-0">
+            <tr><td><a href="/patient/bookappointment" class="text-decoration-none">• Book Appointment</a></td></tr>
+            <tr><td><a href="/patient/upcomingappointments" class="text-decoration-none">• Upcoming</a></td></tr>
+            <tr><td><a href="/patient/todaysappointments" class="text-decoration-none">• Today</a></td></tr>
+            <tr><td><a href="/patient/pastappointments" class="text-decoration-none">• Past</a></td></tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td><i class="bi bi-clipboard"></i></td>
+        <td><a href="/patient/healthrecords" class="text-decoration-none">Medical Records</a></td>
+      </tr>
+      <tr>
+        <td><i class="bi bi-file-text"></i></td>
+        <td><a href="/patient/prescriptions" class="text-decoration-none">Prescriptions</a></td>
+      </tr>
+      <tr>
+        <td><i class="bi bi-receipt"></i></td>
+        <td><a href="/patient/billings" class="text-decoration-none">Billing</a></td>
+      </tr>
+      <tr>
+        <td><i class="bi bi-people"></i></td>
+        <td><a href="/patient/doctors" class="text-decoration-none">Doctors</a></td>
+      </tr>
+      <tr>
+        <td><i class="bi bi-chat-square-text"></i></td>
+        <td><a href="/patient/chat" class="text-decoration-none">Chat</a></td>
+      </tr>
+      <tr>
+        <td><i class="bi bi-box-arrow-right text-danger"></i></td>
+        <td><a href="/auth/logout" class="text-decoration-none text-danger">Logout</a></td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 
 <!-- JavaScript for Sidebar Toggle -->

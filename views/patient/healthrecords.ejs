@@ -6,7 +6,7 @@
     .record-container {
         max-width: 100%;
         background: white;
-        padding: 20px;
+        padding: 10px;
         border-radius: 10px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
@@ -52,7 +52,7 @@
     }
 </style>
 
-<div class="container mt-4">
+<div class="container ">
     <div class="page-header">
         <h2 class="text-center">Health Records</h2>
     </div>
@@ -62,9 +62,9 @@
             <div class="alert alert-warning text-center">No medical records found.</div>
         <% } else { %>
             <% records.forEach(record => { %>
-                    <div class="card-body">
-                        <h4 class="card-title"><%= record.recordType %></h4>
-                        <p class="card-text"><%= record.summary %></p>
+                    <div class="">
+                        <h4 class=""><%= record.recordType %></h4>
+                        <p class=""><%= record.summary %></p>
                         <p><strong>Doctor:</strong> <%= record.doctorId.username %></p>
 
                         <% if (record.attachments && record.attachments.length > 0) { %>
