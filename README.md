@@ -31,9 +31,9 @@ A digital platform designed to securely manage student healthcare records, strea
 
 <img width="1901" height="908" alt="image" src="https://github.com/user-attachments/assets/24473bc1-393d-42e5-a49b-cbbb34dc46ba" />
 
-<img width="1919" height="908" alt="image" src="https://github.com/user-attachments/assets/91a5e652-4412-493f-8871-7caff05244f3" />
+<img width="1919" height="908" alt="image" src="https://github.com/user-attachments/assets/c1590a0e-8332-4787-bf87-e1d6fe41824d" />
 
-<img width="1919" height="910" alt="image" src="https://github.com/user-attachments/assets/423b2356-f2fd-42b7-8485-bc06e6c08a47" />
+<img width="1919" height="910" alt="image" src="https://github.com/user-attachments/assets/a8da721e-8674-49ec-80f9-c7bcf11a6e59" />
 
 <img width="1919" height="907" alt="image" src="https://github.com/user-attachments/assets/de57c897-dd22-43ff-a962-80ff67e1ab47" />
 
