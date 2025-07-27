@@ -1,35 +1,48 @@
-Healthcare Management System
+# Aarogyam – Healthcare Management System (HMS)
 
 A digital platform designed to securely manage student healthcare records, streamline documentation, and improve accessibility within educational institutes.
 
-Project Progress (50% Completed)
-At this stage, we have implemented:
+## Live Demo
 
-✅ User Authentication – Secure login/signup using JWT-based authentication.
+[View Aarogyam](https://your-deployment-url.com)
 
-✅ Student Dashboard – View medical history, prescriptions, and past treatments.
+## Tech Stack
 
-✅ Health Record Storage – Backend API to store & retrieve medical records.
+- **Frontend:** EJS, Bootstrap
+- **Backend:** Node.js + Express.js
+- **Database:** MongoDB
+- **Authentication:** Passport, Firebase 
+- **Notifications:** None
+- **Cloud Storage:** Cloudinary (for medical reports & prescriptions)
+- **AI Chatbot:** Together API (Mental Health Assessment)
+- **Payment Gateway:** Razorpay (Test Mode)
 
-✅ Automated Leave Documentation – System generates medical certificates and leave requests.
+## Features:
+- **User Authentication** – Secure login/signup using passport-based authentication.
+- **Student Dashboard** – View medical history, prescriptions, and past treatments.
+- **Health Record Storage** – Backend API to store & retrieve medical records.
+- **Automated Leave Documentation** – System generates medical certificates and leave requests.
+- **Appointment Booking System** – Initial setup for scheduling doctor appointments.
+- **Mental Health Chatbot** – Integrated mental health assessment using the Together API.
+- **Razorpay Integration** – Payment gateway integrated (currently in test mode).
+- **Basic UI/UX** – Web & mobile interfaces designed using ejs.
 
-✅ Appointment Booking System – Initial setup for scheduling doctor appointments.
+## Screenshots:
 
-✅ Basic UI/UX – Web & mobile interfaces designed using React.js and Flutter.
+<img width="1901" height="908" alt="image" src="https://github.com/user-attachments/assets/24473bc1-393d-42e5-a49b-cbbb34dc46ba" />
 
-Tech Stack
+<img width="1919" height="908" alt="image" src="https://github.com/user-attachments/assets/91a5e652-4412-493f-8871-7caff05244f3" />
 
-🖥 Frontend: React.js (Web), Flutter (Mobile)
+<img width="1919" height="910" alt="image" src="https://github.com/user-attachments/assets/423b2356-f2fd-42b7-8485-bc06e6c08a47" />
 
-🗄 Backend: Node.js with Express.js
+<img width="1919" height="907" alt="image" src="https://github.com/user-attachments/assets/de57c897-dd22-43ff-a962-80ff67e1ab47" />
 
-💾 Database: MongoDB
+<img width="1919" height="910" alt="image" src="https://github.com/user-attachments/assets/63bdd586-6999-40bc-b5f9-53c79b1f3840" />
 
-🔐 Authentication: JWT & bcrypt
+<img width="1919" height="913" alt="image" src="https://github.com/user-attachments/assets/de80ecd9-385d-46d7-8099-3bb53febf5bc" />
 
-📡 Notifications: Twilio / Firebase Cloud Messaging
+<img width="1919" height="908" alt="image" src="https://github.com/user-attachments/assets/4fa3542a-02e2-42cd-8237-cfab6133608d" />
 
-☁ Cloud Storage: AWS S3 (for medical reports & prescriptions)
 
 How to Run the Project
 
