@@ -43,35 +43,48 @@ A digital platform designed to securely manage student healthcare records, strea
 
 <img width="1919" height="908" alt="image" src="https://github.com/user-attachments/assets/4fa3542a-02e2-42cd-8237-cfab6133608d" />
 
+## How to Run the Project
 
-How to Run the Project
+### 1. Clone the Repository
 
-1. Clone the Repository
-
-git clone https://github.com/your-repo-link.git
+```bash
+https://github.com/Yash-Atkari/Aarogyam.git
 cd healthcare-management-system
-
-2. Install Dependencies
-Backend Setup:
-
-cd backend
+```
+### 2. Install dependencies
+```bash
 npm install
-
-Frontend Setup:
-cd frontend
-npm install
-
-3. Configure Environment Variables
-Create a .env file in the backend directory and add:
-
+```
+### 3. Create a .env file inside the backend folder and add
+```bash
+PORT=your_port
 MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_secret_key
-AWS_ACCESS_KEY=your_aws_access_key
-AWS_SECRET_KEY=your_aws_secret_key
+CLOUDINARY_CLOUD_NAME=your_cloudinary_name
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+TOGETHER_API_KEY=your_together_api_key
+RAZORPAY_KEY_ID=your_razorpay_key_id
+RAZORPAY_KEY_SECRET=your_razorpay_secret_key
+```
+### 4. Start the backend server
+```bash
+npm app.js
+```
+The backend will run on:
+http://localhost:xxxx
 
-Current Limitations & Next Steps
-🔹 Pending Features: Appointment confirmation, advanced filtering, and notifications, document generation.
+## Contributing
 
-🔹 Next Focus: Enhancing UI, securing data with encryption, and integrating email/SMS notifications.
+We welcome contributions to improve Aarogyam!
 
-This guide ensures the organizers can set up and test the project easily. Let me know if you need any refinements! 🚀
+If you'd like to add a feature, fix a bug, or enhance the UI/UX:
+
+1. Fork the repository
+2. Create a new branch (`git checkout -b feature-name`)
+3. Commit your changes (`git commit -m "Add new feature"`)
+4. Push to your branch (`git push origin feature-name`)
+5. Create a Pull Request
+
+Please ensure your code follows clean coding practices and includes comments or documentation where necessary.
+
+Feel free to raise issues or suggestions — let's build this better together! 🚀
