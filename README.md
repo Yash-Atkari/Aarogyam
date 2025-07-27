@@ -70,8 +70,7 @@ RAZORPAY_KEY_SECRET=your_razorpay_secret_key
 ```bash
 npm app.js
 ```
-The backend will run on:
-http://localhost:xxxx
+The backend will run on: `http://localhost:xxxx`
 
 ## Contributing
 
