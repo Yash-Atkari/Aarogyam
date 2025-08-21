@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
-const path = require("path");
 const doctorController = require("../controllers/doctor");
+
+const Doctor = require("../models/doctor");
 
 // Configure multer for uploads
 const storage = require("../cloudConfig.js").storage;
@@ -43,5 +44,53 @@ router
 // POST-only routes
 router.post("/generate-certificate/:patientId", doctorController.generateCertificate);
 router.post("/appointments/confirm/:id", doctorController.confirmAppointment);
+
+router
+.route("/profile/:id")
+.get(async (req, res) => {
+  const doctorId = req.params.id;
+  const doctor = await Doctor.findById(doctorId);
+  if (!doctor) {
+    return res.status(404).json({
+      success: false,
+      message: "Doctor not found"
+    });
+  }
+  res.render("doctor/profile", { doctor });
+})
+.post(async (req, res) => {
+  try {
+    const { specialization, experience, hospital, consultantFees, phone } = req.body.doctor;
+    const doctorId = req.user._id;
+
+    // Build update object only with non-empty fields
+    const updates = {};
+    if (specialization) updates.specialization = specialization;
+    if (experience) updates.experience = experience;
+    if (hospital) updates.hospital = hospital;
+    if (consultantFees) updates.consultantFees = consultantFees;
+    if (phone) updates.phone = phone;
+
+    const updatedDoctor = await Doctor.findByIdAndUpdate(
+      doctorId,
+      updates,
+      { new: true }
+    );
+
+    if (!updatedDoctor) {
+      return res.status(404).json({
+        success: false,
+        message: "Doctor not found"
+      });
+    }
+
+    req.flash("success", "Profile updated successfully.");
+    res.redirect("/doctor/dashboard");
+  } catch (err) {
+    console.error("Error updating doctor data:", err);
+    req.flash("danger", "Internal Server Error.");
+    res.redirect("/doctor/dashboard");
+  }
+});
 
 module.exports = router;

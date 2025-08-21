@@ -1,10 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const patientController = require("../controllers/patient");
+
 const { isAuthenticated, isAuthorized } = require("../middleware");
-const { appointmentSchema } = require('../schema');
+
 const Appointment = require("../models/appointment");
 const Billing = require("../models/billing");
+const Patient = require("../models/patient");
+
+const patientController = require("../controllers/patient");
 
 // GET routes
 router.get("/dashboard", isAuthenticated, patientController.dashboard);
@@ -54,5 +57,53 @@ router
 router.get("/chat", (req, res) => {
   res.render("patient/chat");
 });  
+
+router
+.route("/profile/:id")
+.get(async (req, res) => {
+  const patientId = req.params.id;
+  const patient = await Patient.findById(patientId);
+  if (!patient) {
+    return res.status(404).json({
+      success: false,
+      message: "Patient not found"
+    });
+  }
+  res.render("patient/profile", { patient });
+})
+.post(async (req, res) => {
+  try {
+    const { gender, age, height, weight, bloodType } = req.body.patient;
+    const patientId = req.user._id;
+
+    // Build update object only with non-empty fields
+    const updates = {};
+    if (gender) updates.gender = gender;
+    if (age) updates.age = age;
+    if (height) updates.height = height;
+    if (weight) updates.weight = weight;
+    if (bloodType) updates.bloodType = bloodType;
+
+    const updatedPatient = await Patient.findByIdAndUpdate(
+      patientId,
+      updates,
+      { new: true }
+    );
+
+    if (!updatedPatient) {
+      return res.status(404).json({
+        success: false,
+        message: "Patient not found"
+      });
+    }
+
+    req.flash("success", "Profile updated successfully.");
+    res.redirect("/patient/dashboard");
+  } catch (err) {
+    console.error("Error updating patient data:", err);
+    req.flash("danger", "Internal Server Error.");
+    res.redirect("/patient/dashboard");
+  }
+});
 
 module.exports = router;

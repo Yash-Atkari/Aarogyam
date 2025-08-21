@@ -1,0 +1,114 @@
+<%- layout("./layouts/patientboilerplate") %>
+
+<style>
+    .form-container {
+      background: hsl(213, 85%, 97%);
+      padding: 2em;
+      border-radius: 30px;
+      box-shadow: 0 0 2em hsl(231, 62%, 94%);
+      width: 100%;
+      max-width: 900px;
+      margin: auto;
+      margin-bottom: 2rem;
+    }
+
+    h1 {
+      font-weight: 600;
+      color: #333;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      font-weight: 500;
+    }
+
+    .form-control {
+      border-radius: 20px;
+      padding: 1em;
+      box-shadow: 0 0 1em hsl(231, 62%, 94%);
+      border: none;
+    }
+
+    .form-control:focus {
+      box-shadow: 0 0 0 2px #1A73E8;
+      outline: none;
+    }
+
+    .btn-primary {
+      padding: 1em;
+      background: #1A73E8;
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px #1A73E8;
+    }
+
+    @media (max-width: 768px) {
+      .form-container {
+        padding: 1.5em;
+      }
+    }
+  </style>
+
+<div class="container">
+    <form action="/patient/profile/<%= patient._id %>" method="POST" class="form-container needs-validation" novalidate>
+        <div class="row">
+          <!-- Gender -->
+          <div class="mb-3 col-md-6">
+            <label for="gender" class="form-label">Gender <span class="text-danger">*</span></label>
+            <select name="patient[gender]" id="gender" class="form-control" required>
+              <option value="">Select Gender</option>
+              <option value="male" <%= patient.gender === 'male' ? 'selected' : '' %>>Male</option>
+              <option value="female" <%= patient.gender === 'female' ? 'selected' : '' %>>Female</option>
+              <option value="other" <%= patient.gender === 'other' ? 'selected' : '' %>>Other</option>
+            </select>
+            <div class="invalid-feedback">Please select a gender.</div>
+          </div>
+          <!-- Age -->
+          <div class="mb-3 col-md-6">
+            <label for="age" class="form-label">Age <span class="text-danger">*</span></label>
+            <input type="number" name="patient[age]" id="age" value="<%= patient.age %>" placeholder="Enter age" class="form-control" required>
+            <div class="invalid-feedback">Please provide your age.</div>
+          </div>
+        </div>
+      
+        <div class="row">
+          <!-- Height -->
+          <div class="mb-3 col-md-6">
+            <label for="height" class="form-label">Height (cm)</label>
+            <input type="number" name="patient[height]" id="height" value="<%= patient.height %>" placeholder="Enter height in cm" class="form-control">
+          </div>
+          <!-- Weight -->
+          <div class="mb-3 col-md-6">
+            <label for="weight" class="form-label">Weight (kg)</label>
+            <input type="number" name="patient[weight]" id="weight" value="<%= patient.weight %>" placeholder="Enter weight in kg" class="form-control">
+          </div>
+        </div>
+      
+        <!-- Blood Type -->
+        <div class="mb-3">
+          <label for="bloodType" class="form-label">Blood Type</label>
+          <select name="patient[bloodType]" id="bloodType" class="form-control" required>
+            <option value="">Select Blood Type</option>
+            <option value="A+"  <%= patient.bloodType === 'A+'  ? 'selected' : '' %>>A+</option>
+            <option value="A-"  <%= patient.bloodType === 'A-'  ? 'selected' : '' %>>A-</option>
+            <option value="B+"  <%= patient.bloodType === 'B+'  ? 'selected' : '' %>>B+</option>
+            <option value="B-"  <%= patient.bloodType === 'B-'  ? 'selected' : '' %>>B-</option>
+            <option value="O+"  <%= patient.bloodType === 'O+'  ? 'selected' : '' %>>O+</option>
+            <option value="O-"  <%= patient.bloodType === 'O-'  ? 'selected' : '' %>>O-</option>
+            <option value="AB+" <%= patient.bloodType === 'AB+' ? 'selected' : '' %>>AB+</option>
+            <option value="AB-" <%= patient.bloodType === 'AB-' ? 'selected' : '' %>>AB-</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Update Profile</button>
+    </form>
+</div>

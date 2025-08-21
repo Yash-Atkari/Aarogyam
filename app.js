@@ -9,9 +9,10 @@ const razorpay = new RazorPay({
   key_secret: process.env.RZP_KEY_SECRET
 });
 
-const axios = require("axios");
 const express = require("express");
 const mongoose = require("mongoose");
+
+const axios = require("axios");
 const path = require("path");
 const engine = require('ejs-mate');
 const session = require("express-session");
@@ -42,28 +43,23 @@ app.engine('ejs', engine);
 app.use(methodOverride("_method"));
 app.use('/uploads', express.static('uploads'));
 
-// MODELS
+// Models
 
 const Doctor = require("./models/doctor");
 const Patient = require("./models/patient");
 const Billing = require("./models/billing");
 
-// MONGODB CONNECTION
+// MongoDB connection
 
-// const MongoUrl = "mongodb://127.0.0.1:27017/aarogyam";
-const dbUrl = process.env.ATLASDB_URL;
+const MongoUrl =  /* process.env.ATLASDB_URL ||*/ "mongodb://127.0.0.1:27017/aarogyam";
 
 main()
   .then(() => console.log("Connected to DB"))
   .catch((err) => console.error("Error:", err));
 
 async function main() {
-  await mongoose.connect(dbUrl);
+  await mongoose.connect(MongoUrl);
 }
-
-// async function main() {
-//   await mongoose.connect(MongoUrl);
-// }
 
 // Configure Multer for file uploads
 const storage = multer.diskStorage({
@@ -77,20 +73,20 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-const store = MongoStore.create({
-  mongoUrl: dbUrl,
-  crypto: {
-      secret: "process.env.SECRET",
-  },
-  touchAfter: 24 * 3600,
-});
+// const store = MongoStore.create({
+//   mongoUrl: dbUrl,
+//   crypto: {
+//       secret: "process.env.SECRET",
+//   },
+//   touchAfter: 24 * 3600,
+// });
 
-store.on("error", () => {
-  console.log("ERROR in MONGO SESSION STORE");
-});
+// store.on("error", () => {
+//   console.log("ERROR in MONGO SESSION STORE");
+// });
 
 const sessionOptions = {
-  store,
+  // store,
   secret: "process.env.SECRET",
   resave: false,
   saveUninitialized: true,
@@ -213,21 +209,21 @@ app.post('/auth/google-login', async (req, res) => {
   }
 });
 
-// HOME PAGE
+// Home page
 
 app.get("/", (req, res) => res.render("dashboard"));
 
-// AUTH ROUTES
+// Auth routes
 
 const authRouter = require("./routes/auth");
 app.use("/auth", authRouter);
 
-// PATIENT ROUTES
+// Patient routes
 
 const patientRouter = require("./routes/patient");
 app.use("/patient", patientRouter);
 
-// DOCTOR ROUTES
+// Doctor routes
 
 const doctorRouter = require("./routes/doctor");
 app.use("/doctor", doctorRouter);
@@ -319,7 +315,7 @@ app.post('/verify-payment/:billingId', async (req, res) => {
   }
 });
 
-// ERROR HANDLER
+// Error handler
 
 app.all("*", (req, res, next) => {
   next(new ExpressError(404, "Page not found!"));
@@ -330,9 +326,9 @@ app.use((err, req, res, next) => {
   res.status(statusCode).render("error.ejs", { err });
 });
 
-// SERVER LISTENING
+// Server listening
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server listening on http://localhost:${PORT}/`);
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Server listening on http://localhost:${port}/`);
 });

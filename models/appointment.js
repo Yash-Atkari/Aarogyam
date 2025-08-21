@@ -26,8 +26,7 @@ const appointmentSchema = new Schema({
         default: "pending"
     },
     reason: {
-        type: String,
-        required: true
+        type: String
     },
     notes: {
         type: String

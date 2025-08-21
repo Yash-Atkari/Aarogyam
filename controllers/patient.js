@@ -1,6 +1,3 @@
-const fs = require("fs");
-const path = require("path");
-
 const Doctor = require("../models/doctor");
 const Patient = require("../models/patient");
 const Appointment = require("../models/appointment");
@@ -8,11 +5,8 @@ const HealthRecord = require("../models/healthrecord");
 const Billing = require("../models/billing");
 
 const { appointmentSchema } = require('../schema');
-const ExpressError = require("../utils/ExpressError");
 
-/**
- * Render the patient's dashboard.
- */
+// Render the patient's dashboard.
 module.exports.dashboard = async (req, res, next) => {
   try {
     const patient = await Patient.findById(req.user._id);
@@ -28,9 +22,7 @@ module.exports.dashboard = async (req, res, next) => {
   }
 };
 
-/**
- * Render upcoming appointments.
- */
+// Render upcoming appointments.
 module.exports.upcomingAppointments = async (req, res, next) => {
   try {
     const patientId = req.user._id;
@@ -52,9 +44,7 @@ module.exports.upcomingAppointments = async (req, res, next) => {
   }
 };
 
-/**
- * Render today's appointments.
- */
+// Render today's appointments.
 module.exports.todaysAppointments = async (req, res, next) => {
   try {
     const patientId = req.user._id;
@@ -78,9 +68,7 @@ module.exports.todaysAppointments = async (req, res, next) => {
   }
 };
 
-/**
- * Render past appointments.
- */
+// Render past appointments.
 module.exports.pastAppointments = async (req, res, next) => {
   try {
     const patientId = req.user._id;
@@ -102,10 +90,8 @@ module.exports.pastAppointments = async (req, res, next) => {
   }
 };
 
-/**
- * Cancel an appointment.
- * This function is used for upcoming, today's, and past appointments.
- */
+// Cancel an appointment.
+// This function is used for upcoming, today's, and past appointments.
 module.exports.cancelAppointment = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -122,9 +108,7 @@ module.exports.cancelAppointment = async (req, res, next) => {
   }
 };
 
-/**
- * Filter appointments based on query parameters.
- */
+// Filter appointments based on query parameters.
 module.exports.filterAppointments = async (req, res, next) => {
   try {
     const { search, date, status, timeSlot } = req.query;
@@ -159,9 +143,7 @@ module.exports.filterAppointments = async (req, res, next) => {
   }
 };
 
-/**
- * Render appointment booking page.
- */
+// Render appointment booking page.
 module.exports.bookAppointmentPage = async (req, res, next) => {
   try {
     const doctors = await Doctor.find();
@@ -173,9 +155,7 @@ module.exports.bookAppointmentPage = async (req, res, next) => {
   }
 };
 
-/**
- * Render health records for the patient.
- */
+// Render health records for the patient.
 module.exports.healthRecords = async (req, res, next) => {
   try {
     const patientId = req.user._id;
@@ -188,9 +168,7 @@ module.exports.healthRecords = async (req, res, next) => {
   }
 };
 
-/**
- * Render prescriptions for the patient.
- */
+// Render prescriptions for the patient.
 module.exports.prescriptions = async (req, res, next) => {
   try {
     const patientId = req.user._id;
@@ -203,9 +181,7 @@ module.exports.prescriptions = async (req, res, next) => {
   }
 };
 
-/**
- * Remove a prescription (file) from an appointment's attachments.
- */
+// Remove a prescription (file) from an appointment's attachments.
 module.exports.deletePrescription = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -233,9 +209,7 @@ module.exports.deletePrescription = async (req, res, next) => {
   }
 };
 
-/**
- * Render billing records for the patient.
- */
+// Render billing records for the patient.
 module.exports.billings = async (req, res, next) => {
   try {
     const patientId = req.user._id;
@@ -248,9 +222,7 @@ module.exports.billings = async (req, res, next) => {
   }
 };
 
-/**
- * Delete a billing file from the attachments.
- */
+// Delete a billing file from the attachments.
 module.exports.deleteBilling = async (req, res, next) => {
   try {
     const billingId = req.params.id;
@@ -279,9 +251,7 @@ module.exports.deleteBilling = async (req, res, next) => {
   }
 };
 
-/**
- * Render the patient's list of doctors.
- */
+// Render the patient's list of doctors.
 module.exports.doctors = async (req, res, next) => {
   try {
     const patientId = req.user._id;
@@ -298,9 +268,7 @@ module.exports.doctors = async (req, res, next) => {
   }
 };
 
-/**
- * Process booking of a new appointment.
- */
+// Process booking of a new appointment.
 module.exports.bookAppointment = async (req, res, next) => {
   try {
     // User must be authenticated; otherwise, this route should not be reached.
@@ -333,7 +301,7 @@ module.exports.bookAppointment = async (req, res, next) => {
 
     const savedAppointment = await newAppointment.save();
 
-    // Update both doctor and patient records with the new appointment
+    // // Update both doctor and patient records with the new appointment
     await Doctor.findByIdAndUpdate(doctorId, { $push: { appointments: savedAppointment._id } });
     await Patient.findByIdAndUpdate(patientId, { $push: { appointments: savedAppointment._id } });
 
