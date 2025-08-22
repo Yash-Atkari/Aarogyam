@@ -8,18 +8,18 @@ const doctorSchema = new Schema ({
         required: true,
         unique: true
     },
+    fullName: {
+        type: String
+    },
+    qualification: {
+        type: String,
+    },
     specialization: {
         type: String
     },
     experience: {
         type: Number
     },
-    availabilitySlots: [
-        {
-            day: String,
-            time: String  
-        }
-    ],
     hospital: {
         type: String
     },
@@ -29,14 +29,18 @@ const doctorSchema = new Schema ({
     phone: {
         type: String
     },
-    profile: {
-        type: String,
-    },
     role: {
         type: String,
         enum: ['admin', 'doctor', 'patient'],
         default: 'doctor'
     },
+    availabilitySlots: [
+        {
+            day: { type: String },
+            startTime: { type: String },
+            endTime: { type: String }
+        }
+    ],
     appointments: [
         {
             type: Schema.Types.ObjectId,

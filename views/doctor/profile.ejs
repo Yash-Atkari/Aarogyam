@@ -62,6 +62,31 @@
 <div class="container">
     <form action="/doctor/profile/<%= doctor._id %>" method="POST" class="form-container needs-validation" novalidate>
         <div class="row">
+          <div class="col-12">
+            <h1 class="fs-2">Update Profile</h1>
+          </div>
+        </div>
+        
+        <!-- Full Name -->
+        <div class="mb-3">
+            <label for="fullName" class="form-label">Full Name <span class="text-danger">*</span></label>
+            <input type="text" name="doctor[fullName]" id="fullName" value="<%= doctor.fullName %>" placeholder="Enter full name" class="form-control" required>
+            <div class="invalid-feedback">Please provide a full name.</div>
+        </div>
+
+        <!-- Email -->
+        <div class="mb-3">
+            <label for="email" class="form-label">Email Address <span class="text-danger">*</span></label>
+            <input type="email" name="doctor[email]" id="email" value="<%= doctor.email %>" placeholder="Enter email address" class="form-control" disabled required>
+            <div class="invalid-feedback">Please provide a valid email address.</div>
+        </div>
+
+        <!-- Qualification -->
+        <div class="mb-3">
+            <label for="qualification" class="form-label">Qualification</label>
+            <input type="text" name="doctor[qualification]" id="qualification" value="<%= doctor.qualification %>" placeholder="Enter qualification" class="form-control">
+        </div>
+      <div class="row">
           <!-- Specialization -->
           <div class="mb-3 col-md-6">
             <label for="specialization" class="form-label">Specialization <span class="text-danger">*</span></label>
@@ -97,6 +122,8 @@
           <input type="text" name="doctor[phone]" id="phone" value="<%= doctor.phone %>" placeholder="Enter phone number" class="form-control" required>
           <div class="invalid-feedback">Please provide a valid phone number.</div>
         </div>
+        <!-- Availaibility Slots -->
+         
 
         <button type="submit" class="btn btn-primary">Update Profile</button>
     </form>

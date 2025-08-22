@@ -73,16 +73,19 @@ router
 })
 .post(async (req, res) => {
   try {
-    const { gender, age, height, weight, bloodType } = req.body.patient;
+    const { fullName, gender, age, height, weight, bloodType, phone, address } = req.body.patient;
     const patientId = req.user._id;
 
     // Build update object only with non-empty fields
     const updates = {};
+    if (fullName) updates.fullName = fullName;
     if (gender) updates.gender = gender;
     if (age) updates.age = age;
     if (height) updates.height = height;
     if (weight) updates.weight = weight;
     if (bloodType) updates.bloodType = bloodType;
+    if (phone) updates.phone = phone;
+    if (address) updates.address = address;
 
     const updatedPatient = await Patient.findByIdAndUpdate(
       patientId,

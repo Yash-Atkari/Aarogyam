@@ -103,13 +103,17 @@
   </div>
 
   <div class="patient-info">
-      <h3>Details:</h3>
+        <h3>Patient Information:</h3>
       <ul>
+          <li><strong>Full Name:</strong> <%= patient.fullName %></li>
+          <li><strong>Email:</strong> <%= patient.email %></li>
           <li><strong>Gender:</strong> <%= patient.gender %></li>
           <li><strong>Age:</strong> <%= patient.age %> years old</li>
           <li><strong>Height:</strong> <%= patient.height %> cm</li>
           <li><strong>Weight:</strong> <%= patient.weight %> kg</li>
           <li><strong>Blood Type:</strong> <%= patient.bloodType %></li>
+          <li><strong>Phone:</strong> <%= patient.phone %></li>
+          <li><strong>Address:</strong> <%= patient.address %></li>
       </ul>
       <a href="/patient/profile/<%= patient._id %>" class="btn btn-primary">Update</a>
   </div>

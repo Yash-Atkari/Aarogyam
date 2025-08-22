@@ -139,12 +139,15 @@
     </div>
 
     <div class="doctor-info">
-        <h3>Details:</h3>
+        <h3>Doctor Information:</h3>
         <ul>
+            <li><strong>Full Name:</strong> <%= doctor.fullName %></li>
+            <li><strong>Email:</strong> <%= doctor.email %></li>
+            <li><strong>Qualification:</strong> <%= doctor.qualification %></li>
             <li><strong>Specialization:</strong> <%= doctor.specialization %></li>
             <li><strong>Experience:</strong> <%= doctor.experience %> years old</li>
             <li><strong>Hospital:</strong> <%= doctor.hospital %></li>
-            <li><strong>ConsultantFees:</strong> <%= doctor.consultantFees %></li>
+            <li><strong>Consultant Fees:</strong> <%= doctor.consultantFees %></li>
             <li><strong>Phone:</strong> <%= doctor.phone %></li>
         </ul>
         <a href="/doctor/profile/<%= doctor._id %>" class="btn btn-primary">Update</a>

@@ -60,11 +60,13 @@ router
 })
 .post(async (req, res) => {
   try {
-    const { specialization, experience, hospital, consultantFees, phone } = req.body.doctor;
+    const { fullName, qualification, specialization, experience, hospital, consultantFees, phone } = req.body.doctor;
     const doctorId = req.user._id;
 
     // Build update object only with non-empty fields
     const updates = {};
+    if (fullName) updates.fullName = fullName;
+    if (qualification) updates.qualification = qualification;
     if (specialization) updates.specialization = specialization;
     if (experience) updates.experience = experience;
     if (hospital) updates.hospital = hospital;

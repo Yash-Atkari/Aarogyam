@@ -8,6 +8,9 @@ const patientSchema = new Schema({
         required: true,
         unique: true
     },
+    fullName: {
+        type: String
+    },
     gender: {
         type: String,
         enum: ["male", "female", "other"]
@@ -23,6 +26,12 @@ const patientSchema = new Schema({
     },
     bloodType: {
         type: String,
+    },
+    phone: {
+        type: String 
+    },
+    address: {
+        type: String
     },
     role: {
         type: String,
