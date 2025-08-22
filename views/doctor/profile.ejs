@@ -130,14 +130,13 @@
             <% if (doctor.availabilitySlots && doctor.availabilitySlots.length > 0) { %>
               <% doctor.availabilitySlots.forEach(function(slot, index) { %>
                 <hr>
-                <div class="row mb-2 slot-item">
+                <div class="row mb-2">
                     <div class="col-md-4"><label for="date" class="form-label">Date</label></div>
-                    <div class="col-md-4"><label for="startTime" class="form-label">Start time</label></div>
-                    <div class="col-md-4"><label for="endTime" class="form-label">End time</label></div>
-                  </div>
+                    <div class="col-md-3"><label for="startTime" class="form-label">Start time</label></div>
+                    <div class="col-md-3"><label for="endTime" class="form-label">End time</label></div>
+                    <div class="col-md-2"><label for="action" class="form-label">Action</label></div>
+                </div>
                 <div class="row mb-2 slot-item">
-                  
-                  <!-- Date instead of Day -->
                   <div class="col-md-4">
                     <input 
                       type="date" 

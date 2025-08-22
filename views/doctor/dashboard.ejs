@@ -139,23 +139,36 @@
     </div>
 
     <div class="doctor-info">
-        <h3>Doctor Information:</h3>
-        <ul>
-            <li><strong>Full Name:</strong> <%= doctor.fullName %></li>
-            <li><strong>Email:</strong> <%= doctor.email %></li>
-            <li><strong>Qualification:</strong> <%= doctor.qualification %></li>
-            <li><strong>Specialization:</strong> <%= doctor.specialization %></li>
-            <li><strong>Experience:</strong> <%= doctor.experience %> years old</li>
-            <li><strong>Hospital:</strong> <%= doctor.hospital %></li>
-            <li><strong>Consultant Fees:</strong> <%= doctor.consultantFees %></li>
-            <li><strong>Phone:</strong> <%= doctor.phone %></li>
-        </ul>
+  <h3>Doctor Information:</h3>
+  <ul>
+      <li><strong>Full Name:</strong> <%= doctor.fullName %></li>
+      <li><strong>Email:</strong> <%= doctor.email %></li>
+      <li><strong>Qualification:</strong> <%= doctor.qualification %></li>
+      <li><strong>Specialization:</strong> <%= doctor.specialization %></li>
+      <li><strong>Experience:</strong> <%= doctor.experience %> years</li>
+      <li><strong>Hospital:</strong> <%= doctor.hospital %></li>
+      <li><strong>Consultant Fees:</strong> <%= doctor.consultantFees %></li>
+      <li><strong>Phone:</strong> <%= doctor.phone %></li>
+  </ul>
 
-        <div class="alert alert-info mt-3" role="alert">
-            <i class="fa-regular fa-calendar-plus"></i>&nbsp;
-            <span>Add your available slots by clicking update to let patients book appointments easily.</span>
+    <!-- Show Availability Slots -->
+    <% if (doctor.availabilitySlots && doctor.availabilitySlots.length > 0) { %>
+        <h3 class="mt-3">Available Slots:</h3>
+        <div class="d-flex flex-wrap gap-2">
+        <% doctor.availabilitySlots.forEach(function(slot) { %>
+            <p class="badge bg-success p-2 fs-6">
+            <%= new Date(slot.date).toLocaleDateString("en-GB", { day:"2-digit", month:"short", year:"numeric" }) %> 
+            (<%= slot.startTime %> - <%= slot.endTime %>)
+            </p>
+        <% }) %>
         </div>
+    <% } else { %>
+        <div class="alert alert-info mt-3" role="alert">
+        <i class="fa-regular fa-calendar-plus"></i>&nbsp;
+        <span>Add your available slots by clicking update to let patients book appointments easily.</span>
+        </div>
+    <% } %>
 
-        <a href="/doctor/profile/<%= doctor._id %>" class="btn btn-primary">Update</a>
+    <a href="/doctor/profile/<%= doctor._id %>" class="btn btn-primary mt-3">Update</a>
     </div>
 </div>
