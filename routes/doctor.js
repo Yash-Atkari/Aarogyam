@@ -60,7 +60,17 @@ router
 })
 .post(async (req, res) => {
   try {
-    const { fullName, qualification, specialization, experience, hospital, consultantFees, phone } = req.body.doctor;
+    const { 
+      fullName, 
+      qualification, 
+      specialization, 
+      experience, 
+      hospital, 
+      consultantFees, 
+      phone, 
+      availabilitySlots 
+    } = req.body.doctor;
+
     const doctorId = req.user._id;
 
     // Build update object only with non-empty fields
@@ -73,10 +83,27 @@ router
     if (consultantFees) updates.consultantFees = consultantFees;
     if (phone) updates.phone = phone;
 
+    // Handle availability slots (if provided)
+    if (availabilitySlots && Array.isArray(availabilitySlots)) {
+      // sanitize: remove empty slots + past dates
+      const today = new Date().toISOString().split("T")[0];
+
+      const cleanSlots = availabilitySlots.filter(slot => {
+        return (
+          slot.date && 
+          slot.startTime && 
+          slot.endTime && 
+          slot.date >= today   // only allow today or future
+        );
+      });
+
+      updates.availabilitySlots = cleanSlots;
+    }
+
     const updatedDoctor = await Doctor.findByIdAndUpdate(
       doctorId,
       updates,
-      { new: true }
+      { new: true, runValidators: true }
     );
 
     if (!updatedDoctor) {

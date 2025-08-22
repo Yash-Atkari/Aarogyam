@@ -122,9 +122,89 @@
           <input type="text" name="doctor[phone]" id="phone" value="<%= doctor.phone %>" placeholder="Enter phone number" class="form-control" required>
           <div class="invalid-feedback">Please provide a valid phone number.</div>
         </div>
-        <!-- Availaibility Slots -->
-         
+        <!-- Availability Slots -->
+        <div class="mb-3">
+          <label class="form-label">Availability Slots</label>
+
+          <div id="slots-container">
+            <% if (doctor.availabilitySlots && doctor.availabilitySlots.length > 0) { %>
+              <% doctor.availabilitySlots.forEach(function(slot, index) { %>
+                <hr>
+                <div class="row mb-2 slot-item">
+                    <div class="col-md-4"><label for="date" class="form-label">Date</label></div>
+                    <div class="col-md-4"><label for="startTime" class="form-label">Start time</label></div>
+                    <div class="col-md-4"><label for="endTime" class="form-label">End time</label></div>
+                  </div>
+                <div class="row mb-2 slot-item">
+                  
+                  <!-- Date instead of Day -->
+                  <div class="col-md-4">
+                    <input 
+                      type="date" 
+                      id="slot-date-<%= index %>" 
+                      name="doctor[availabilitySlots][<%= index %>][date]" 
+                      value="<%= slot.date ? slot.date.toISOString().split('T')[0] : '' %>" 
+                      class="form-control" 
+                      min="<%= new Date().toISOString().split('T')[0] %>"
+                      required
+                    >
+                  </div>
+                  <div class="col-md-3">
+                    <input type="time" name="doctor[availabilitySlots][<%= index %>][startTime]" value="<%= slot.startTime %>" class="form-control" required>
+                  </div>
+                  <div class="col-md-3">
+                    <input type="time" name="doctor[availabilitySlots][<%= index %>][endTime]" value="<%= slot.endTime %>" class="form-control" required>
+                  </div>
+                  <div class="col-md-2">
+                    <button type="button" class="btn btn-danger remove-slot"><i class="fa-solid fa-xmark"></i></button>
+                  </div>
+                </div>
+              <% }) %>
+            <% } %>
+          </div>
+          <button type="button" class="btn btn-secondary mt-2" id="add-slot">Add Slot</button>
+        </div>
 
         <button type="submit" class="btn btn-primary">Update Profile</button>
     </form>
 </div>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    let slotsContainer = document.getElementById("slots-container");
+    let addSlotBtn = document.getElementById("add-slot");
+
+    // Get today's date in YYYY-MM-DD format
+    const today = new Date().toISOString().split("T")[0];
+
+    addSlotBtn.addEventListener("click", () => {
+      let index = slotsContainer.querySelectorAll(".slot-item").length;
+
+      let slotHtml = `
+        <hr>
+        <div class="row mb-2 slot-item">
+          <div class="col-md-4">
+            <input type="date" name="doctor[availabilitySlots][${index}][date]" class="form-control" min="${today}" required>
+          </div>
+          <div class="col-md-3">
+            <input type="time" name="doctor[availabilitySlots][${index}][startTime]" class="form-control" required>
+          </div>
+          <div class="col-md-3">
+            <input type="time" name="doctor[availabilitySlots][${index}][endTime]" class="form-control" required>
+          </div>
+          <div class="col-md-2">
+            <button type="button" class="btn btn-danger remove-slot"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+        </div>
+      `;
+
+      slotsContainer.insertAdjacentHTML("beforeend", slotHtml);
+    });
+
+    // Remove slot
+    slotsContainer.addEventListener("click", function(e) {
+      if (e.target.classList.contains("remove-slot")) {
+        e.target.closest(".slot-item").remove();
+      }
+    });
+  });
+</script>

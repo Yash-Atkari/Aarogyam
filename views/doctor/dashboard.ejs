@@ -150,6 +150,12 @@
             <li><strong>Consultant Fees:</strong> <%= doctor.consultantFees %></li>
             <li><strong>Phone:</strong> <%= doctor.phone %></li>
         </ul>
+
+        <div class="alert alert-info mt-3" role="alert">
+            <i class="fa-regular fa-calendar-plus"></i>&nbsp;
+            <span>Add your available slots by clicking update to let patients book appointments easily.</span>
+        </div>
+
         <a href="/doctor/profile/<%= doctor._id %>" class="btn btn-primary">Update</a>
     </div>
 </div>

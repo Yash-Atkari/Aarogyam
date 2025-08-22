@@ -36,7 +36,7 @@ const doctorSchema = new Schema ({
     },
     availabilitySlots: [
         {
-            day: { type: String },
+            date: { type: Date, required: true },
             startTime: { type: String },
             endTime: { type: String }
         }
