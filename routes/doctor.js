@@ -122,4 +122,18 @@ router
   }
 });
 
+// Get doctor availability slots
+router.get("/:doctorId/slots", async (req, res) => {
+    try {
+        const doctor = await Doctor.findById(req.params.doctorId).lean();
+        console.log(doctor);
+        if (!doctor) return res.status(404).json({ message: "Doctor not found" });
+
+        res.json({ slots: doctor.availabilitySlots }); // return slots as JSON
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
 module.exports = router;

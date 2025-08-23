@@ -55,7 +55,7 @@
                 <select name="patient[doctorId]" class="form-select" required>
                     <option value="" selected disabled>Select a doctor</option>
                     <% doctors.forEach(doctor => { %>
-                        <option value="<%= doctor._id %>"><%= doctor.username %></option>
+                        <option value="<%= doctor._id %>"><%= doctor.username %> (<%= doctor.specialization %>)</option>
                     <% }); %>
                 </select>
                 <div class="invalid-feedback">Please select a doctor.</div>
@@ -69,12 +69,8 @@
         
             <div class="mb-2">
                 <label class="form-label">Time Slot</label>
-                <select name="patient[timeSlot]" class="form-select" required>
-                    <option value="" selected disabled>Select a time</option>
-                    <option value="09:00-09:30">09:00 - 09:30 AM</option>
-                    <option value="09:30-10:00">09:30 - 10:00 AM</option>
-                    <option value="10:00-10:30">10:00 - 10:30 AM</option>
-                    <option value="10:30-11:00">10:30 - 11:00 AM</option>
+                <select name="patient[timeSlot]" id="timeSlot" class="form-select" required>
+                    <option value="" selected disabled>Select a available time slot</option>
                 </select>
                 <div class="invalid-feedback">Please choose a time slot.</div>
             </div>
@@ -101,4 +97,39 @@
             form.classList.add("was-validated");
         });
     });
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const doctorSelect = document.querySelector("select[name='patient[doctorId]']");
+    const timeSlotSelect = document.getElementById("timeSlot");
+
+    doctorSelect.addEventListener("change", async function () {
+        const doctorId = this.value;
+        if (!doctorId) return;
+
+        // Fetch slots
+        const response = await fetch(`/doctor/${doctorId}/slots`); 
+        console.log(response);
+        const data = await response.json(); // Parse JSON response body into a JavaScript object
+        console.log(data);
+
+        // Clear old slots
+        timeSlotSelect.innerHTML = `<option value="" disabled selected>Select a time</option>`;
+
+        // Populate new slots
+        if (data.slots && data.slots.length > 0) {
+            data.slots.forEach(slot => {
+                const option = document.createElement("option");
+                option.value = `${slot.startTime}-${slot.endTime}`;
+                option.textContent = `(${slot.startTime} - ${slot.endTime})`;
+                timeSlotSelect.appendChild(option);
+            });
+        } else {
+            const option = document.createElement("option");
+            option.disabled = true;
+            option.textContent = "No slots available";
+            timeSlotSelect.appendChild(option);
+        }
+    });
+});
 </script>
