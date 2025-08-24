@@ -5,6 +5,7 @@ const HealthRecord = require("../models/healthrecord");
 const Billing = require("../models/billing");
 
 const { appointmentSchema } = require('../schema');
+const { start } = require("repl");
 
 // Render the patient's dashboard.
 module.exports.dashboard = async (req, res, next) => {
@@ -286,6 +287,10 @@ module.exports.bookAppointment = async (req, res, next) => {
     const patientId = req.user._id;
     const { doctorId, appointmentDate, timeSlot, reason } = value.patient;
 
+    const [startTime, endTime] = timeSlot.split("-");
+
+    console.log(startTime, endTime, appointmentDate);
+
     const newAppointment = new Appointment({
       patientId,
       doctorId,
@@ -304,6 +309,20 @@ module.exports.bookAppointment = async (req, res, next) => {
     // // Update both doctor and patient records with the new appointment
     await Doctor.findByIdAndUpdate(doctorId, { $push: { appointments: savedAppointment._id } });
     await Patient.findByIdAndUpdate(patientId, { $push: { appointments: savedAppointment._id } });
+
+    // 🔥 Remove booked slot from doctor's availability
+    await Doctor.findByIdAndUpdate(
+      doctorId,
+      {
+        $pull: {
+          availabilitySlots: {
+            date: new Date(appointmentDate),
+            startTime: startTime.trim(),
+            endTime: endTime.trim()
+          }
+        }
+      }
+    );
 
     req.flash("success", "Appointment booked successfully!");
     res.redirect("/patient/bookappointment");

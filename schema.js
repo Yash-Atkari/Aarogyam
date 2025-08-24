@@ -6,12 +6,7 @@ module.exports.appointmentSchema = Joi.object({
       appointmentDate: Joi.date().greater('now').required().messages({
         'date.greater': 'Appointment date must be in the future.'
       }),
-      timeSlot: Joi.string().valid(
-        '09:00-09:30',
-        '09:30-10:00',
-        '10:00-10:30',
-        '10:30-11:00'
-      ).required(),
+      timeSlot: Joi.string().required(),
       reason: Joi.string().allow('').max(500) // optional
     }).required()
   });
