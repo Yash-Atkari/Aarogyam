@@ -51,7 +51,7 @@ const Billing = require("./models/billing");
 
 // MongoDB connection
 
-const MongoUrl =  /* process.env.ATLASDB_URL ||*/ "mongodb://127.0.0.1:27017/aarogyam";
+const MongoUrl =  process.env.ATLASDB_URL || "mongodb://127.0.0.1:27017/aarogyam";
 
 main()
   .then(() => console.log("Connected to DB"))
@@ -73,20 +73,20 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// const store = MongoStore.create({
-//   mongoUrl: dbUrl,
-//   crypto: {
-//       secret: "process.env.SECRET",
-//   },
-//   touchAfter: 24 * 3600,
-// });
+const store = MongoStore.create({
+  mongoUrl: dbUrl,
+  crypto: {
+      secret: "process.env.SECRET",
+  },
+  touchAfter: 24 * 3600,
+});
 
-// store.on("error", () => {
-//   console.log("ERROR in MONGO SESSION STORE");
-// });
+store.on("error", () => {
+  console.log("ERROR in MONGO SESSION STORE");
+});
 
 const sessionOptions = {
-  // store,
+  store,
   secret: "process.env.SECRET",
   resave: false,
   saveUninitialized: true,
