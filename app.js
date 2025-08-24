@@ -74,7 +74,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 const store = MongoStore.create({
-  mongoUrl: dbUrl,
+  mongoUrl: MongoUrl,
   crypto: {
       secret: "process.env.SECRET",
   },
