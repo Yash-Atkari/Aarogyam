@@ -63,7 +63,7 @@
         
             <div class="mb-2">
                 <label class="form-label">Appointment Date</label>
-                <input type="date" name="patient[appointmentDate]" class="form-control" required min="<%= new Date().toISOString().split('T')[0] %>">
+                <input type="text" id="appointmentDate" name="patient[appointmentDate]" class="form-control" required>
                 <div class="invalid-feedback">Please select a date.</div>
             </div>
         
@@ -101,27 +101,55 @@
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     const doctorSelect = document.querySelector("select[name='patient[doctorId]']");
+    const dateInput = document.getElementById("appointmentDate");
     const timeSlotSelect = document.getElementById("timeSlot");
+    let calendar;
 
+    // When a doctor is selected, fetch available slots and initialize calendar with those dates
     doctorSelect.addEventListener("change", async function () {
         const doctorId = this.value;
         if (!doctorId) return;
 
         // Fetch slots
-        const response = await fetch(`/doctor/${doctorId}/slots`); 
-        console.log(response);
-        const data = await response.json(); // Parse JSON response body into a JavaScript object
-        console.log(data);
+        const response = await fetch(`/doctor/${doctorId}/slots`);
+        const data = await response.json();
 
-        // Clear old slots
+        // Extract unique available dates
+        const validDates = [...new Set(data.slots.map(slot =>
+            new Date(slot.date).toISOString().split("T")[0]
+        ))];
+
+        console.log("Available dates:", validDates);
+
+        // Destroy old calendar if exists
+        if (calendar) calendar.destroy();
+
+        // Initialize Flatpickr with enabled dates only
+        calendar = flatpickr(dateInput, {
+            dateFormat: "Y-m-d",
+            enable: validDates
+        });
+
+        // Reset times
+        timeSlotSelect.innerHTML = `<option value="" disabled selected>Select a time</option>`;
+    });
+
+    // When a valid date is chosen, populate slots
+    dateInput.addEventListener("change", async function () {
+        const doctorId = doctorSelect.value;
+        const selectedDate = this.value;
+        if (!doctorId || !selectedDate) return;
+
+        const response = await fetch(`/doctor/${doctorId}/slots?date=${selectedDate}`);
+        const data = await response.json();
+
         timeSlotSelect.innerHTML = `<option value="" disabled selected>Select a time</option>`;
 
-        // Populate new slots
         if (data.slots && data.slots.length > 0) {
             data.slots.forEach(slot => {
                 const option = document.createElement("option");
                 option.value = `${slot.startTime}-${slot.endTime}`;
-                option.textContent = `(${slot.startTime} - ${slot.endTime})`;
+                option.textContent = `${slot.startTime} - ${slot.endTime}`;
                 timeSlotSelect.appendChild(option);
             });
         } else {
@@ -133,3 +161,5 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 </script>
+<!-- Flatpickr for better date selection -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>

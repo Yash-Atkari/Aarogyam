@@ -126,12 +126,23 @@ router
 router.get("/:doctorId/slots", async (req, res) => {
     try {
         const doctor = await Doctor.findById(req.params.doctorId).lean();
-        console.log(doctor);
-        if (!doctor) return res.status(404).json({ message: "Doctor not found" });
+        if (!doctor) {
+            return res.status(404).json({ message: "Doctor not found" });
+        }
 
-        res.json({ slots: doctor.availabilitySlots }); // return slots as JSON
+        let slots = doctor.availabilitySlots || [];
+
+        // If a date query param is provided, filter slots by that date
+        if (req.query.date) {
+            const requestedDate = new Date(req.query.date).toISOString().split("T")[0];
+            slots = slots.filter(slot =>
+                new Date(slot.date).toISOString().split("T")[0] === requestedDate
+            );
+        }
+
+        res.json({ slots });
     } catch (err) {
-        console.error(err);
+        console.error("Error fetching slots:", err);
         res.status(500).json({ message: "Server error" });
     }
 });
