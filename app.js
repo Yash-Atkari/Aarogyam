@@ -90,13 +90,12 @@ store.on("error", () => {
 
 const sessionOptions = {
   store,
-  secret: "process.env.SECRET",
+  secret: process.env.SECRET,   // use env variable properly
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,     // only save when needed
   cookie: {
-      expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      httpOnly: true,
+    maxAge: 7 * 24 * 60 * 60 * 1000,  // 7 days
+    httpOnly: true,
   }
 };
 
