@@ -161,12 +161,17 @@ module.exports.loggedOut = (req, res, next) => {
       req.flash("error", "Logout failed. Please try again.");
       return res.redirect("back");
     }
-    req.session.regenerate((err) => {
+
+    req.session.destroy((err) => {
       if (err) {
-        console.error("Session regeneration error:", err);
+        console.error("Session destroy error:", err);
         req.flash("error", "Error clearing session. Please try again.");
         return res.redirect("back");
       }
+
+      // Remove cookie from browser as well
+      res.clearCookie("connect.sid");
+
       return res.redirect("/auth/login");
     });
   });
