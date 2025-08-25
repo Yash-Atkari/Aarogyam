@@ -58,7 +58,10 @@ main()
   .catch((err) => console.error("Error:", err));
 
 async function main() {
-  await mongoose.connect(MongoUrl);
+  await mongoose.connect(MongoUrl, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+  });
 }
 
 // Configure Multer for file uploads
