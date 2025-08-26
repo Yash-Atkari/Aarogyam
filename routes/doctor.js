@@ -4,6 +4,7 @@ const multer = require("multer");
 const doctorController = require("../controllers/doctor");
 
 const Doctor = require("../models/doctor");
+const Appointment = require("../models/appointment");
 
 // Configure multer for uploads
 const storage = require("../cloudConfig.js").storage;
@@ -145,6 +146,39 @@ router.get("/:doctorId/slots", async (req, res) => {
         console.error("Error fetching slots:", err);
         res.status(500).json({ message: "Server error" });
     }
+});
+
+router.get("/filterappointments", async (req, res, next) => {
+  try {
+    const { search, date, status } = req.query;
+    const doctorId = req.user._id;
+
+    // Build filter
+    let filter = { doctorId }; 
+    if (date) filter.date = date;
+    if (status) filter.status = status;
+
+    // Query with doctor filter + populate
+    let appointments = await Appointment.find(filter)
+      .populate("patientId")
+      .populate("doctorId"); // if you need doctor info for searching
+
+    // Apply search filtering
+    if (search) {
+      const searchLower = search.toLowerCase();
+      appointments = appointments.filter((appointment) =>
+        (appointment.patientId?.fullName?.toLowerCase().includes(searchLower)) ||
+        (appointment.reason?.toLowerCase().includes(searchLower)) ||
+        (appointment.disease?.toLowerCase().includes(searchLower))
+      );
+    }
+
+    res.render("doctor/appointments", { appointments });
+  } catch (error) {
+    console.error("Error filtering appointments:", error);
+    req.flash("error", "Something went wrong while filtering appointments.");
+    res.redirect(req.get("referer") || "/doctor/dashboard");
+  }
 });
 
 module.exports = router;

@@ -42,7 +42,7 @@ module.exports.appointments = async (req, res, next) => {
 module.exports.renderAddAppointmentDetails = async (req, res, next) => {
   try {
     const appointmentId = req.params.id;
-    const appointment = await Appointment.findById(appointmentId).populate("patientId");
+    const appointment = await Appointment.findById(appointmentId).populate("patientId").populate("doctorId");
     if (!appointment) {
       req.flash("error", "Appointment not found.");
       return res.redirect("/doctor/appointments");
@@ -59,7 +59,7 @@ module.exports.renderAddAppointmentDetails = async (req, res, next) => {
 module.exports.renderEditAppointment = async (req, res, next) => {
   try {
     const appointmentId = req.params.id;
-    const appointment = await Appointment.findById(appointmentId).populate("patientId");
+    const appointment = await Appointment.findById(appointmentId).populate("patientId").populate("doctorId");
     if (!appointment) {
       req.flash("error", "Appointment not found.");
       return res.redirect("/doctor/appointments");
@@ -189,7 +189,7 @@ module.exports.generateCertificate = async (req, res, next) => {
 module.exports.addAppointmentDetails = async (req, res, next) => {
   try {
     const appointmentId = req.params.id;
-    const { username, email, gender, appointmentDate, timeSlot, symptoms, disease, status, billAmount } = req.body.patient;
+    const { symptoms, disease, status, billAmount } = req.body.patient;
 
     // Find the appointment by id
     const appointment = await Appointment.findById(appointmentId);
@@ -206,7 +206,7 @@ module.exports.addAppointmentDetails = async (req, res, next) => {
     // Update appointment details
     appointment.disease = disease;
     appointment.summary = symptoms;
-    appointment.status = status || "pending";
+    appointment.status = "completed";
     if (prescriptionUrl) {
       appointment.attachments.push(prescriptionUrl);
     }

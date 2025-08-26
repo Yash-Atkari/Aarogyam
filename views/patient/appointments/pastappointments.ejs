@@ -2,7 +2,21 @@
 
 <style>
     body { background-color: #f8f9fa; }
-    
+    .appointments-container {
+        max-width: 100%;
+        /* margin: auto; */
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .appointment-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px;
+        margin-bottom: 10px;
+    }
     .appointment-card {
         display: flex;
         align-items: center;
@@ -75,7 +89,7 @@
     </div>
 
     <!-- Search and Filter Section -->
-    <form id="filterForm" method="GET" action="/patient/filterappointments">
+    <form id="filterForm" method="GET" class="mt-4" action="/patient/filterappointments">
             <div class="row g-2">
                 <div class="col-md-3">
                     <input type="text" class="form-control" name="search" placeholder="Search by Doctor, Reason, Disease">
@@ -85,7 +99,7 @@
                 </div>
                 <div class="col-md-2">
                     <select class="form-control" name="status">
-                        <option value="">All Statuses</option>
+                        <option value="" selected disabled>Search by Status</option>
                         <option value="pending">Pending</option>
                         <option value="confirmed">Confirmed</option>
                         <option value="completed">Completed</option>
@@ -98,9 +112,7 @@
             </div>
         </form>
 
-    <div class="appointments-container my-2 table-responsive">
-        <h5>Appointments</h5>
-
+    <div class="appointments-container mt-4 table-responsive">
         <% if (appointments && appointments.length > 0) { %> 
             <% appointments.forEach(appointment => { %>
                 <div class="appointment-card">
