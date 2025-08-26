@@ -86,7 +86,7 @@
                     <option value="10:30-11:00" <%= appointment.timeSlot === "10:30-11:00" ? "selected" : "" %>>10:30 - 11:00 AM</option>
                 </select>
             </div>
-        
+
             <div class="form-group">
                 <label>Symptoms</label>
                 <textarea name="patient[symptoms]" placeholder="Describe symptoms"></textarea>
@@ -95,6 +95,14 @@
             <div class="form-group">
                 <label>Disease</label>
                 <input type="text" name="patient[disease]">
+            </div>
+
+            <div class="form-group">
+                <label>Status</label>
+                <select name="patient[status]">
+                    <option value="pending" <%= appointment.status === "pending" ? "selected" : "" %>>Pending</option>
+                    <option value="completed" <%= appointment.status === "completed" ? "selected" : "" %>>Completed</option>
+                </select>
             </div>
         
             <div class="form-group">

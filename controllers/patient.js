@@ -112,22 +112,23 @@ module.exports.cancelAppointment = async (req, res, next) => {
 // Filter appointments based on query parameters.
 module.exports.filterAppointments = async (req, res, next) => {
   try {
-    const { search, date, status, timeSlot } = req.query;
+    const { search, date, status } = req.query;
     let filter = {};
 
     if (date) filter.date = date;
     if (status) filter.status = status;
-    if (timeSlot) filter.timeSlot = timeSlot;
 
     let appointments = await Appointment.find(filter).populate("doctorId");
+    console.log(appointments);
 
     if (search) {
       appointments = appointments.filter((appointment) =>
-        appointment.doctorId.username.toLowerCase().includes(search.toLowerCase()) ||
+        appointment.doctorId.fullName.toLowerCase().includes(search.toLowerCase()) ||
         appointment.reason.toLowerCase().includes(search.toLowerCase()) ||
         appointment.disease.toLowerCase().includes(search.toLowerCase())
       );
     }
+    console.log(appointments);
 
     const referer = req.get("referer");
     if (referer && referer.includes("/pastappointments")) {

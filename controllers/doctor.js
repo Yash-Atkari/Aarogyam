@@ -189,7 +189,7 @@ module.exports.generateCertificate = async (req, res, next) => {
 module.exports.addAppointmentDetails = async (req, res, next) => {
   try {
     const appointmentId = req.params.id;
-    const { username, email, gender, appointmentDate, timeSlot, symptoms, disease, billAmount } = req.body.patient;
+    const { username, email, gender, appointmentDate, timeSlot, symptoms, disease, status, billAmount } = req.body.patient;
 
     // Find the appointment by id
     const appointment = await Appointment.findById(appointmentId);
@@ -206,6 +206,7 @@ module.exports.addAppointmentDetails = async (req, res, next) => {
     // Update appointment details
     appointment.disease = disease;
     appointment.summary = symptoms;
+    appointment.status = status || "pending";
     if (prescriptionUrl) {
       appointment.attachments.push(prescriptionUrl);
     }

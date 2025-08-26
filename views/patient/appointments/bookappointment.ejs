@@ -55,7 +55,7 @@
                 <select name="patient[doctorId]" class="form-select" required>
                     <option value="" selected disabled>Select a doctor</option>
                     <% doctors.forEach(doctor => { %>
-                        <option value="<%= doctor._id %>"><%= doctor.username %> (<%= doctor.specialization %>)</option>
+                        <option value="<%= doctor._id %>"><%= doctor.fullName %> (<%= doctor.specialization %>)</option>
                     <% }); %>
                 </select>
                 <div class="invalid-feedback">Please select a doctor.</div>
