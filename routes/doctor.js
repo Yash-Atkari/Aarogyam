@@ -181,4 +181,29 @@ router.get("/filterappointments", async (req, res, next) => {
   }
 });
 
+router.get("/appointment/:appointmentId/prescription/:index", async (req, res) => {
+  try {
+    const appointment = await Appointment.findById(req.params.appointmentId);
+    if (!appointment) {
+      req.flash("error", "Appointment not found.");
+      return res.redirect(req.get("referer") || "/doctor/dashboard");
+    }
+    const index = parseInt(req.params.index, 10);
+
+    // Removing appointment of index from attachment
+    if (index >= 0 && index < appointment.attachments.length) {
+      appointment.attachments.splice(index, 1);
+      await appointment.save();
+      req.flash("success", "Attachment removed successfully.");
+    } else {
+      req.flash("error", "Invalid attachment index.");
+    }
+
+    res.redirect(req.get("referer") || "/doctor/dashboard");
+  } catch (error) {
+    console.error("Error removing attachment:", error);
+    req.flash("error", "Something went wrong while removing the attachment.");
+    res.redirect(req.get("referer") || "/doctor/dashboard");
+  }});
+
 module.exports = router;
