@@ -81,16 +81,23 @@
               <td><%= appointment.status %></td>
               <td class="actions">
                 <div class="d-flex">
-                  <a href="/doctor/appointments/addAppointmentDetails/<%= appointment._id %>" class="btn btn-primary">
+                  <a href="/doctor/appointments/addAppointmentDetails/<%= appointment._id %>" 
+                    class="btn btn-primary <%= appointment.status === 'pending' ? 'disabled' : '' %>">
                     <i class="fa-solid fa-plus"></i>
                   </a>
-                  <a href="/doctor/appointments/edit/<%= appointment._id %>" class="btn btn-secondary">
+
+                  <a href="/doctor/appointments/edit/<%= appointment._id %>" 
+                    class="btn btn-secondary <%= appointment.status === 'pending' ? 'disabled' : '' %>">
                     <i class="fa-solid fa-pen-to-square"></i>
                   </a>
-                  <form action="/doctor/appointments/confirm/<%= appointment._id %>" method="POST" style="display:inline;">
-                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmModal" onclick="setAppointmentId('<%= appointment._id %>')"><i class="fa-solid fa-circle-check"></i></button>
-                  </form> 
-                </div>      
+
+                  <button type="button" class="btn btn-success" 
+                          <%= appointment.status !== 'pending' ? 'disabled' : '' %>
+                          data-bs-toggle="modal" data-bs-target="#confirmModal" 
+                          onclick="setAppointmentId('<%= appointment._id %>')">
+                    <i class="fa-solid fa-circle-check"></i>
+                  </button>
+                </div>   
               </td>
             </tr>
           <% }) %>

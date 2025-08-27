@@ -189,7 +189,9 @@ module.exports.generateCertificate = async (req, res, next) => {
 module.exports.addAppointmentDetails = async (req, res, next) => {
   try {
     const appointmentId = req.params.id;
-    const { symptoms, disease, status, billAmount } = req.body.patient;
+    const { symptoms, disease, billAmount } = req.body.patient;
+
+    console.log(symptoms, disease, billAmount);
 
     // Find the appointment by id
     const appointment = await Appointment.findById(appointmentId);
@@ -200,7 +202,7 @@ module.exports.addAppointmentDetails = async (req, res, next) => {
 
     // Extract the uploaded file paths
     const prescriptionUrl = req.files["patient[prescription]"]?.[0]?.path || null;
-    const medicalReports = req.files["patient[medicalReports]"]?.map(file => file.path) || [];
+    const medicalReports = req.files["patient[medicalReports]"]?.[0]?.path || null;
     const billUrl = req.files["patient[bill]"]?.[0]?.path || null;
 
     // Update appointment details
@@ -212,30 +214,46 @@ module.exports.addAppointmentDetails = async (req, res, next) => {
     }
     await appointment.save();
 
-    // Create a new health record
-    const healthRecord = new HealthRecord({
+    // Update HealthRecord attachments if exists, otherwise create new
+    let healthRecord = await HealthRecord.findOne({
       patientId: appointment.patientId,
-      doctorId: appointment.doctorId,
-      disease,
-      symptoms,
-      attachments: medicalReports,
+      doctorId: appointment.doctorId
     });
-    await healthRecord.save();
+
+    if (healthRecord) {
+      // Push new attachments into the existing array
+      if (medicalReports) {
+        healthRecord.attachments.push(medicalReports);
+        await healthRecord.save();
+      }
+    } else {
+      // Create new record if not exists
+      healthRecord = new HealthRecord({
+        patientId: appointment.patientId,
+        doctorId: appointment.doctorId,
+        disease,
+        symptoms,
+        attachments: medicalReports,
+      });
+      await healthRecord.save();
+    }
 
     // Create a new billing record
-    const invoiceNo = `INV-${Math.floor(Math.random() * 9000) + 1000}`;
-    const billing = new Billing({
-      patientId: appointment.patientId,
-      doctorId: appointment.doctorId,
-      invoiceNo,
-      date: new Date(),
-      amount: billAmount, // Update this later as needed
-      reason: disease,
-      status: "pending",
-      paymentMethod: "UPI",
-      attachments: billUrl ? [billUrl] : [],
-    });
-    await billing.save();
+    if(billUrl) {
+      const invoiceNo = `INV-${Math.floor(Math.random() * 9000) + 1000}`;
+      const billing = new Billing({
+        patientId: appointment.patientId,
+        doctorId: appointment.doctorId,
+        invoiceNo,
+        date: new Date(),
+        amount: billAmount, // Update this later as needed
+        reason: disease,
+        status: "pending",
+        paymentMethod: "UPI",
+        attachments: billUrl ? [billUrl] : [],
+      });
+      await billing.save();
+    }
 
     req.flash("success", "Appointment details added successfully.");
     res.redirect("/doctor/appointments");
@@ -271,6 +289,7 @@ module.exports.editAppointment = async (req, res, next) => {
     }
     appointment.disease = disease;
     appointment.summary = symptoms;
+    appointment.status = "completed";
     if (prescriptionUrl) {
       appointment.attachments = [prescriptionUrl]; // Replace previous prescription if any
     }

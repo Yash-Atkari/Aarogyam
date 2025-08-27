@@ -28,7 +28,6 @@ const billingSchema = new Schema({
     },
     reason: {
         type: String, // e.g., "Consultation", "Surgery", "Lab Test"
-        required: true
     },
     attachments: {
         type: [String], // Array of file paths for uploaded bills (PDFs, images)
