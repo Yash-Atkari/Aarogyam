@@ -207,12 +207,11 @@ module.exports.addAppointmentDetails = async (req, res, next) => {
 
     // Update appointment details
     appointment.disease = disease;
-    appointment.summary = symptoms;
+    appointment.symptoms = symptoms;
     appointment.status = "completed";
     if (prescriptionUrl) {
       appointment.attachments.push(prescriptionUrl);
     }
-    await appointment.save();
 
     // Update HealthRecord attachments if exists, otherwise create new
     let healthRecord = await HealthRecord.findOne({
@@ -236,6 +235,7 @@ module.exports.addAppointmentDetails = async (req, res, next) => {
         attachments: medicalReports,
       });
       await healthRecord.save();
+      appointment.healthrecord = healthRecord._id;
     }
 
     // Create a new billing record
@@ -253,7 +253,9 @@ module.exports.addAppointmentDetails = async (req, res, next) => {
         attachments: billUrl ? [billUrl] : [],
       });
       await billing.save();
+      appointment.billing = billing._id;
     }
+    await appointment.save();
 
     req.flash("success", "Appointment details added successfully.");
     res.redirect("/doctor/appointments");
@@ -288,7 +290,7 @@ module.exports.editAppointment = async (req, res, next) => {
       return res.redirect("/doctor/appointments");
     }
     appointment.disease = disease;
-    appointment.summary = symptoms;
+    appointment.symptoms = symptoms;
     appointment.status = "completed";
     if (prescriptionUrl) {
       appointment.attachments = [prescriptionUrl]; // Replace previous prescription if any

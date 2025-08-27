@@ -6,7 +6,7 @@
     .record-container {
         max-width: 100%;
         background: white;
-        padding: 10px;
+        padding: 10px 20px;
         border-radius: 10px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
@@ -17,7 +17,6 @@
         display: flex;
         align-items: center;
         gap: 10px;
-        margin-bottom: 15px;
     }
 
     .card {
@@ -63,13 +62,13 @@
         <% } else { %>
             <% records.forEach(record => { %>
                     <div class="">
-                        <h4 class=""><%= record.recordType %></h4>
-                        <p class=""><%= record.summary %></p>
-                        <p><strong>Doctor:</strong> <%= record.doctorId.username %></p>
-
+                        <p><strong>Doctor:</strong> <%= record.doctorId.fullName %></p>
+                        <p><strong>Symptom:</strong> <%= record.symptoms %></p>
+                        <p><strong>Disease:</strong> <%= record.disease %></p>
+                        
                         <% if (record.attachments && record.attachments.length > 0) { %>
                             <p><strong>Attachments:</strong></p>
-                            <ul class="list-unstyled">
+                            <ul class="">
                                 <% record.attachments.forEach((attachment, index) => { %>
                                     <li class="mb-2">
                                         <a href="<%= attachment %>" class="btn btn-success" target="_blank">
@@ -85,7 +84,7 @@
                             <p class="text-muted">No attachments available.</p>
                         <% } %>   
                         
-                        <p class="text-muted"><strong>Created On:</strong> <%= new Date(record.created_at).toDateString() %></p>
+                        <p class="text-muted badge"><%= new Date(record.created_at).toDateString() %></p>
                 </div>
             <% }); %>
         <% } %>

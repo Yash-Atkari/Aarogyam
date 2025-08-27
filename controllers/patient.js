@@ -298,11 +298,7 @@ module.exports.bookAppointment = async (req, res, next) => {
       date: new Date(appointmentDate),
       timeSlot,
       status: "pending",
-      reason,
-      notes: "",
-      disease: "",
-      summary: "",
-      attachments: []
+      reason: reason || "",
     });
 
     const savedAppointment = await newAppointment.save();

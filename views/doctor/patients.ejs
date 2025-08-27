@@ -1,31 +1,8 @@
 <%- layout("./layouts/doctorboilerplate") %>
 
 <style>
-    .filters {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    .filter {
-        text-align: center;
-        margin-right: 2rem;
-        opacity: 0.7;
-    }
-    .filter p {
-        font-size: 0.9rem;
-    }
-    .filter:hover {
-        opacity: 1;
-        cursor: pointer;
-    }
-    .card {
-        border-radius: 15px;
-        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-        transition: 0.3s;
-        padding: 1rem;
-    }
-    .card:hover {
-        transform: translateY(-5px);
+    p {
+        margin-bottom: 0.3rem;
     }
     .btn-custom {
         width: 100%;
@@ -42,21 +19,21 @@
                     <div class="col">
                         <div class="bg-white p-3 rounded-3">
                             <h4 class="text-primary">
-                                <i class="fa-solid fa-user"></i> <%= patient.username %>
+                                <i class="fa-solid fa-user"></i>&nbsp; <%= patient.fullName %>
                             </h4>
                             <p><strong>Email:</strong> <%= patient.email %></p>
                             <p><strong>Gender:</strong> <%= patient.gender %></p>
                             <p><strong>Age:</strong> <%= patient.age %> years</p>
-                            <p><strong>Blood Type:</strong> <%= patient.bloodType %></p>
+                            <p><strong>Phone:</strong> <%= patient.phone %></p>
     
                             <a href="/doctor/patient/<%= patient._id %>/healthrecords" class="btn btn-primary btn-custom">
-                                <i class="fa-solid fa-notes-medical"></i> Health Records
+                                <i class="fa-solid fa-notes-medical"></i>&nbsp; Health Records
                             </a>
                             <a href="/doctor/<%= doctor._id %>/patient/<%= patient._id %>/prescriptions" class="btn btn-success btn-custom">
-                                <i class="fa-solid fa-file-prescription"></i> Prescriptions
+                                <i class="fa-solid fa-file-prescription"></i>&nbsp; Prescriptions
                             </a>
                             <a href="#" class="btn btn-secondary btn-custom" onclick="openCertificateModal('<%= patient._id %>')">
-                                <i class="fa-solid fa-file-prescription"></i> Generate Certificate
+                                <i class="fa-solid fa-file-prescription"></i>&nbsp; Generate Certificate
                             </a>                            
                         </div>
                     </div>

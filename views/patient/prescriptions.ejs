@@ -9,12 +9,11 @@
         <table class="prescriptions-table container-fluid">
             <thead>
                 <tr>
-                    <th>#</th>
-                    <th>Reason</th>
-                    <th>Created by</th>
+                    <th>Sr. No.</th>
+                    <th>Doctor</th>
                     <th>Date</th>
                     <th>Disease</th>
-                    <th>Actions</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -26,12 +25,11 @@
                     <% appointments.forEach((record, index) => { %>
                         <tr>
                             <td><%= index + 1 %></td>
-                            <td><%= record.reason %></td>
-                            <td class="doctor-name"><%= record.doctorId.username %></td>
+                            <td class="doctor-name"><%= record.doctorId.fullName %></td>
                             <td><%= new Date(record.createdAt).toLocaleDateString() %></td>
                             <td>
                                 <% if (record.disease) { %>
-                                    <span class="disease-tag <%= record.disease.replace(/\s+/g, '-') %>">
+                                    <span class=" <%= record.disease.replace(/\s+/g, '-') %>">
                                         <%= record.disease %>
                                     </span>
                                 <% } else { %>
@@ -41,7 +39,7 @@
                             <td class="actions">
                                 <% if (record.attachments && record.attachments.length > 0) { %>
                                     <% record.attachments.forEach(file => { %>
-                                        <div class="d-flex">
+                                        <div class="d-flex border rounded">
                                             <a href="<%= file %>" class="action-icon view" title="View" target="_blank">
                                                 <i class="fas fa-eye"></i>
                                             </a>
@@ -97,14 +95,9 @@
 </script>
 
 <style>
-    .prescriptions-container {
-        padding: 20px;
-    }
-
     .page-header {
         font-size: 22px;
         font-weight: bold;
-        margin-bottom: 15px;
     }
 
     .record-container {
@@ -117,7 +110,6 @@
     .prescriptions-table {
         width: 100%;
         border-collapse: collapse;
-        margin-top: 10px;
     }
 
     .prescriptions-table th, .prescriptions-table td {
@@ -132,13 +124,6 @@
 
     .doctor-name {
         color: #007bff;
-        font-weight: bold;
-    }
-
-    .disease-tag {
-        padding: 5px 10px;
-        border-radius: 5px;
-        font-size: 12px;
         font-weight: bold;
     }
 

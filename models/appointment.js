@@ -28,19 +28,24 @@ const appointmentSchema = new Schema({
     reason: {
         type: String
     },
-    notes: {
-        type: String
-    },
     disease: {
         type: String
     },
-    summary: {
+    symptoms: {
         type: String
     },
     attachments: {
         type: [String],
         default: []
-    }
+    },
+    healthrecord: {
+        type: Schema.Types.ObjectId,
+        ref: "HealthRecord"
+    },
+    billing: {
+        type: Schema.Types.ObjectId,
+        ref: "Billing"
+    },
 }, { timestamps: true }); 
 
 module.exports = mongoose.model("Appointment", appointmentSchema);
