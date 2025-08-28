@@ -172,23 +172,21 @@ app.post('/auth/google/doctor', (req, res) => {
 app.post('/auth/google-login', async (req, res) => {
   const { email } = req.body;
   try {
-    // Try to find patient by email
     let user = await Patient.findOne({ email });
+    let role = "patient";
 
     if (!user) {
-      // If not found in patients, try doctors
       user = await Doctor.findOne({ email });
-
-      if (!user) {
-        // No user found at all
-        return res.status(404).json({ 
-          success: false, 
-          message: "No account found with this email 😕"
-        });
-      }
+      role = "doctor";
     }
 
-    // Log the user in using Passport
+    if (!user) {
+      return res.status(404).json({ 
+        success: false, 
+        message: "No account found with this email 😕"
+      });
+    }
+
     req.logIn(user, (err) => {
       if (err) {
         console.error("Log in error", err);
@@ -198,8 +196,11 @@ app.post('/auth/google-login', async (req, res) => {
         });
       }
 
-      // Successful login
-      return res.json({ success: true });
+      // ✅ Important: return the role
+      return res.json({ 
+        success: true, 
+        role 
+      });
     });
   }
   catch (err) {
