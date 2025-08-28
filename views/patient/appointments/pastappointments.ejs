@@ -74,6 +74,32 @@
         flex-wrap: wrap;
     }
 
+    /* Table Styles */
+    .appointments-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .appointments-table th, .appointments-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .appointments-table th {
+        background-color: #f8f9fa;
+    }
+
+    .doctor-name {
+        color: #007bff;
+        font-weight: bold;
+    }
+
+    .actions {
+        display: flex;
+        gap: 10px;
+    }
+
     @media (max-width: 768px) {
         .filter-container .col-md-3,
         .filter-container .col-md-2 {
@@ -113,58 +139,59 @@
         </form>
 
     <div class="appointments-container mt-4 table-responsive">
-        <% if (appointments && appointments.length > 0) { %> 
-            <% appointments.forEach(appointment => { %>
-                <div class="appointment-card">
-                    <div class="doctor-info">
-                        <div>
-                            <strong>Name</strong> <br>
-                            <small><%= appointment.doctorId.fullName %></small>
-                        </div>
-                        <div>
-                            <strong>Specialization</strong> <br>
-                            <small><%= appointment.doctorId.specialization %></small>
-                        </div>
-                    </div>
-                    <div>
-                        <strong>Date</strong> <br>
-                        <small><%= appointment.date.toString().split(" ").slice(0, 4).join(" ") %></small>
-                    </div>
-                    <div>
-                        <strong>Time</strong> <br>
-                        <small><%= appointment.timeSlot %></small>
-                    </div>
-                    <div>
-                        <strong>Reason</strong> <br>
-                        <small><%= appointment.reason %></small>
-                    </div>
-                    <div>
-                        <strong>Contact</strong> <br>
-                        <small><%= appointment.doctorId.phone %></small>
-                    </div>
-                    <div>
-                        <strong>Location</strong> <br>
-                        <small><%= appointment.doctorId.hospital %></small>
-                    </div>
-                    <div>
-                        <strong>Status</strong> <br>
-                        <small><%= appointment.status %></small>
-                    </div>
-                    <% if (appointment.status === 'completed') { %>
-                        <div>
-                            <strong>Disease</strong> <br>
-                            <small><%= appointment.disease %></small>
-                        </div>
-                    <% } %>
-                    <div class="actions">
-                        <strong>Action</strong> <br>
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelModal" onclick="setAppointmentId('<%= appointment._id %>')">Cancel</button>                                      
-                    </div>
-                </div>
-            <% }) %>
-        <% } else { %>
-            No appointments found.
-        <% } %>
+    <% if (appointments && appointments.length > 0) { %> 
+        <table class="appointments-table container-fluid">
+            <thead>
+                <tr>
+                    <th>Sr. No.</th>
+                    <th>Doctor</th>
+                    <th>Specialization</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Reason</th>
+                    <th>Contact</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th>Disease</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% appointments.forEach((appointment, index) => { %>
+                    <tr>
+                        <td><%= index + 1 %></td>
+                        <td class="doctor-name"><%= appointment.doctorId.fullName %></td>
+                        <td><%= appointment.doctorId.specialization %></td>
+                        <td><%= new Date(appointment.date).toLocaleDateString() %></td>
+                        <td><%= appointment.timeSlot %></td>
+                        <td><%= appointment.reason || "—" %></td>
+                        <td><%= appointment.doctorId.phone %></td>
+                        <td><%= appointment.doctorId.hospital %></td>
+                        <td><%= appointment.status %></td>
+                        <td>
+                            <% if (appointment.status === 'completed' && appointment.disease) { %>
+                                <span class=" <%= appointment.disease.replace(/\s+/g, '-') %>">
+                                    <%= appointment.disease %>
+                                </span>
+                            <% } else { %>
+                                —
+                            <% } %>
+                        </td>
+                        <td class="actions">
+                            <button type="button" class="btn btn-danger btn-sm" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#cancelModal" 
+                                    onclick="setAppointmentId('<%= appointment._id %>')">
+                                Cancel
+                            </button>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    <% } else { %>
+        <p>No appointments found.</p>
+    <% } %>
     </div>
 </div>
 

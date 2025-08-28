@@ -62,14 +62,16 @@
         </div>
       
         <div class="form-group">
-          <label>Prescription</label>
+          <label>Prescriptions</label>
           <input type="file" class="form-control-file" name="patient[prescription]" />
           <% if (appointment.attachments.length > 0) { %>
-          <p class="mt-2">Current Attachments:</p>
+          <p class="mt-2">Current attachments:</p>
           <ul>
             <% appointment.attachments.forEach(function(file, index) { %>
               <li>
-                <a class="btn btn-success mt-2" target="_blank" href="<%= file %>">View File <%= index + 1 %></a>&nbsp;<a class="btn btn-danger mt-2" href="/doctor/appointment/<%= appointment._id %>/prescription/<%= index %>">x</a>
+                <a class="btn btn-success mt-2" target="_blank" href="<%= file %>">View file <%= index + 1 %></a>
+                &nbsp;
+                <a class="btn btn-danger mt-2" href="/doctor/appointment/<%= appointment._id %>/prescription/<%= index %>">x</a>
               </li>
             <% }); %>
           </ul>
@@ -77,38 +79,43 @@
         </div>
       
         <div class="form-group">
-          <label>Medical report</label>
-          <input type="file" class="form-control-file" name="patient[medicalReports]" multiple />
-          <% if (healthRecord.attachments.length > 0) { %>
-          <p class="mt-2">Current Reports:</p>
+        <label>Medical reports</label>
+        <input type="file" class="form-control-file" name="patient[medicalReports]" multiple />
+        <% if (appointment.healthrecord && appointment.healthrecord.attachments.length > 0) { %>
+          <p class="mt-2">Current reports:</p>
           <ul>
-            <% healthRecord.attachments.forEach((report, index) => { %>
+            <% appointment.healthrecord.attachments.forEach((report, index) => { %>
               <li>
-                <a class="btn btn-success mt-2" target="_blank" href="<%= report %>">View Report <%= index + 1 %></a>
+                <a class="btn btn-success mt-2" target="_blank" href="<%= report %>">View report <%= index + 1 %></a>
+                &nbsp;
+                <a class="btn btn-danger mt-2" href="/doctor/appointment/<%= appointment._id %>/healthrecord/<%= index %>">x</a>
               </li>
             <% }) %>
           </ul>
         <% } %>
-        </div>
+      </div>
       
         <div class="form-group">
           <label>Bill (PDF, Images, etc.)</label>
           <input type="file" class="form-control-file" name="patient[bill]" />
-         <% if (billing && billing.attachments.length > 0) { %>
-          <p class="mt-2">Current Bills:</p>
-          <ul>
-            <% billing.attachments.forEach((bill, index) => { %>
-              <li>
-                <a class="btn btn-success mt-2" target="_blank" href="<%= bill %>">View Bill <%= index + 1 %></a>
-              </li>
-            <% }) %>
-          </ul>
-        <% } %>
+          
+          <% if (appointment.billing && appointment.billing.attachments.length > 0) { %>
+            <p class="mt-2">Current bills:</p>
+            <ul>
+              <% appointment.billing.attachments.forEach((bill, index) => { %>
+                <li>
+                  <a class="btn btn-success mt-2" target="_blank" href="<%= bill %>">View bill <%= index + 1 %></a>
+                  &nbsp;
+                  <a class="btn btn-danger mt-2" href="/doctor/appointment/<%= appointment._id %>/billing/<%= index %>">x</a>
+                </li>
+              <% }) %>
+            </ul>
+          <% } %>
         </div>
 
         <div class="form-group">
           <label>Fees</label>
-          <input type="text" class="form-control" name="patient[amount]" value="<%= billing.amount %>" />
+          <input type="text" class="form-control" name="patient[amount]" value="<%= appointment.billing.amount %>" />
         </div>
       
         <button type="submit" class="btn btn-primary">Update</button>

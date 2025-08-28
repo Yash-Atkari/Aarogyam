@@ -18,17 +18,17 @@ router.get("/patient/:id/healthrecords", doctorController.healthRecords);
 router.get("/:doctorId/patient/:patientId/prescriptions", doctorController.prescriptions);
 
 // Combined routes using `router.route()`
-router
-  .route("/appointments/addAppointmentDetails/:id")
-  .get(doctorController.renderAddAppointmentDetails)
-  .post(
-    upload.fields([
-      { name: "patient[prescription]", maxCount: 1 },
-      { name: "patient[medicalReports]", maxCount: 5 },
-      { name: "patient[bill]", maxCount: 1 },
-    ]),
-    doctorController.addAppointmentDetails
-  );
+// router
+//   .route("/appointments/addAppointmentDetails/:id")
+//   .get(doctorController.renderAddAppointmentDetails)
+//   .post(
+//     upload.fields([
+//       { name: "patient[prescription]", maxCount: 1 },
+//       { name: "patient[medicalReports]", maxCount: 5 },
+//       { name: "patient[bill]", maxCount: 1 },
+//     ]),
+//     doctorController.addAppointmentDetails
+//   );
 
 router
   .route("/appointments/edit/:id")
@@ -205,5 +205,76 @@ router.get("/appointment/:appointmentId/prescription/:index", async (req, res) =
     req.flash("error", "Something went wrong while removing the attachment.");
     res.redirect(req.get("referer") || "/doctor/dashboard");
   }});
+
+  router.get("/appointment/:appointmentId/healthrecord/:index", async (req, res) => {
+  try {
+    const appointment = await Appointment.findById(req.params.appointmentId).populate("healthrecord");
+    if (!appointment) {
+      req.flash("error", "Appointment not found.");
+      return res.redirect(req.get("referer") || "/doctor/dashboard");
+    }
+
+    const healthRecord = appointment.healthrecord;
+    if (!healthRecord) {
+      req.flash("error", "No health record found for this appointment.");
+      return res.redirect(req.get("referer") || "/doctor/dashboard");
+    }
+
+    const index = parseInt(req.params.index, 10);
+
+    if (index >= 0 && index < healthRecord.attachments.length) {
+      // Remove the attachment at the given index
+      healthRecord.attachments.splice(index, 1);
+      await healthRecord.save();
+
+      req.flash("success", "Medical report removed successfully.");
+    } else {
+      req.flash("error", "Invalid report index.");
+    }
+
+    res.redirect(req.get("referer") || "/doctor/dashboard");
+  } catch (error) {
+    console.error("Error removing medical report:", error);
+    req.flash("error", "Something went wrong while removing the report.");
+    res.redirect(req.get("referer") || "/doctor/dashboard");
+  }
+});
+
+router.get("/appointment/:appointmentId/billing/:index", async (req, res) => {
+  try {
+    const { appointmentId, index } = req.params;
+
+    // Find appointment with populated billing
+    const appointment = await Appointment.findById(appointmentId).populate("billing");
+    if (!appointment) {
+      req.flash("error", "Appointment not found.");
+      return res.redirect(req.get("referer") || "/doctor/dashboard");
+    }
+
+    if (!appointment.billing) {
+      req.flash("error", "No billing record associated with this appointment.");
+      return res.redirect(req.get("referer") || "/doctor/dashboard");
+    }
+
+    const billing = appointment.billing;
+    const attachmentIndex = parseInt(index, 10);
+
+    // Remove attachment by index
+    if (attachmentIndex >= 0 && attachmentIndex < billing.attachments.length) {
+      billing.attachments.splice(attachmentIndex, 1);
+      await billing.save();
+
+      req.flash("success", "Billing attachment removed successfully.");
+    } else {
+      req.flash("error", "Invalid billing attachment index.");
+    }
+
+    res.redirect(req.get("referer") || "/doctor/dashboard");
+  } catch (error) {
+    console.error("Error removing billing attachment:", error);
+    req.flash("error", "Something went wrong while removing the billing attachment.");
+    res.redirect(req.get("referer") || "/doctor/dashboard");
+  }
+});
 
 module.exports = router;

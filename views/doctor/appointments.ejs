@@ -2,23 +2,36 @@
 
 <style>
   .appointments-container {
-    padding: 0px 0px;
-  }
-  .appointments-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-  }
-  .appointments-table th, .appointments-table td {
-    padding: 12px;
-    border-bottom: 1px solid #ddd;
-  }
-  .appointments-table th {
-    background-color: #f8f9fa;
-  }
-  .actions .btn {
-    margin-right: 5px;
-  }
+        max-width: 100%;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+  /* Table Styles */
+    .appointments-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .appointments-table th, .appointments-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .appointments-table th {
+        background-color: #f8f9fa;
+    }
+
+    .doctor-name {
+        color: #007bff;
+        font-weight: bold;
+    }
+
+    .actions .btn {
+        margin-right: 5px;
+    }
 </style>
 
 <div class="container">
@@ -53,14 +66,14 @@
       <thead>
         <tr>
           <th>Sr. No.</th>
-          <th>Patient Name</th>
+          <th>Patient</th>
           <th>Gender</th>
           <th>Reason</th>
-          <th>Appointment Date</th>
-          <th>Time Slot</th>
+          <th>Date</th>
+          <th>Time</th>
           <th>Disease</th>
           <th>Status</th>
-          <th>Actions</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
@@ -81,10 +94,10 @@
               <td><%= appointment.status %></td>
               <td class="actions">
                 <div class="d-flex">
-                  <a href="/doctor/appointments/addAppointmentDetails/<%= appointment._id %>" 
+                  <!-- <a href="/doctor/appointments/addAppointmentDetails/<%= appointment._id %>" 
                     class="btn btn-primary <%= appointment.status === 'pending' ? 'disabled' : '' %>">
                     <i class="fa-solid fa-plus"></i>
-                  </a>
+                  </a> -->
 
                   <a href="/doctor/appointments/edit/<%= appointment._id %>" 
                     class="btn btn-secondary <%= appointment.status === 'pending' ? 'disabled' : '' %>">
