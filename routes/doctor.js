@@ -14,7 +14,7 @@ const upload = multer({ storage });
 router.get("/dashboard", doctorController.dashboard);
 router.get("/appointments", doctorController.appointments);
 router.get("/patients", doctorController.patients);
-router.get("/patient/:id/healthrecords", doctorController.healthRecords);
+router.get("/:doctorId/patient/:patientId/healthrecords", doctorController.healthRecords);
 router.get("/:doctorId/patient/:patientId/prescriptions", doctorController.prescriptions);
 
 // Combined routes using `router.route()`

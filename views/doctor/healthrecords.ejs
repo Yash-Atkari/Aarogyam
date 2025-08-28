@@ -22,15 +22,15 @@
 
 <body>
     <div class="container container-fluid">
-        <h2 class="">Health Records for <a href="" style="text-decoration: none;"><%= patient.fullName %></a></h2>
+        <h2 class="">Medical Records for <a href="" style="text-decoration: none;"><%= appointments[0].patientId.fullName %></a></h2>
         <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
             <% if (healthrecords && healthrecords.length > 0) { %>
                 <% for (let record of healthrecords) { %>
                     <div class="col">
                         <div class="bg-white p-3 rounded-3">
-                            <h5 class="text-dark">
-                                <i class="fa-solid fa-notes-medical"></i> Health Record
-                            </h5>
+                            <h6 class="text-dark">
+                                <i class="fa-solid fa-calendar"></i>&nbsp; Appointment on <%= new Date(record.created_at).toDateString() %>
+                            </h6>
                         
                             <p><strong>Symptom:</strong> <%= record.symptoms %></p>
                             <p><strong>Disease:</strong> <%= record.disease %></p>

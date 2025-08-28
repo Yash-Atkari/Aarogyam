@@ -26,7 +26,7 @@
                             <p><strong>Age:</strong> <%= patient.age %> years</p>
                             <p><strong>Phone:</strong> <%= patient.phone %></p>
     
-                            <a href="/doctor/patient/<%= patient._id %>/healthrecords" class="btn btn-primary btn-custom">
+                            <a href="/doctor/<%= doctor._id %>/patient/<%= patient._id %>/healthrecords" class="btn btn-primary btn-custom">
                                 <i class="fa-solid fa-notes-medical"></i>&nbsp; Health Records
                             </a>
                             <a href="/doctor/<%= doctor._id %>/patient/<%= patient._id %>/prescriptions" class="btn btn-success btn-custom">

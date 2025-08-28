@@ -89,17 +89,25 @@ module.exports.patients = async (req, res, next) => {
   }
 };
 
-// Display Health Records for a Specific Patient
+// Display Health Records + Appointments between a Doctor and Patient
 module.exports.healthRecords = async (req, res, next) => {
   try {
-    const patientId = req.params.id;
-    const patient = await Patient.findById(patientId);
-    if (!patient) {
-      req.flash("error", "Patient not found.");
-      return res.redirect("/doctor/patients");
-    }
-    const healthrecords = await HealthRecord.find({ patientId });
-    res.render("doctor/healthrecords", { healthrecords, patient });
+    const { doctorId, patientId } = req.params;
+
+    // Get all appointments for this doctor-patient pair
+    const appointments = await Appointment.find({ doctorId, patientId })
+      .populate("patientId"); // optional: populate doctor & patient
+
+    // Collect all healthrecord IDs from appointments
+    const healthRecordIds = appointments
+      .map(app => app.healthrecord) // since it's a single ObjectId
+      .filter(id => id); // remove null/undefined
+
+    // Fetch the healthrecords
+    const healthrecords = await HealthRecord.find({ _id: { $in: healthRecordIds } });
+
+    // Pass both appointments + healthrecords to view
+    res.render("doctor/healthrecords", { appointments, healthrecords });
   } catch (error) {
     console.error("Error fetching health records:", error);
     req.flash("error", "Failed to load health records. Please try again.");
@@ -111,13 +119,13 @@ module.exports.healthRecords = async (req, res, next) => {
 module.exports.prescriptions = async (req, res, next) => {
   try {
     const { doctorId, patientId } = req.params;
-    const patient = await Patient.findById(patientId);
-    if (!patient) {
-      req.flash("error", "Patient not found.");
-      return res.redirect("/doctor/patients");
-    }
-    const appointments = await Appointment.find({ doctorId, patientId });
-    res.render("doctor/prescriptions", { appointments, patient });
+
+    // Fetch all appointments between doctor & patient
+    const appointments = await Appointment.find({ doctorId, patientId })
+      .populate("patientId"); // optional populate for details
+
+    // Pass to EJS
+    res.render("doctor/prescriptions", { appointments });
   } catch (error) {
     console.error("Error fetching prescriptions:", error);
     req.flash("error", "Failed to load prescriptions. Please try again.");

@@ -19,7 +19,7 @@
 
 <body>
     <div class="container container-fluid">
-        <h2 class="">Prescriptions for <a href="" style="text-decoration: none;"><%= patient.fullName %></a></h2>
+        <h2 class="">Prescriptions for <a href="" style="text-decoration: none;"><%= appointments[0].patientId.fullName %></a></h2>
         <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
             <% for (let appointment of appointments) { %>
                 <div class="col">
