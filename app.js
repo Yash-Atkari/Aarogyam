@@ -235,7 +235,7 @@ app.post("/chat", async (req, res) => {
     const { message } = req.body;
 
     const payload = {
-      model: "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
+      model: "mistralai/Mistral-7B-Instruct-v0.2",
       messages: [
         {
           role: "system",
