@@ -4,9 +4,8 @@
     body { background-color: #f8f9fa; }
 
     .record-container {
-        max-width: 100%;
         background: white;
-        padding: 10px 20px;
+        padding: 20px;
         border-radius: 10px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
@@ -52,6 +51,9 @@
     p {
         margin-bottom: 0.3rem;
     }
+    .alert {
+        position: inherit;
+    }
 </style>
 
 <div class="container ">
@@ -61,7 +63,7 @@
 
     <div class="record-container">
         <% if (records.length === 0) { %>
-            <div class="alert alert-warning text-center">No medical records found.</div>
+            <div class="alert alert-warning text-center" style="margin: 0;">No medical records found</div>
         <% } else { %>
             <% records.forEach(record => { %>
                     <div class="">
@@ -84,7 +86,7 @@
                                 <% }); %>
                             </ul>
                         <% } else { %>
-                            <p class="text-muted">No attachments available.</p>
+                            <p class="text-muted">No attachments available</p>
                         <% } %>   
                         
                         <p class="text-muted badge"><%= new Date(record.created_at).toDateString() %></p>

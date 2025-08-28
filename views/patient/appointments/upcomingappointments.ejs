@@ -161,18 +161,19 @@
                         <td><%= appointment.status %></td>
                         <td>
                             <% if (appointment.status === 'completed' && appointment.disease) { %>
-                                <span class=" <%= appointment.disease.replace(/\s+/g, '-') %>">
+                                <span class="<%= appointment.disease.replace(/\s+/g, '-') %>">
                                     <%= appointment.disease %>
                                 </span>
                             <% } else { %>
-                                —
+                                — 
                             <% } %>
                         </td>
                         <td class="actions">
                             <button type="button" class="btn btn-danger btn-sm" 
                                     data-bs-toggle="modal" 
                                     data-bs-target="#cancelModal" 
-                                    onclick="setAppointmentId('<%= appointment._id %>')">
+                                    onclick="setAppointmentId('<%= appointment._id %>')"
+                                    <% if (['cancelled', 'confirmed', 'completed'].includes(appointment.status)) { %> disabled <% } %>>
                                 Cancel
                             </button>
                         </td>
@@ -181,7 +182,7 @@
             </tbody>
         </table>
     <% } else { %>
-        <p>No appointments found.</p>
+        <p>No appointments found</p>
     <% } %>
     </div>
 </div>

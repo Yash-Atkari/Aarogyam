@@ -6,27 +6,27 @@
     </div>
 
     <div class="record-container table-responsive">
-        <table class="billing-table">
-            <thead>
-                <tr>
-                    <th>Invoice No.</th>
-                    <th>Doctor</th>
-                    <th>Disease</th>
-                    <th>Date</th>
-                    <th>Amount</th>
-                    <th>Payment</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                    <th>Pay</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% if (bills.length === 0) { %>
-                    <tr>
-                        <td colspan="9">No billing records found.</td>
-                    </tr>
-                <% } else { %>
-                    <% bills.forEach((bill) => { %>
+        <% if (bills.length === 0) { %>
+            <tr>
+                <div class="alert alert-warning text-center" style="margin: 0;">No billings found</div>
+            </tr>
+        <% } else { %>
+            <% bills.forEach((bill) => { %>
+                <table class="billing-table">
+                    <thead>
+                        <tr>
+                            <th>Invoice No.</th>
+                            <th>Doctor</th>
+                            <th>Disease</th>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Payment</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                            <th>Pay</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                         <tr>
                             <td><%= bill.invoiceNo %></td>
                             <td class="doctor-name"><%= bill.doctorId.fullName %></td>
@@ -66,10 +66,10 @@
                                 </button>                            
                             </td>
                         </tr>
-                    <% }); %>
-                <% } %>
-            </tbody>
-        </table>
+                    </tbody>
+                </table>
+            <% }); %>
+        <% } %>
     </div>
 </div>
 
@@ -169,6 +169,10 @@
     .page-header {
         font-size: 22px;
         font-weight: bold;
+    }
+
+    .alert {
+        position: inherit;
     }
 
     .record-container {

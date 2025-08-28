@@ -115,20 +115,25 @@ module.exports.filterAppointments = async (req, res, next) => {
     const { search, date, status } = req.query;
     let filter = {};
 
-    if (date) filter.date = date;
+    if (date) {
+      const start = new Date(date);
+      start.setHours(0, 0, 0, 0);
+      const end = new Date(date);
+      end.setHours(23, 59, 59, 999);
+      filter.date = { $gte: start, $lte: end };
+    }
+
     if (status) filter.status = status;
 
     let appointments = await Appointment.find(filter).populate("doctorId");
-    console.log(appointments);
 
     if (search) {
       appointments = appointments.filter((appointment) =>
         appointment.doctorId.fullName.toLowerCase().includes(search.toLowerCase()) ||
-        appointment.reason.toLowerCase().includes(search.toLowerCase()) ||
-        appointment.disease.toLowerCase().includes(search.toLowerCase())
+        (appointment.reason && appointment.reason.toLowerCase().includes(search.toLowerCase())) ||
+        (appointment.disease && appointment.disease.toLowerCase().includes(search.toLowerCase()))
       );
     }
-    console.log(appointments);
 
     const referer = req.get("referer");
     if (referer && referer.includes("/pastappointments")) {

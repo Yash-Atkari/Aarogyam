@@ -115,7 +115,11 @@
 
         <div class="form-group">
           <label>Fees</label>
-          <input type="text" class="form-control" name="patient[amount]" value="<%= appointment.billing.amount %>" />
+          <% if (appointment.billing) { %>
+            <input type="text" class="form-control" name="patient[amount]" value=" <%= appointment.billing.amount %>"/>
+          <% } else { %>
+            <input type="text" class="form-control" name="patient[amount]" value=" <%= appointment.doctorId.consultantFees %>"/>
+          <% } %>
         </div>
       
         <button type="submit" class="btn btn-primary">Update</button>
