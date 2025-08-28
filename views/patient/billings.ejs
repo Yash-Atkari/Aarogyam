@@ -6,13 +6,7 @@
     </div>
 
     <div class="record-container table-responsive">
-        <% if (bills.length === 0) { %>
-            <tr>
-                <div class="alert alert-warning text-center" style="margin: 0;">No billings found</div>
-            </tr>
-        <% } else { %>
-            <% bills.forEach((bill) => { %>
-                <table class="billing-table">
+        <table class="billing-table">
                     <thead>
                         <tr>
                             <th>Invoice No.</th>
@@ -26,13 +20,19 @@
                             <th>Pay</th>
                         </tr>
                     </thead>
-                    <tbody>
+        <tbody>
+        <% if (bills.length === 0) { %>
+            <tr>
+                <div class="alert alert-warning text-center" style="margin: 0;">No billings found</div>
+            </tr>
+        <% } else { %>
+            <% bills.forEach((bill) => { %>
                         <tr>
                             <td><%= bill.invoiceNo %></td>
                             <td class="doctor-name"><%= bill.doctorId.fullName %></td>
                             <td><%= bill.reason %></td>
                             <td><%= new Date(bill.date).toLocaleDateString() %></td>
-                            <td>₹ <%= bill.amount %></td>
+                            <td>₹<%= bill.amount %></td>
                             <td><%= bill.paymentMethod %></td>
                             <td class="status <%= bill.status === 'paid' ? 'paid' : 'unpaid' %>">
                                 <%= bill.status %>
@@ -66,10 +66,10 @@
                                 </button>                            
                             </td>
                         </tr>
-                    </tbody>
-                </table>
             <% }); %>
         <% } %>
+        </tbody>
+    </table>
     </div>
 </div>
 
@@ -166,13 +166,14 @@
 </script>
 
 <style>
+    .billing-container {
+        padding: 20px;
+    }
+
     .page-header {
         font-size: 22px;
         font-weight: bold;
-    }
-
-    .alert {
-        position: inherit;
+        margin-bottom: 15px;
     }
 
     .record-container {
@@ -185,6 +186,7 @@
     .billing-table {
         width: 100%;
         border-collapse: collapse;
+        margin-top: 10px;
     }
 
     .billing-table th, .billing-table td {
