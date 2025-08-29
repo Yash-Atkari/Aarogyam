@@ -4,7 +4,6 @@ const Doctor = require("./models/doctor");
 
 module.exports.isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
-    console.log("Authentication done!");
     return next(); // User is logged in, proceed to the next middleware
   }
 
@@ -33,7 +32,6 @@ module.exports.isAuthorized = (Model, paramIdField = 'id', resourceOwnerField = 
         return next(new ExpressError(403, "You are not authorized to perform this action."));
       }
       
-      console.log("Authorization done!");
       next();
     } catch (err) {
       console.error(err);

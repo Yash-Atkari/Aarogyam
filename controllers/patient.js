@@ -154,7 +154,35 @@ module.exports.filterAppointments = async (req, res, next) => {
 module.exports.bookAppointmentPage = async (req, res, next) => {
   try {
     const doctors = await Doctor.find();
-    res.render("patient/appointments/bookappointment", { doctors });
+
+    // Get current IST time
+    const nowUtc = new Date();
+    const nowIST = new Date(nowUtc.getTime() + (5.5 * 60 * 60 * 1000));
+
+    const doctorsWithFutureSlots = doctors.map(doc => {
+      const futureSlots = doc.availabilitySlots.filter(slot => {
+        // Create slot datetime from date + startTime
+        const slotDate = new Date(slot.date);
+
+        if (slot.startTime) {
+          const [hours, minutes] = slot.startTime.split(":").map(Number);
+          slotDate.setHours(hours, minutes, 0, 0);
+        }
+
+        // Convert slotDate (stored UTC) into IST
+        const slotIST = new Date(slotDate.getTime() + (5.5 * 60 * 60 * 1000));
+
+        return slotIST >= nowIST;
+      });
+
+      return {
+        ...doc.toObject(),
+        availabilitySlots: futureSlots
+      };
+    });
+
+    res.render("patient/appointments/bookappointment", { doctors: doctorsWithFutureSlots });
+
   } catch (err) {
     console.error("Error rendering appointment booking page:", err);
     req.flash("error", "Internal Server Error.");
@@ -294,8 +322,6 @@ module.exports.bookAppointment = async (req, res, next) => {
     const { doctorId, appointmentDate, timeSlot, reason } = value.patient;
 
     const [startTime, endTime] = timeSlot.split("-");
-
-    console.log(startTime, endTime, appointmentDate);
 
     const newAppointment = new Appointment({
       patientId,

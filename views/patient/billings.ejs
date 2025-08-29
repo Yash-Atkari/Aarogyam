@@ -6,71 +6,90 @@
     </div>
 
     <div class="record-container table-responsive">
-        <table class="billing-table">
-                    <thead>
-                        <tr>
-                            <th>Invoice No.</th>
-                            <th>Doctor</th>
-                            <th>Disease</th>
-                            <th>Date</th>
-                            <th>Amount</th>
-                            <th>Payment</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                            <th>Pay</th>
-                        </tr>
-                    </thead>
-        <tbody>
-        <% if (bills.length === 0) { %>
-            <tr>
-                <div class="alert alert-warning text-center" style="margin: 0;">No billings found</div>
-            </tr>
+    <table class="billing-table">
+      <thead>
+        <tr>
+          <th>Invoice No.</th>
+          <th>Doctor</th>
+          <th>Disease</th>
+          <th>Date</th>
+          <th>Amount</th>
+          <th>Payment</th>
+          <th>Status</th>
+          <th>Action</th>
+          <th>Pay</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% if (!bills || bills.length === 0) { %>
+          <tr>
+            <td colspan="9">
+              <p style="margin: 0;">
+                No billings found
+              </p>
+            </td>
+          </tr>
         <% } else { %>
-            <% bills.forEach((bill) => { %>
-                        <tr>
-                            <td><%= bill.invoiceNo %></td>
-                            <td class="doctor-name"><%= bill.doctorId.fullName %></td>
-                            <td><%= bill.reason %></td>
-                            <td><%= new Date(bill.date).toLocaleDateString() %></td>
-                            <td>₹<%= bill.amount %></td>
-                            <td><%= bill.paymentMethod %></td>
-                            <td class="status <%= bill.status === 'paid' ? 'paid' : 'unpaid' %>">
-                                <%= bill.status %>
-                            </td>
-                            <td>
-                                <% if (bill.attachments.length > 0) { %>
-                                        <% bill.attachments.forEach((file) => { %>
-                                            <div class="d-flex">
-                                                <a href="<%= file %>" class="action-icon view" title="View" target="_blank">
-                                                    <i class="fas fa-eye"></i>
-                                                </a>
-                                                <a href="<%= file %>" class="action-icon download" title="Download" target="_blank" download>
-                                                    <i class="fas fa-download"></i>
-                                                </a>
-                                                <a href="#" class="action-icon delete" title="Delete" data-bs-toggle="modal" data-bs-target="#cancelModal" onclick="setAppointmentId('<%= bill._id %>', '<%= file %>')">
-                                                    <i class="fas fa-trash"></i>
-                                                </a>
-                                            </div>
-                                        <% }); %>
-                                <% } else { %>
-                                    No files
-                                <% } %>
-                            </td>
-                            <td>
-                                <button 
-                                class="rzp-button btn btn-primary" 
-                                data-amount="<%= bill.amount %>" 
-                                data-billingid="<%= bill._id %>"
-                                >
-                                Pay
-                                </button>                            
-                            </td>
-                        </tr>
-            <% }); %>
+          <% bills.forEach((bill) => { %>
+            <tr data-billingid="<%= bill._id %>">
+              <td><%= bill.invoiceNo %></td>
+              <td class="doctor-name"><%= bill.doctorId.fullName %></td>
+              <td><%= bill.reason %></td>
+              <td><%= new Date(bill.date).toLocaleDateString() %></td>
+              <td>₹<%= bill.amount %></td>
+              <td><%= bill.paymentMethod %></td>
+              <td class="status <%= bill.status === 'paid' ? 'paid' : 'unpaid' %>">
+                <%= bill.status %>
+              </td>
+
+              <td>
+                <% if (Array.isArray(bill.attachments) && bill.attachments.length > 0) { %>
+                  <div class="actions" role="group" aria-label="attachment actions">
+                    <% bill.attachments.forEach((file) => { %>
+                      <a href="<%= file %>" class="action-icon view" title="View" target="_blank" rel="noopener">
+                        <i class="fas fa-eye" aria-hidden="true"></i>
+                        <span class="visually-hidden">View</span>
+                      </a>
+
+                      <a href="<%= file %>" class="action-icon download" title="Download" target="_blank" rel="noopener" download>
+                        <i class="fas fa-download" aria-hidden="true"></i>
+                        <span class="visually-hidden">Download</span>
+                      </a>
+
+                      <button type="button"
+                              class="action-icon delete btn-link"
+                              title="Delete"
+                              data-bs-toggle="modal"
+                              data-bs-target="#cancelModal"
+                              data-file="<%= encodeURIComponent(file) %>"
+                              data-billingid="<%= bill._id %>">
+                        <i class="fas fa-trash" aria-hidden="true"></i>
+                        <span class="visually-hidden">Delete</span>
+                      </button>
+                    <% }); %>
+                  </div>
+                <% } else { %>
+                  <span>No files</span>
+                <% } %>
+              </td>
+
+              <td>
+                <button
+                  class="rzp-button btn btn-primary"
+                  type="button"
+                  data-amount="<%= bill.amount %>"
+                  data-billingid="<%= bill._id %>"
+                  aria-label="Pay invoice <%= bill.invoiceNo %>">
+                  Pay
+                </button>
+              </td>
+            </tr>
+          <% }); %>
         <% } %>
-        </tbody>
+      </tbody>
     </table>
-    </div>
+  </div>
 </div>
 
 <!-- Include Razorpay checkout script -->
