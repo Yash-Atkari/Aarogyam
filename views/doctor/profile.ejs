@@ -139,14 +139,13 @@
                 <div class="row mb-2 slot-item">
                   <div class="col-md-4">
                     <input 
-                      type="date" 
-                      id="slot-date-<%= index %>" 
-                      name="doctor[availabilitySlots][<%= index %>][date]" 
-                      value="<%= slot.date ? slot.date.toISOString().split('T')[0] : '' %>" 
-                      class="form-control" 
-                      min="<%= new Date().toISOString().split('T')[0] %>"
-                      required
-                    >
+                    type="date" 
+                    name="doctor[availabilitySlots][<%= index %>][date]" 
+                    value="<%= slot.date ? slot.date.toISOString().split('T')[0] : '' %>" 
+                    class="form-control" 
+                    min="<%= new Date().toLocaleString('en-CA', { timeZone: 'Asia/Kolkata' }).split(',')[0] %>"
+                    required
+                  >
                   </div>
                   <div class="col-md-3">
                     <input type="time" name="doctor[availabilitySlots][<%= index %>][startTime]" value="<%= slot.startTime %>" class="form-control" required>
@@ -161,7 +160,10 @@
               <% }) %>
             <% } %>
           </div>
-          <button type="button" class="btn btn-secondary mt-2" id="add-slot">Add Slot</button>
+          <div class="alert alert-warning mb-2" role="alert">
+            ⚠️ <strong>Note:</strong> Please add availability slots only for future times (greater than current IST).
+          </div>
+          <button type="button" class="btn btn-secondary" id="add-slot">Add Slot</button>
         </div>
 
         <button type="submit" class="btn btn-primary">Update Profile</button>
@@ -174,7 +176,7 @@
 
     // Get today's date in YYYY-MM-DD format
     const today = new Date().toLocaleDateString("en-CA"); // en-CA gives YYYY-MM-DD
-  console.log(today);
+    console.log(today);
 
     addSlotBtn.addEventListener("click", () => {
       let index = slotsContainer.querySelectorAll(".slot-item").length;

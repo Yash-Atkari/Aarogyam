@@ -145,6 +145,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         timeSlotSelect.innerHTML = `<option value="" disabled selected>Select a time</option>`;
 
+        console.log("Slots for date:", data.slots);
+
         if (data.slots && data.slots.length > 0) {
             data.slots.forEach(slot => {
                 const option = document.createElement("option");

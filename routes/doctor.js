@@ -131,7 +131,14 @@ router.get("/:doctorId/slots", async (req, res) => {
             return res.status(404).json({ message: "Doctor not found" });
         }
 
+        const now = new Date(); // current UTC instant
         let slots = doctor.availabilitySlots || [];
+
+        // Filter only future slots (IST-based)
+        slots = slots.filter(slot => {
+            const slotDateTime = new Date(`${slot.date.toISOString().split("T")[0]}T${slot.startTime}:00+05:30`);
+            return slotDateTime >= now;
+        });
 
         // If a date query param is provided, filter slots by that date
         if (req.query.date) {
