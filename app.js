@@ -96,9 +96,7 @@ const sessionOptions = {
   rolling: true,   // 👈 add this here for sliding session
   cookie: {
     maxAge: 7 * 24 * 60 * 60 * 1000,  // 7 days
-    secure: process.env.NODE_ENV === "production", // recommended for HTTPS
     httpOnly: true,
-    sameSite: "lax", // optional, CSRF protection
   }
 };
 
