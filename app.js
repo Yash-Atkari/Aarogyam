@@ -4,10 +4,10 @@ if(process.env.NODE_ENV != "production") {
 
 const RazorPay = require("razorpay");
 const crypto = require('crypto');
-const razorpay = new RazorPay({
-  key_id: process.env.RZP_KEY_ID,
-  key_secret: process.env.RZP_KEY_SECRET
-});
+// const razorpay = new RazorPay({
+//   key_id: process.env.RZP_KEY_ID,
+//   key_secret: process.env.RZP_KEY_SECRET
+// });
 
 const express = require("express");
 const mongoose = require("mongoose");
@@ -274,52 +274,52 @@ app.post("/chat", async (req, res) => {
   }
 });
 
-// Create an order endpoint
-app.post('/create-order', async (req, res) => {
-  try {
-    const { amount } = req.body;      // amount in INR, e.g. 500 for ₹500
-    const options = {
-      amount: amount * 100,           // convert to paise
-      currency: 'INR',
-      receipt: `receipt_${Date.now()}`,
-    };
-    const order = await razorpay.orders.create(options);
-    res.json({ success: true, order });
-  } catch (err) {
-    console.error('Razorpay order creation failed:', err);
-    res.status(500).json({ success: false, error: 'Order creation failed' });
-  }
-});
+// // Create an order endpoint
+// app.post('/create-order', async (req, res) => {
+//   try {
+//     const { amount } = req.body;      // amount in INR, e.g. 500 for ₹500
+//     const options = {
+//       amount: amount * 100,           // convert to paise
+//       currency: 'INR',
+//       receipt: `receipt_${Date.now()}`,
+//     };
+//     const order = await razorpay.orders.create(options);
+//     res.json({ success: true, order });
+//   } catch (err) {
+//     console.error('Razorpay order creation failed:', err);
+//     res.status(500).json({ success: false, error: 'Order creation failed' });
+//   }
+// });
 
-app.post('/verify-payment/:billingId', async (req, res) => {
-  // Extracts the details sent by the Razorpay handler on the frontend.
-  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
-  // Creates a secure HMAC SHA256 signature using your secret key - This mirrors what Razorpay sends in razorpay_signature.
-  const hmac = crypto.createHmac('sha256', process.env.RZP_KEY_SECRET);
-  hmac.update(`${razorpay_order_id}|${razorpay_payment_id}`);
-  const expectedSignature = hmac.digest('hex');
+// app.post('/verify-payment/:billingId', async (req, res) => {
+//   // Extracts the details sent by the Razorpay handler on the frontend.
+//   const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+//   // Creates a secure HMAC SHA256 signature using your secret key - This mirrors what Razorpay sends in razorpay_signature.
+//   const hmac = crypto.createHmac('sha256', process.env.RZP_KEY_SECRET);
+//   hmac.update(`${razorpay_order_id}|${razorpay_payment_id}`);
+//   const expectedSignature = hmac.digest('hex');
 
-// Compares your generated signature with Razorpay's - If they match: payment is legit.
-  if (expectedSignature === razorpay_signature) {
-   try {
-      const billingId = req.params.billingId;
+// // Compares your generated signature with Razorpay's - If they match: payment is legit.
+//   if (expectedSignature === razorpay_signature) {
+//    try {
+//       const billingId = req.params.billingId;
 
-      // ✅ Replace with your actual Mongoose model
-      const billing = await Billing.findById(billingId);
-      if (!billing) return res.status(404).json({ success: false, error: 'Billing record not found' });
+//       // ✅ Replace with your actual Mongoose model
+//       const billing = await Billing.findById(billingId);
+//       if (!billing) return res.status(404).json({ success: false, error: 'Billing record not found' });
 
-      billing.status = 'paid';
-      await billing.save();
+//       billing.status = 'paid';
+//       await billing.save();
 
-      return res.json({ success: true });
-    } catch (err) {
-      console.error('Error updating billing status:', err);
-      return res.status(500).json({ success: false, error: 'Failed to update billing status' });
-    }
-  } else {
-    return res.status(400).json({ success: false, error: 'Invalid signature' });
-  }
-});
+//       return res.json({ success: true });
+//     } catch (err) {
+//       console.error('Error updating billing status:', err);
+//       return res.status(500).json({ success: false, error: 'Failed to update billing status' });
+//     }
+//   } else {
+//     return res.status(400).json({ success: false, error: 'Invalid signature' });
+//   }
+// });
 
 // Error handler
 
