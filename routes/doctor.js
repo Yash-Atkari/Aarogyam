@@ -170,14 +170,20 @@ router.get("/filterappointments", async (req, res, next) => {
       .populate("patientId")
       .populate("doctorId"); // if you need doctor info for searching
 
-    // Apply search filtering
+    // Apply search filtering (without doctorName)
     if (search) {
       const searchLower = search.toLowerCase();
-      appointments = appointments.filter((appointment) =>
-        (appointment.patientId?.fullName?.toLowerCase().includes(searchLower)) ||
-        (appointment.reason?.toLowerCase().includes(searchLower)) ||
-        (appointment.disease?.toLowerCase().includes(searchLower))
-      );
+
+      appointments = appointments.filter((appointment) => {
+        const patientName =
+          appointment.patientId?.fullName || appointment.patientId?.username || "";
+
+        return (
+          patientName.toLowerCase().includes(searchLower) ||
+          appointment.reason?.toLowerCase().includes(searchLower) ||
+          appointment.disease?.toLowerCase().includes(searchLower)
+        );
+      });
     }
 
     res.render("doctor/appointments", { appointments });

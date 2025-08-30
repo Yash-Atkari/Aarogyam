@@ -22,7 +22,7 @@
 
 <body>
     <div class="container container-fluid">
-        <h2 class="">Medical Records for <a href="" style="text-decoration: none;"><%= appointments[0].patientId.fullName %></a></h2>
+        <h2 class="">Medical Records for <a href="" style="text-decoration: none;"><%= appointments[0].patientId.fullName || appointments[0].patientId.username %></a></h2>
         <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
             <% if (healthrecords && healthrecords.length > 0) { %>
                 <% for (let record of healthrecords) { %>

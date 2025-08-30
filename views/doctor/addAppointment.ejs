@@ -47,7 +47,7 @@
 
 <div class="container">
     <div class="form-header">
-        <h2><strong><%= appointment.patientId.fullName %></strong>'s Appointment</h2>
+        <h2><strong><%= appointment.patientId.fullName || appointment.patientId.username %></strong>'s Appointment</h2>
     </div>
     <div class="appointment-form-container my-3">
         <form action="/doctor/appointments/addAppointmentDetails/<%= appointment._id %>" method="POST" enctype="multipart/form-data">
