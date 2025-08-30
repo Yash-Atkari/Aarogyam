@@ -128,11 +128,18 @@ module.exports.filterAppointments = async (req, res, next) => {
     let appointments = await Appointment.find(filter).populate("doctorId");
 
     if (search) {
-      appointments = appointments.filter((appointment) =>
-        appointment.doctorId.fullName.toLowerCase().includes(search.toLowerCase()) ||
-        (appointment.reason && appointment.reason.toLowerCase().includes(search.toLowerCase())) ||
-        (appointment.disease && appointment.disease.toLowerCase().includes(search.toLowerCase()))
-      );
+      appointments = appointments.filter((appointment) => {
+        const doctorName =
+          appointment.doctorId.fullName || appointment.doctorId.username || "";
+
+        return (
+          doctorName.toLowerCase().includes(search.toLowerCase()) ||
+          (appointment.reason &&
+            appointment.reason.toLowerCase().includes(search.toLowerCase())) ||
+          (appointment.disease &&
+            appointment.disease.toLowerCase().includes(search.toLowerCase()))
+        );
+      });
     }
 
     const referer = req.get("referer");

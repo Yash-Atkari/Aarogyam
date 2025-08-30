@@ -151,7 +151,7 @@
                 <% appointments.forEach((appointment, index) => { %>
                     <tr>
                         <td><%= index + 1 %></td>
-                        <td class="doctor-name"><%= appointment.doctorId.fullName %></td>
+                        <td class="doctor-name"><%= appointment.doctorId.fullName || appointment.doctorId.username %></td>
                         <td><%= appointment.doctorId.specialization %></td>
                         <td><%= new Date(appointment.date).toLocaleDateString() %></td>
                         <td><%= appointment.timeSlot %></td>

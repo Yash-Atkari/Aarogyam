@@ -67,7 +67,7 @@
         <% } else { %>
             <% records.forEach(record => { %>
                     <div class="">
-                        <p><strong>Doctor:</strong> <%= record.doctorId.fullName %></p>
+                        <p><strong>Doctor:</strong> <%= record.doctorId.fullName || record.doctorId.username %></p>
                         <p><strong>Symptom:</strong> <%= record.symptoms %></p>
                         <p><strong>Disease:</strong> <%= record.disease %></p>
                         

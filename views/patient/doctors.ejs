@@ -26,7 +26,7 @@
                     <div class="col">
                         <div class="card">
                             <h4 class="text-primary">
-                                <i class="fa-solid fa-user-doctor"></i>&nbsp; <%= doctor.fullName %>
+                                <i class="fa-solid fa-user-doctor"></i>&nbsp; <%= doctor.fullName ||  doctor.username %>
                             </h4>
                             <p><strong>Email:</strong> <%= doctor.email %></p>
                             <p><strong>Specialization:</strong> <%= doctor.specialization %></p>

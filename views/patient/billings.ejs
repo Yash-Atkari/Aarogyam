@@ -34,7 +34,7 @@
           <% bills.forEach((bill) => { %>
             <tr data-billingid="<%= bill._id %>">
               <td><%= bill.invoiceNo %></td>
-              <td class="doctor-name"><%= bill.doctorId.fullName %></td>
+              <td class="doctor-name"><%= bill.doctorId.fullName || bill.doctorId.username %></td>
               <td><%= bill.reason %></td>
               <td><%= new Date(bill.date).toLocaleDateString() %></td>
               <td>₹<%= bill.amount %></td>

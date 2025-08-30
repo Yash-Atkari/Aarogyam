@@ -25,7 +25,7 @@
                     <% appointments.forEach((record, index) => { %>
                         <tr>
                             <td><%= index + 1 %></td>
-                            <td class="doctor-name"><%= record.doctorId.fullName %></td>
+                            <td class="doctor-name"><%= record.doctorId.fullName || record.doctorId.username %></td>
                             <td><%= new Date(record.createdAt).toLocaleDateString() %></td>
                             <td>
                                 <% if (record.disease) { %>

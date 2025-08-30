@@ -106,6 +106,10 @@
     .doctor-info li strong {
         color: #222;
     }
+
+    .alert {
+        position: inherit;
+    }
 </style>
 
 <div class="dashboard-container container">
@@ -119,7 +123,7 @@
             <div class="welcome-text">
                 <h3>Welcome back</h3>
                 <i class="fa-solid fa-user fs-4"></i>
-                <span class="doctor-name">&nbsp;Dr. <%= doctor.username %></span>
+                <span class="doctor-name">&nbsp;Dr. <%= doctor.fullName ||  doctor.username %></span>
                 <p>
                     Dedicated to providing the best healthcare services with <%= doctor.experience %> years of experience.
                 </p>
