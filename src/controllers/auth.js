@@ -1,9 +1,9 @@
 const passport = require("passport");
 
-const Doctor = require("../models/doctor");
-const Patient = require("../models/patient");
-const ExpressError = require("../utils/ExpressError");
-const { patientSchema, doctorSchema } = require("../schema");
+const Doctor = require("../models/Doctor");
+const Patient = require("../models/Patient");
+const ExpressError = require("../utils/expressError");
+const { patientSchema, doctorSchema } = require("../validators");
 
 // Render the login form.
 module.exports.logInFormRender = (req, res) => {

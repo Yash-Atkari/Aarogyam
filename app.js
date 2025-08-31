@@ -25,7 +25,7 @@ const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
-const ExpressError = require("./utils/ExpressError");
+const ExpressError = require("./src/utils/expressError");
 
 const app = express();
 
@@ -36,7 +36,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
+app.set('views', path.join(__dirname, 'src', 'views')); // <-- updated path
 app.use(express.static("public"));
 app.use(express.static(path.join(__dirname, "public")));
 app.engine('ejs', engine);
@@ -45,13 +45,13 @@ app.use('/uploads', express.static('uploads'));
 
 // Models
 
-const Doctor = require("./models/doctor");
-const Patient = require("./models/patient");
-const Billing = require("./models/billing");
+const Doctor = require("./src/models/Doctor");
+const Patient = require("./src/models/Patient");
+const Billing = require("./src/models/Billing");
 
 // MongoDB connection
 
-const MongoUrl =  process.env.ATLASDB_URL || "mongodb://127.0.0.1:27017/aarogyam";
+const MongoUrl =  /*process.env.ATLASDB_URL ||*/ "mongodb://127.0.0.1:27017/aarogyam";
 
 main()
   .then(() => console.log("Connected to DB"))
@@ -76,20 +76,20 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-const store = MongoStore.create({
-  mongoUrl: MongoUrl,
-  crypto: {
-      secret: process.env.MONGOSTORESECRET,
-  },
-  touchAfter: 24 * 3600,
-});
+// const store = MongoStore.create({
+//   mongoUrl: MongoUrl,
+//   crypto: {
+//       secret: process.env.MONGOSTORESECRET,
+//   },
+//   touchAfter: 24 * 3600,
+// });
 
-store.on("error", () => {
-  console.log("ERROR in MONGO SESSION STORE");
-});
+// store.on("error", () => {
+//   console.log("ERROR in MONGO SESSION STORE");
+// });
 
 const sessionOptions = {
-  store,
+  // store,
   secret: process.env.SECRET,   // use env variable properly
   resave: false,
   saveUninitialized: false,     // only save when needed
@@ -219,17 +219,17 @@ app.get("/", (req, res) => res.render("dashboard"));
 
 // Auth routes
 
-const authRouter = require("./routes/auth");
+const authRouter = require("./src/routes/auth");
 app.use("/auth", authRouter);
 
 // Patient routes
 
-const patientRouter = require("./routes/patient");
+const patientRouter = require("./src/routes/patient");
 app.use("/patient", patientRouter);
 
 // Doctor routes
 
-const doctorRouter = require("./routes/doctor");
+const doctorRouter = require("./src/routes/doctor");
 app.use("/doctor", doctorRouter);
 
 app.post("/chat", async (req, res) => {

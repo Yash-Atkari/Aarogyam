@@ -1,10 +1,10 @@
-const Doctor = require("../models/doctor");
-const Patient = require("../models/patient");
-const Appointment = require("../models/appointment");
-const HealthRecord = require("../models/healthrecord");
-const Billing = require("../models/billing");
+const Doctor = require("../models/Doctor");
+const Patient = require("../models/Patient");
+const Appointment = require("../models/Appointment");
+const HealthRecord = require("../models/HealthRecord");
+const Billing = require("../models/Billing");
 
-const { appointmentSchema } = require('../schema');
+const { appointmentSchema } = require('../validators');
 const { start } = require("repl");
 
 // Render the patient's dashboard.

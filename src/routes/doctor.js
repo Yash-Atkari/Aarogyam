@@ -3,11 +3,11 @@ const router = express.Router();
 const multer = require("multer");
 const doctorController = require("../controllers/doctor");
 
-const Doctor = require("../models/doctor");
-const Appointment = require("../models/appointment");
+const Doctor = require("../models/Doctor.js");
+const Appointment = require("../models/Appointment");
 
 // Configure multer for uploads
-const storage = require("../cloudConfig.js").storage;
+const storage = require("../config/cloudConfig.js").storage;
 const upload = multer({ storage });
 
 // GET routes

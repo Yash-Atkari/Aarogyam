@@ -2,12 +2,12 @@ const fs = require("fs");
 const path = require("path");
 const PDFDocument = require("pdfkit");
 
-const Doctor = require("../models/doctor");
-const Patient = require("../models/patient");
-const Appointment = require("../models/appointment");
-const HealthRecord = require("../models/healthrecord");
-const Billing = require("../models/billing");
-const ExpressError = require("../utils/ExpressError");
+const Doctor = require("../models/Doctor");
+const Patient = require("../models/Patient");
+const Appointment = require("../models/Appointment");
+const HealthRecord = require("../models/HealthRecord");
+const Billing = require("../models/Billing");
+const ExpressError = require("../utils/expressError");
 
 // Render Doctor Dashboard
 module.exports.dashboard = async (req, res, next) => {

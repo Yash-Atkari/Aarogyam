@@ -3,9 +3,9 @@ const router = express.Router();
 
 const { isAuthenticated, isAuthorized } = require("../middleware");
 
-const Appointment = require("../models/appointment");
-const Billing = require("../models/billing");
-const Patient = require("../models/patient");
+const Appointment = require("../models/Appointment");
+const Billing = require("../models/Billing");
+const Patient = require("../models/Patient");
 
 const patientController = require("../controllers/patient");
 

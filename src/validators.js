@@ -76,31 +76,30 @@ module.exports.appointmentSchema = Joi.object({
   }).required(),
 });
 
-  module.exports.patientSchema = Joi.object({
-    patient: Joi.object({
-      email: Joi.string().email().required().messages({
-        'any.required': 'Email is required.'
-      }),
-      username: Joi.string().min(3).max(30).required().messages({
-        'any.required': 'Username is required.'
-      }),
-      password: Joi.string().min(6).required().messages({
-        'any.required': 'Password is required.'
-      })
+module.exports.patientSchema = Joi.object({
+  patient: Joi.object({
+    email: Joi.string().email().required().messages({
+      'any.required': 'Email is required.'
+    }),
+    username: Joi.string().min(3).max(30).required().messages({
+      'any.required': 'Username is required.'
+    }),
+    password: Joi.string().min(6).required().messages({
+      'any.required': 'Password is required.'
     })
-  });  
+  })
+});  
   
-  module.exports.doctorSchema = Joi.object({
-    doctor: Joi.object({
-      email: Joi.string().email().required().messages({
-        'any.required': 'Email is required.'
-      }),
-      username: Joi.string().min(3).max(30).required().messages({
-        'any.required': 'Username is required.'
-      }),
-      password: Joi.string().min(6).required().messages({
-        'any.required': 'Password is required.'
-      }),
-    })
-  });
-  
+module.exports.doctorSchema = Joi.object({
+  doctor: Joi.object({
+    email: Joi.string().email().required().messages({
+      'any.required': 'Email is required.'
+    }),
+    username: Joi.string().min(3).max(30).required().messages({
+      'any.required': 'Username is required.'
+    }),
+    password: Joi.string().min(6).required().messages({
+      'any.required': 'Password is required.'
+    }),
+  })
+});

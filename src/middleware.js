@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const ExpressError = require("./utils/ExpressError"); // Update path if needed
-const Doctor = require("./models/doctor");
+const ExpressError = require("./utils/expressError"); // Update path if needed
+const Doctor = require("./models/Doctor");
 
 module.exports.isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
