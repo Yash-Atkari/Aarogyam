@@ -1,0 +1,91 @@
+/* Prescriptions Page Styling */
+
+/* General */
+.page-header {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.record-container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.alert {
+    position: inherit;
+    margin: 0;
+}
+
+/* Table Styling */
+.prescriptions-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.prescriptions-table th,
+.prescriptions-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    vertical-align: middle;
+}
+
+.prescriptions-table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.prescriptions-table td {
+    font-size: 14px;
+}
+
+/* Doctor Name Highlight */
+.doctor-name {
+    color: #007bff;
+    font-weight: bold;
+}
+
+/* Disease Tags */
+.disease-tag {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #fff;
+}
+
+.disease-tag.Fever { background: #ff6666; }
+.disease-tag.Cholera { background: #66cc99; }
+.disease-tag.Jaundice { background: #cc99ff; }
+.disease-tag.Typhoid { background: #ffcc66; color: #333; }
+.disease-tag.Malaria { background: #ff9966; }
+.disease-tag.Infection { background: #66cccc; }
+
+/* Action Buttons */
+.actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.action-icon {
+    font-size: 18px;
+    text-decoration: none;
+    padding: 6px;
+    border-radius: 5px;
+    transition: 0.2s ease;
+}
+
+.download { color: #6f42c1; }
+.view { color: #28a745; }
+.delete { color: #dc3545; }
+
+.action-icon:hover {
+    opacity: 0.7;
+    transform: scale(1.1);
+}

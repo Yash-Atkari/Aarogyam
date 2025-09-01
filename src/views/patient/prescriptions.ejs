@@ -19,7 +19,9 @@
             <tbody>
                 <% if (appointments.length === 0) { %>
                     <tr>
-                        <div class="alert alert-warning text-center" style="margin: 0;">No medical records found</div>
+                        <td colspan="5">
+                            <div class="alert alert-warning text-center" style="margin: 0;">No medical records found</div>
+                        </td>
                     </tr>
                 <% } else { %>
                     <% appointments.forEach((record, index) => { %>
@@ -29,14 +31,14 @@
                             <td><%= new Date(record.createdAt).toLocaleDateString() %></td>
                             <td>
                                 <% if (record.disease) { %>
-                                    <span class=" <%= record.disease.replace(/\s+/g, '-') %>">
+                                    <span class="disease-tag <%= record.disease.replace(/\s+/g, '-') %>">
                                         <%= record.disease %>
                                     </span>
                                 <% } else { %>
                                     <span>—</span>
                                 <% } %>
                             </td>
-                            <td class="actions">
+                            <td class="actions py-3">
                                 <% if (record.attachments && record.attachments.length > 0) { %>
                                     <% record.attachments.forEach(file => { %>
                                         <div class="d-flex border rounded">
@@ -52,7 +54,7 @@
                                         </div>
                                     <% }) %>
                                 <% } else { %>
-                                    <span>No files</span>
+                                    <span class="py-2">No files</span>
                                 <% } %>
                             </td>
                         </tr>
@@ -86,76 +88,10 @@
 
 <script>
     function setAppointmentId(recordId, filePath) {
-        // Select the form inside the modal
         const cancelForm = document.getElementById("deleteForm");
-
-        // Set the form action dynamically
         cancelForm.action = `/patient/prescriptions/delete/${recordId}?file=${encodeURIComponent(filePath)}`;
     }
 </script>
 
-<style>
-    .page-header {
-        font-size: 22px;
-        font-weight: bold;
-    }
-
-    .record-container {
-        background: white;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .alert {
-        position: inherit;
-    }
-
-    .prescriptions-table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .prescriptions-table th, .prescriptions-table td {
-        padding: 12px;
-        text-align: left;
-        border-bottom: 1px solid #ddd;
-    }
-
-    .prescriptions-table th {
-        background-color: #f8f9fa;
-    }
-
-    .doctor-name {
-        color: #007bff;
-        font-weight: bold;
-    }
-
-    /* Disease Colors */
-    .disease-tag.Fever { background: #ff6666; color: white; }
-    .disease-tag.Cholera { background: #66cc99; color: white; }
-    .disease-tag.Jaundice { background: #cc99ff; color: white; }
-    .disease-tag.Typhoid { background: #ffcc66; color: white; }
-    .disease-tag.Malaria { background: #ff9966; color: white; }
-    .disease-tag.Infection { background: #66cccc; color: white; }
-
-    .actions {
-        display: flex;
-        gap: 10px;
-    }
-
-    .action-icon {
-        font-size: 18px;
-        text-decoration: none;
-        padding: 5px;
-        border-radius: 5px;
-    }
-
-    .download { color: #6f42c1; }
-    .view { color: #28a745; }
-    .delete { color: #dc3545; }
-
-    .action-icon:hover {
-        opacity: 0.7;
-    }
-</style>
+<!-- Link external CSS -->
+<link rel="stylesheet" href="/css/patient/prescriptions.css">

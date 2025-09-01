@@ -1,116 +1,7 @@
 <%- layout('./layouts/doctorboilerplate') %>
 
-<style>
-    .dashboard-container {
-        padding: 0 20px 20px 20px;
-        color: #333;
-    }
-
-    .dashboard-header span {
-        font-size: 14px;
-        color: #888;
-    }
-
-    .welcome-card {
-        background: #f8f9fd;
-        padding: 20px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        margin-top: 15px;
-    }
-
-    .welcome-content {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-    }
-
-    .doctor-profile {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-    }
-
-    .welcome-text h3 {
-        font-weight: normal;
-        color: #666;
-    }
-
-    .doctor-name {
-        color: #007bff;
-        font-size: 22px;
-        font-weight: bold;
-    }
-
-    .welcome-text p {
-        font-size: 14px;
-        color: #555;
-        max-width: 600px;
-        line-height: 1.5;
-    }
-
-    .stats-container {
-        display: flex;
-        justify-content: space-between;
-        gap: 20px;
-        margin-top: 20px;
-    }
-
-    .stat-card {
-        background: white;
-        padding: 15px;
-        border-radius: 10px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        flex: 1;
-        text-align: center;
-    }
-
-    .stat-number {
-        font-size: 24px;
-        font-weight: bold;
-        color: #333;
-    }
-
-    .stat-label {
-        color: #666;
-        font-size: 14px;
-    }
-
-    .doctor-info {
-        margin-top: 20px;
-        background: white;
-        padding: 15px;
-        border-radius: 10px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .doctor-info h3 {
-        margin-bottom: 10px;
-        font-size: 18px;
-        font-weight: bold;
-    }
-
-    .doctor-info ul {
-        list-style: none;
-        padding: 0;
-    }
-
-    .doctor-info li {
-        margin-bottom: 8px;
-        font-size: 16px;
-        color: #444;
-    }
-
-    .doctor-info li strong {
-        color: #222;
-    }
-
-    .alert {
-        position: inherit;
-    }
-</style>
+<!-- Link to external CSS -->
+<link rel="stylesheet" href="/css/doctor/dashboard.css">
 
 <div class="dashboard-container container">
     <div class="dashboard-header">
@@ -123,7 +14,7 @@
             <div class="welcome-text">
                 <h3>Welcome back</h3>
                 <i class="fa-solid fa-user fs-4"></i>
-                <span class="doctor-name">&nbsp;Dr. <%= doctor.fullName ||  doctor.username %></span>
+                <span class="doctor-name">&nbsp;Dr. <%= doctor.fullName || doctor.username %></span>
                 <p>
                     Dedicated to providing the best healthcare services with <%= doctor.experience %> years of experience.
                 </p>
@@ -143,36 +34,36 @@
     </div>
 
     <div class="doctor-info">
-  <h3>Doctor Information:</h3>
-  <ul>
-      <li><strong>Full Name:</strong> <%= doctor.fullName %></li>
-      <li><strong>Email:</strong> <%= doctor.email %></li>
-      <li><strong>Qualification:</strong> <%= doctor.qualification %></li>
-      <li><strong>Specialization:</strong> <%= doctor.specialization %></li>
-      <li><strong>Experience:</strong> <%= doctor.experience %> years</li>
-      <li><strong>Hospital:</strong> <%= doctor.hospital %></li>
-      <li><strong>Consultant Fees:</strong> <%= doctor.consultantFees %></li>
-      <li><strong>Phone:</strong> <%= doctor.phone %></li>
-  </ul>
+        <h3>Doctor Information:</h3>
+        <ul>
+            <li><strong>Full Name:</strong> <%= doctor.fullName %></li>
+            <li><strong>Email:</strong> <%= doctor.email %></li>
+            <li><strong>Qualification:</strong> <%= doctor.qualification %></li>
+            <li><strong>Specialization:</strong> <%= doctor.specialization %></li>
+            <li><strong>Experience:</strong> <%= doctor.experience %> years</li>
+            <li><strong>Hospital:</strong> <%= doctor.hospital %></li>
+            <li><strong>Consultant Fees:</strong> <%= doctor.consultantFees %></li>
+            <li><strong>Phone:</strong> <%= doctor.phone %></li>
+        </ul>
 
-    <!-- Show Availability Slots -->
-    <% if (doctor.availabilitySlots && doctor.availabilitySlots.length > 0) { %>
-        <h3 class="mt-3">Available Slots:</h3>
-        <div class="d-flex flex-wrap gap-2">
-        <% doctor.availabilitySlots.forEach(function(slot) { %>
-            <p class="badge bg-success p-2 fs-6">
-            <%= new Date(slot.date).toLocaleDateString("en-GB", { day:"2-digit", month:"short", year:"numeric" }) %> 
-            (<%= slot.startTime %> - <%= slot.endTime %>)
-            </p>
-        <% }) %>
-        </div>
-    <% } else { %>
-        <div class="alert alert-info mt-3" role="alert">
-        <i class="fa-regular fa-calendar-plus"></i>&nbsp;
-        <span>Add your available slots by clicking update to let patients book appointments easily.</span>
-        </div>
-    <% } %>
+        <!-- Show Availability Slots -->
+        <% if (doctor.availabilitySlots && doctor.availabilitySlots.length > 0) { %>
+            <h3 class="mt-3">Available Slots:</h3>
+            <div class="d-flex flex-wrap gap-2">
+                <% doctor.availabilitySlots.forEach(function(slot) { %>
+                    <p class="badge bg-success p-2 fs-6">
+                        <%= new Date(slot.date).toLocaleDateString("en-GB", { day:"2-digit", month:"short", year:"numeric" }) %> 
+                        (<%= slot.startTime %> - <%= slot.endTime %>)
+                    </p>
+                <% }) %>
+            </div>
+        <% } else { %>
+            <div class="alert alert-info mt-3" role="alert">
+                <i class="fa-regular fa-calendar-plus"></i>&nbsp;
+                <span>Add your available slots by clicking update to let patients book appointments easily.</span>
+            </div>
+        <% } %>
 
-    <a href="/doctor/profile/<%= doctor._id %>" class="btn btn-primary mt-3">Update Profile</a>
+        <a href="/doctor/profile/<%= doctor._id %>" class="btn btn-primary mt-3">Update Profile</a>
     </div>
 </div>

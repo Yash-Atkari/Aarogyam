@@ -1,0 +1,78 @@
+.billing-container {
+    padding: 20px;
+}
+
+.page-header {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.record-container {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+}
+
+.billing-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.billing-table th,
+.billing-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    white-space: nowrap; /* prevent breaking */
+}
+
+.billing-table th {
+    background-color: #f8f9fa;
+}
+
+.doctor-name {
+    color: #007bff;
+    font-weight: bold;
+}
+
+.status.paid {
+    color: green;
+    font-weight: bold;
+}
+
+.status.unpaid {
+    color: red;
+    font-weight: bold;
+}
+
+.actions {
+    display: flex;
+}
+
+.action-icon {
+    font-size: 18px;
+    text-decoration: none;
+    padding: 5px;
+    border-radius: 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.download {
+    color: #6f42c1;
+}
+
+.view {
+    color: #28a745;
+}
+
+.delete {
+    color: #dc3545;
+    border: none;
+    background: none;
+    cursor: pointer;
+}

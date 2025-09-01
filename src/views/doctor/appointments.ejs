@@ -1,67 +1,35 @@
 <%- layout("./layouts/doctorboilerplate") %>
 
-<style>
-  .appointments-container {
-        max-width: 100%;
-        background: white;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-  /* Table Styles */
-    .appointments-table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .appointments-table th, .appointments-table td {
-        padding: 12px;
-        text-align: left;
-        border-bottom: 1px solid #ddd;
-    }
-
-    .appointments-table th {
-        background-color: #f8f9fa;
-    }
-
-    .doctor-name {
-        color: #007bff;
-        font-weight: bold;
-    }
-
-    .actions .btn {
-        margin-right: 5px;
-    }
-</style>
+<!-- Custom CSS -->
+<link rel="stylesheet" href="/css/doctor/appointments.css">
 
 <div class="container">
   <h2 class="">Doctor Appointments</h2>
   <!-- Search and Filter Section -->
-    <form id="filterForm" class="mt-4" method="GET" action="/doctor/filterappointments">
-      <div class="row g-2">
-          <div class="col-md-3">
-              <input type="text" class="form-control" name="search" placeholder="Search by Patient, Reason, Disease">
-          </div>
-          <div class="col-md-2">
-              <input type="date" class="form-control" name="date">
-          </div>
-          <div class="col-md-2">
-              <select class="form-control" name="status">
-                  <option value="" selected disabled>Search by Status</option>
-                  <option value="pending">Pending</option>
-                  <option value="confirmed">Confirmed</option>
-                  <option value="completed">Completed</option>
-                  <option value="cancelled">Cancelled</option>
-              </select>
-          </div>
-          <div class="col-md-2">
-              <button type="submit" class="btn btn-primary w-100">Filter</button>
-          </div>
-        </div>
-    </form>
+  <form id="filterForm" class="mt-4" method="GET" action="/doctor/filterappointments">
+    <div class="row g-2">
+      <div class="col-md-3">
+        <input type="text" class="form-control" name="search" placeholder="Search by Patient, Reason, Disease">
+      </div>
+      <div class="col-md-2">
+        <input type="date" class="form-control" name="date">
+      </div>
+      <div class="col-md-2">
+        <select class="form-control" name="status">
+          <option value="" selected disabled>Search by Status</option>
+          <option value="pending">Pending</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="completed">Completed</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-primary w-100">Filter</button>
+      </div>
+    </div>
+  </form>
 
   <div class="appointments-container container table-responsive mt-4">
-  
     <table class="appointments-table">
       <thead>
         <tr>
@@ -94,11 +62,6 @@
               <td><%= appointment.status %></td>
               <td class="actions">
                 <div class="d-flex">
-                  <!-- <a href="/doctor/appointments/addAppointmentDetails/<%= appointment._id %>" 
-                    class="btn btn-primary <%= appointment.status === 'pending' ? 'disabled' : '' %>">
-                    <i class="fa-solid fa-plus"></i>
-                  </a> -->
-
                   <a href="/doctor/appointments/edit/<%= appointment._id %>" 
                     class="btn btn-secondary <%= appointment.status === 'pending' ? 'disabled' : '' %>">
                     <i class="fa-solid fa-pen-to-square"></i>

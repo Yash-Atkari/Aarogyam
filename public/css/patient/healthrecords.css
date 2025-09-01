@@ -1,0 +1,59 @@
+body { 
+    background-color: #f8f9fa; 
+}
+
+.record-container {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.page-header {
+    font-size: 22px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.card {
+    background: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+}
+
+.record-card h4 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.record-card p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #555;
+}
+
+.download-link {
+    display: inline-block;
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.download-link:hover {
+    text-decoration: underline;
+}
+
+p {
+    margin-bottom: 0.3rem;
+}
+
+.alert {
+    position: inherit;
+}

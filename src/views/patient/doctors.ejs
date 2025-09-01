@@ -1,21 +1,7 @@
 <%- layout("./layouts/patientboilerplate") %>
 
-<style>
-    .card {
-        border-radius: 15px;
-        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-        transition: 0.3s;
-        padding: 1rem;
-        position: relative;
-        z-index: -1;
-    }
-    .btn-custom {
-        width: 100%;
-    }
-    p {
-        margin-bottom: 0.3rem;
-    }
-</style>
+<!-- Link external CSS -->
+<link rel="stylesheet" href="/css/patient/doctors.css">
 
 <body>
     <div class="container-fluid container">
@@ -24,14 +10,15 @@
             <% if (doctors && doctors.length > 0) { %>
                 <% for (let doctor of doctors) { %>
                     <div class="col">
-                        <div class="card">
+                        <div class="doctor-card">
                             <h4 class="text-primary">
-                                <i class="fa-solid fa-user-doctor"></i>&nbsp; <%= doctor.fullName ||  doctor.username %>
+                                <i class="fa-solid fa-user-doctor"></i>&nbsp;
+                                <%= doctor.fullName || doctor.username %>
                             </h4>
                             <p><strong>Email:</strong> <%= doctor.email %></p>
                             <p><strong>Specialization:</strong> <%= doctor.specialization %></p>
                             <p><strong>Experience:</strong> <%= doctor.experience %> years</p>
-                            <p><strong>Consultant Fees:</strong> <%= doctor.consultantFees %> </p>
+                            <p><strong>Consultant Fees:</strong> ₹<%= doctor.consultantFees %></p>
                             <p><strong>Phone:</strong> <%= doctor.phone %></p>
                         </div>
                     </div>

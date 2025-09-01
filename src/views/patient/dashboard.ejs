@@ -1,84 +1,7 @@
 <%- layout("./layouts/patientboilerplate") %>
 
-<style>
-  .dashboard-container {
-    padding: 0 20px 20px 20px;
-    color: #333;
-}
-
-.dashboard-header span {
-    font-size: 14px;
-    color: #888;
-}
-
-.welcome-card {
-    background: #f8f9fd;
-    padding: 20px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    margin-top: 15px;
-}
-
-.welcome-content {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.welcome-image {
-    width: 120px;
-    height: auto;
-}
-
-.welcome-text h3 {
-    font-weight: normal;
-    color: #666;
-}
-
-.patient-name {
-    color: #007bff;
-    font-size: 22px;
-    font-weight: bold;
-}
-
-.welcome-text p {
-    font-size: 14px;
-    color: #555;
-    max-width: 600px;
-    line-height: 1.5;
-}
-
-.patient-info {
-    margin-top: 20px;
-    background: white;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.patient-info h3 {
-    margin-bottom: 10px;
-    font-size: 18px;
-    font-weight: bold;
-}
-
-.patient-info ul {
-    list-style: none;
-    padding: 0;
-}
-
-.patient-info li {
-    margin-bottom: 8px;
-    font-size: 16px;
-    color: #444;
-}
-
-.patient-info li strong {
-    color: #222;
-}
-</style>
+<!-- External CSS -->
+<link rel="stylesheet" href="/css/patient/dashboard.css">
 
 <div class="dashboard-container container">
   <div class="dashboard-header">
@@ -91,7 +14,7 @@
           <div class="welcome-text">
               <h3>Welcome back</h3>
               <i class="fa-solid fa-user fs-5"></i>
-              <span class="patient-name">&nbsp;</i><%= patient.fullName || patient.username %></span>
+              <span class="patient-name">&nbsp;<%= patient.fullName || patient.username %></span>
               <p>
                   We would like to take this opportunity to welcome you to our practice and 
                   thank you for choosing our physicians to participate in your healthcare. 

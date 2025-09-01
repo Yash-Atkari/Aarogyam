@@ -1,14 +1,7 @@
 <%- layout("./layouts/doctorboilerplate") %>
 
-<style>
-    p {
-        margin-bottom: 0.3rem;
-    }
-    .btn-custom {
-        width: 100%;
-        margin-top: 0.5rem;
-    }
-</style>
+<!-- Link external CSS -->
+<link rel="stylesheet" href="/css/doctor/patients.css">
 
 <body>
     <div class="container-fluid container">
@@ -17,7 +10,7 @@
             <% if (doctor.patients.length > 0) { %> 
                 <% for (let patient of doctor.patients) { %>
                     <div class="col">
-                        <div class="bg-white p-3 rounded-3">
+                        <div class="patient-card">
                             <h4 class="text-primary">
                                 <i class="fa-solid fa-user"></i>&nbsp; <%= patient.fullName || patient.username %>
                             </h4>
@@ -26,20 +19,26 @@
                             <p><strong>Age:</strong> <%= patient.age %> years</p>
                             <p><strong>Phone:</strong> <%= patient.phone %></p>
     
-                            <a href="/doctor/<%= doctor._id %>/patient/<%= patient._id %>/healthrecords" class="btn btn-primary btn-custom">
+                            <a href="/doctor/<%= doctor._id %>/patient/<%= patient._id %>/healthrecords" 
+                               class="btn btn-primary btn-custom">
                                 <i class="fa-solid fa-notes-medical"></i>&nbsp; Health Records
                             </a>
-                            <a href="/doctor/<%= doctor._id %>/patient/<%= patient._id %>/prescriptions" class="btn btn-success btn-custom">
+                            <a href="/doctor/<%= doctor._id %>/patient/<%= patient._id %>/prescriptions" 
+                               class="btn btn-success btn-custom">
                                 <i class="fa-solid fa-file-prescription"></i>&nbsp; Prescriptions
                             </a>
-                            <a href="#" class="btn btn-secondary btn-custom" onclick="openCertificateModal('<%= patient._id %>')">
-                                <i class="fa-solid fa-file-prescription"></i>&nbsp; Generate Certificate
+                            <a href="#" class="btn btn-secondary btn-custom" 
+                               onclick="openCertificateModal('<%= patient._id %>')">
+                                <i class="fa-solid fa-certificate"></i>&nbsp; Generate Certificate
                             </a>                            
                         </div>
                     </div>
                 <% } %>
             <% } else { %>
-                <p>No patients found.</p>
+                <div class="no-patients">
+                    <i class="fa-solid fa-user-slash"></i>
+                    <p>No patients found.</p>
+                </div>
             <% } %>
         </div>
     </div>
@@ -85,6 +84,11 @@
             return;
         }
 
+        if (new Date(dischargeDate) < new Date(admissionDate)) {
+            alert("Discharge date cannot be before admission date.");
+            return;
+        }
+
         generateMedicalCertificate(selectedPatientId, admissionDate, dischargeDate);
     }
 
@@ -98,9 +102,10 @@
 
             if (response.ok) {
                 const { fileUrl } = await response.json();
-                window.open(fileUrl, '_blank'); // Automatically download the PDF
+                window.open(fileUrl, '_blank');
             } else {
-                console.error('Failed to generate certificate');
+                const { message } = await response.json();
+                alert(message || 'Failed to generate certificate.');
             }
         } catch (error) {
             console.error('Error generating certificate:', error);

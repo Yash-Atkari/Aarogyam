@@ -1,0 +1,21 @@
+/* Doctor Cards Styling */
+.doctor-card {
+    border-radius: 15px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    background: #fff;
+    margin-bottom: 20px;
+}
+
+/* .doctor-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.15);
+} */
+
+.doctor-card h4 {
+    margin-bottom: 0.8rem;
+}
+
+p {
+    margin-bottom: 0.3rem;
+}

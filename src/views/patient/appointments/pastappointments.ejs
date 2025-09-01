@@ -1,113 +1,5 @@
 <%- layout("./layouts/patientboilerplate") %>
-
-<style>
-    body { background-color: #f8f9fa; }
-    .appointments-container {
-        max-width: 100%;
-        /* margin: auto; */
-        background: white;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-    .appointment-card {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 15px;
-        margin-bottom: 10px;
-    }
-    .appointment-card {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 15px;
-        border-radius: 10px;
-        background: #fff;
-        margin-bottom: 10px;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    }
-
-    .appointment-header {
-        font-size: 20px;
-        font-weight: bold;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .doctor-info {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-    }
-    .doctor-info img {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-    }
-    .status-confirm { color: green; font-weight: bold; }
-    .status-cancelled { color: red; font-weight: bold; }
-    .status-pending { color: orange; font-weight: bold; }
-    .actions i {
-        cursor: pointer;
-        font-size: 1.2rem;
-        margin-right: 10px;
-    }
-
-    /* -------------- */
-
-    .filter-container {
-        background-color: #ffffff;
-        border-radius: 10px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-
-    .filter-container .form-control,
-    .filter-container .btn {
-        border-radius: 8px;
-    }
-
-    .filter-container .row {
-        align-items: center;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
-
-    /* Table Styles */
-    .appointments-table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .appointments-table th, .appointments-table td {
-        padding: 12px;
-        text-align: left;
-        border-bottom: 1px solid #ddd;
-    }
-
-    .appointments-table th {
-        background-color: #f8f9fa;
-    }
-
-    .doctor-name {
-        color: #007bff;
-        font-weight: bold;
-    }
-
-    .actions {
-        display: flex;
-        gap: 10px;
-    }
-
-    @media (max-width: 768px) {
-        .filter-container .col-md-3,
-        .filter-container .col-md-2 {
-            flex: 1 1 100%;
-            margin-bottom: 10px;
-        }
-    }
-</style>
+<link rel="stylesheet" href="/css/patient/appointments/appointments.css">
 
 <div class="container">
     <div class="appointment-header">
@@ -116,93 +8,93 @@
 
     <!-- Search and Filter Section -->
     <form id="filterForm" method="GET" class="mt-4" action="/patient/filterappointments">
-            <div class="row g-2">
-                <div class="col-md-3">
-                    <input type="text" class="form-control" name="search" placeholder="Search by Doctor, Reason, Disease">
-                </div>
-                <div class="col-md-2">
-                    <input type="date" class="form-control" name="date">
-                </div>
-                <div class="col-md-2">
-                    <select class="form-control" name="status">
-                        <option value="" selected disabled>Search by Status</option>
-                        <option value="pending">Pending</option>
-                        <option value="confirmed">Confirmed</option>
-                        <option value="completed">Completed</option>
-                        <option value="cancelled">Cancelled</option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <button type="submit" class="btn btn-primary w-100">Filter</button>
-                </div>
+        <div class="row g-2">
+            <div class="col-md-3">
+                <input type="text" class="form-control" name="search" placeholder="Search by Doctor, Reason, Disease">
             </div>
-        </form>
+            <div class="col-md-2">
+                <input type="date" class="form-control" name="date">
+            </div>
+            <div class="col-md-2">
+                <select class="form-control" name="status">
+                    <option value="" selected disabled>Search by Status</option>
+                    <option value="pending">Pending</option>
+                    <option value="confirmed">Confirmed</option>
+                    <option value="completed">Completed</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Filter</button>
+            </div>
+        </div>
+    </form>
 
     <div class="appointments-container mt-4 table-responsive">
-    <% if (appointments && appointments.length > 0) { %> 
-        <table class="appointments-table container-fluid">
-            <thead>
-                <tr>
-                    <th>Sr. No.</th>
-                    <th>Doctor</th>
-                    <th>Specialization</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Reason</th>
-                    <th>Contact</th>
-                    <th>Location</th>
-                    <th>Status</th>
-                    <th>Disease</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% appointments.forEach((appointment, index) => { %>
+        <% if (appointments && appointments.length > 0) { %> 
+            <table class="appointments-table container-fluid">
+                <thead>
                     <tr>
-                        <td><%= index + 1 %></td>
-                        <td class="doctor-name"><%= appointment.doctorId.fullName || appointment.doctorId.username %></td>
-                        <td><%= appointment.doctorId.specialization %></td>
-                        <td><%= new Date(appointment.date).toLocaleDateString() %></td>
-                        <td><%= appointment.timeSlot %></td>
-                        <td><%= appointment.reason || "—" %></td>
-                        <td><%= appointment.doctorId.phone %></td>
-                        <td><%= appointment.doctorId.hospital %></td>
-                        <td><%= appointment.status %></td>
-                        <td>
-                            <% if (appointment.status === 'completed' && appointment.disease) { %>
-                                <span class=" <%= appointment.disease.replace(/\s+/g, '-') %>">
-                                    <%= appointment.disease %>
-                                </span>
-                            <% } else { %>
-                                —
-                            <% } %>
-                        </td>
-                        <td class="actions">
-                            <button type="button" class="btn btn-danger btn-sm" 
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#cancelModal" 
-                                    onclick="setAppointmentId('<%= appointment._id %>')"
-                                    <% if (['cancelled', 'confirmed', 'completed'].includes(appointment.status)) { %> disabled <% } %>>
-                                Cancel
-                            </button>
-                        </td>
+                        <th>Sr. No.</th>
+                        <th>Doctor</th>
+                        <th>Specialization</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Reason</th>
+                        <th>Contact</th>
+                        <th>Location</th>
+                        <th>Status</th>
+                        <th>Disease</th>
+                        <th>Action</th>
                     </tr>
-                <% }) %>
-            </tbody>
-        </table>
-    <% } else { %>
-        <p>No appointments found</p>
-    <% } %>
+                </thead>
+                <tbody>
+                    <% appointments.forEach((appointment, index) => { %>
+                        <tr>
+                            <td><%= index + 1 %></td>
+                            <td class="doctor-name"><%= appointment.doctorId.fullName || appointment.doctorId.username %></td>
+                            <td><%= appointment.doctorId.specialization %></td>
+                            <td><%= new Date(appointment.date).toLocaleDateString() %></td>
+                            <td><%= appointment.timeSlot %></td>
+                            <td><%= appointment.reason || "—" %></td>
+                            <td><%= appointment.doctorId.phone %></td>
+                            <td><%= appointment.doctorId.hospital %></td>
+                            <td><%= appointment.status %></td>
+                            <td>
+                                <% if (appointment.status === 'completed' && appointment.disease) { %>
+                                    <span class="<%= appointment.disease.replace(/\s+/g, '-') %>">
+                                        <%= appointment.disease %>
+                                    </span>
+                                <% } else { %>
+                                    —
+                                <% } %>
+                            </td>
+                            <td class="actions py-3">
+                                <button type="button" class="btn btn-danger btn-sm" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#cancelModal" 
+                                        onclick="setAppointmentId('<%= appointment._id %>')"
+                                        <% if (['cancelled', 'confirmed', 'completed'].includes(appointment.status)) { %> disabled <% } %>>
+                                    Cancel
+                                </button>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        <% } else { %>
+            <p>No appointments found</p>
+        <% } %>
     </div>
 </div>
 
-<!-- Cancel Confirmation Modal -->
-<div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+<!-- Cancel Modal -->
+<div class="modal fade" id="cancelModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="cancelModalLabel">Confirm Cancellation</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <h5 class="modal-title">Confirm Cancellation</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           Are you sure you want to cancel this appointment?
@@ -218,7 +110,7 @@
 </div>
 
 <script>
-    function setAppointmentId(appointmentId) {
-      document.getElementById("cancelForm").action = `/patient/pastappointments/cancel/${appointmentId}?_method=DELETE`;
-    }
+function setAppointmentId(appointmentId) {
+  document.getElementById("cancelForm").action = `/patient/pastappointments/cancel/${appointmentId}?_method=DELETE`;
+}
 </script>

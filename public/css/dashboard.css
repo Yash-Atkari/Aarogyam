@@ -1,0 +1,290 @@
+/* General Styles */
+body {
+  font-family: 'Inter', sans-serif;
+  color: #333;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.section-header h2 {
+  font-size: 2.2rem;
+  margin-bottom: 1rem;
+  color: #1A73E8;
+}
+
+.section-header p {
+  font-size: 1.1rem;
+  color: #666;
+}
+
+/* Hero Section */
+.hero-section {
+  padding: 3rem 0;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9f5f4 100%);
+}
+
+.hero-content {
+  padding: 2rem 0;
+}
+
+.hero-content h1 {
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+  color: #1A73E8;
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  color: #555;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.hero-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Features Section */
+.features-section {
+  padding: 5rem 0;
+  background-color: #fff;
+}
+
+.features-grid {
+  margin-top: 3rem;
+}
+
+.feature-card {
+  text-align: center;
+  padding: 2rem 1.5rem;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  margin-bottom: 2rem;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.feature-icon {
+  margin-bottom: 1.5rem;
+}
+
+.feature-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #1A73E8;
+}
+
+.feature-card p {
+  color: #666;
+}
+
+/* Stats Section */
+.stats-section {
+  padding: 4rem 0;
+  background-color: #0d9488;
+  color: white;
+  text-align: center;
+}
+
+.stat-item h2 {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.stat-item p {
+  font-size: 1.2rem;
+  opacity: 0.9;
+}
+
+/* Testimonial Section */
+.testimonial-section {
+  padding: 5rem 0;
+  background-color: #f8f9fa;
+}
+
+.testimonial-card {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  border-radius: 10px;
+  background-color: white;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+}
+
+.testimonial-content p {
+  font-size: 1.2rem;
+  font-style: italic;
+  margin-bottom: 1.5rem;
+  color: #555;
+}
+
+.testimonial-author h4 {
+  margin-bottom: 0.2rem;
+  color: #1A73E8;
+}
+
+.testimonial-author p {
+  font-size: 0.9rem;
+  color: #777;
+}
+
+/* CTA Section */
+.cta-section {
+  padding: 5rem 0;
+  background: linear-gradient(135deg, #1A73E8 0%, #1A73E8 100%);
+  color: white;
+  text-align: center;
+}
+
+.cta-content h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.cta-content p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+.cta-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+/* Button Styles */
+.btn-custom {
+  background-color: #1A73E8;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.3s ease;
+  display: inline-block;
+}
+
+.signup {
+  border: 2px solid white;
+}
+
+.btn-custom:hover {
+  background-color: #1A73E8;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px #1A73E8;
+}
+
+.btn-outline-custom {
+  border: 2px solid #1A73E8;
+  color: #1A73E8;
+  background-color: transparent;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.3s ease;
+  display: inline-block;
+}
+
+.btn-outline-custom:hover {
+  background-color: #1A73E8;
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px #1A73E8;
+}
+
+/* CTA Section - White Button Variant */
+.cta-section .btn-outline-custom {
+  border: 2px solid white;
+  color: white;
+}
+
+.cta-section .btn-outline-custom:hover {
+  background-color: white;
+  color: #1A73E8;
+}
+
+/* Responsive Styles */
+@media (max-width: 991px) {
+  .hero-content {
+    text-align: center;
+    padding: 2rem 1rem;
+  }
+
+  .hero-content h1 {
+    font-size: 2.5rem;
+  }
+
+  .hero-buttons {
+    justify-content: center;
+  }
+
+  .hero-image {
+    margin-top: 2rem;
+  }
+
+  .cta-content h2 {
+    font-size: 2rem;
+  }
+
+  .cta-buttons {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .cta-buttons a {
+    width: 80%;
+  }
+}
+
+@media (max-width: 767px) {
+  .section-header h2 {
+    font-size: 1.8rem;
+  }
+
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .feature-card {
+    padding: 1.5rem 1rem;
+  }
+
+  .stat-item {
+    margin-bottom: 2rem;
+  }
+
+  .stat-item h2 {
+    font-size: 2.5rem;
+  }
+
+  .testimonial-content p {
+    font-size: 1rem;
+  }
+}

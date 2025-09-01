@@ -1,59 +1,51 @@
 <%- layout("./layouts/doctorboilerplate") %>
 
-<style>
-    .card {
-        border-radius: 15px;
-        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-        transition: 0.3s;
-        padding: 1rem;
-        margin-bottom: 1rem;
-    }
-    .card:hover {
-        transform: translateY(-5px);
-    }
-    .btn-custom {
-        width: 100%;
-        margin-top: 0.5rem;
-    }
-    p {
-        margin-bottom: 0.3rem;
-    }
-</style>
+<!-- Link external CSS -->
+<link rel="stylesheet" href="/css/doctor/healthrecords.css">
 
 <body>
-    <div class="container container-fluid">
-        <h2 class="">Medical Records for <a href="" style="text-decoration: none;"><%= appointments[0].patientId.fullName || appointments[0].patientId.username %></a></h2>
-        <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
+    <div class="container">
+        <h2>
+            Medical Records for 
+            <a href="" style="text-decoration: none;">
+                <%= appointments[0].patientId.fullName || appointments[0].patientId.username %>
+            </a>
+        </h2>
+
+        <!-- Custom responsive grid -->
+        <div class="healthrecords-container">
             <% if (healthrecords && healthrecords.length > 0) { %>
                 <% for (let record of healthrecords) { %>
-                    <div class="col">
-                        <div class="bg-white p-3 rounded-3">
-                            <h6 class="text-dark">
-                                <i class="fa-solid fa-calendar"></i>&nbsp; Appointment on <%= new Date(record.created_at).toDateString() %>
-                            </h6>
-                        
-                            <p><strong>Symptom:</strong> <%= record.symptoms %></p>
-                            <p><strong>Disease:</strong> <%= record.disease %></p>
-                            <% if (record.attachments && record.attachments.length > 0) { %>
-                                <p><strong>Attachments:</strong></p>
-                                <ul>
-                                    <% for (let file of record.attachments) { %>
-                                        <li class="my-2">
-                                            <a href="<%= file %>" class="btn btn-primary" target="_blank">
-                                                <i class="fa-solid fa-eye"></i> View
-                                            </a>
-                                            <a href="<%= file %>" class="btn btn-success" target="_blank" download>
-                                                <i class="fa-solid fa-download"></i> Download
-                                            </a>
-                                        </li>
-                                    <% } %>
-                                </ul>
-                            <% } else { %>
-                                <p class="text-muted">No attachments available</p>
-                            <% } %>
+                    <div class="healthrecord-card">
+                        <h6 class="text-dark">
+                            <i class="fa-solid fa-calendar"></i>&nbsp; Appointment on 
+                            <%= new Date(record.created_at).toDateString() %>
+                        </h6>
+                    
+                        <p><strong>Symptom:</strong> <%= record.symptoms %></p>
+                        <p><strong>Disease:</strong> <%= record.disease %></p>
 
-                            <p class="text-muted badge"><%= new Date(record.created_at).toDateString() %></p>
-                        </div>
+                        <% if (record.attachments && record.attachments.length > 0) { %>
+                            <p><strong>Attachments:</strong></p>
+                            <ul>
+                                <% for (let file of record.attachments) { %>
+                                    <li>
+                                        <a href="<%= file %>" class="btn btn-primary" target="_blank">
+                                            <i class="fa-solid fa-eye"></i> View
+                                        </a>
+                                        <a href="<%= file %>" class="btn btn-success" target="_blank" download>
+                                            <i class="fa-solid fa-download"></i> Download
+                                        </a>
+                                    </li>
+                                <% } %>
+                            </ul>
+                        <% } else { %>
+                            <p class="text-muted">No attachments available</p>
+                        <% } %>
+
+                        <p class="text-muted badge">
+                            <%= new Date(record.created_at).toDateString() %>
+                        </p>
                     </div>
                 <% } %>
             <% } else { %>

@@ -1,0 +1,62 @@
+body { 
+    background-color: #f8f9fa; 
+}
+
+.appointment-form-container {
+    max-width: 100%;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-header {
+    font-size: 22px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.success-message {
+    text-align: center;
+    color: green;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+/* ✅ Responsiveness */
+@media (max-width: 600px) {
+    .appointment-form-container {
+        padding: 15px;
+    }
+
+    .form-header {
+        font-size: 18px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    input, select, textarea {
+        font-size: 14px;
+        padding: 8px;
+    }
+}

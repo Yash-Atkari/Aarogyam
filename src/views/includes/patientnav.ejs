@@ -1,185 +1,93 @@
-<style>
-  body {
-      background-color: #ffffff;
-      color: #333333;
-      transition: margin-left 0.3s ease-in-out;
-  }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aarogyam</title>
 
-  /* Sidebar Styles */
-  .sidebar {
-      background-color: #ffffff;
-      border-right: 1px solid #dcdcdc;
-      min-height: 100vh;
-      position: absolute;
-      top: 60px;
-      width: 250px;
-      transition: left 0.4s cubic-bezier(0.25, 1, 0.5, 1); /* Smooth transition */
-      left: -250px; /* Initially hidden */
-      
-  }
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-  /* Show Sidebar */
-  .sidebar.show {
-      left: 0;
-  }
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
-  /* Content shifts when sidebar is visible */
-  .content {
-      margin-left: 0;
-      transition: margin-left 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-  }
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 
-  .content.shifted {
-      margin-left: 250px;
-  }
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/css/includes/patientnav.css">
+</head>
+<body>
+  <!-- Sidebar Toggle Button -->
+  <button class="sidebar-toggle">
+    <i class="bi bi-list"></i>
+  </button>
 
-  /* Sidebar Toggle Button */
-  .sidebar-toggle {
-      position: fixed;
-      top: 10px;
-      left: 10px;
-      z-index: 1050;
-      background: #007bff;
-      color: white;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), background 0.3s;
-  }
+  <!-- Sidebar -->
+  <div class="sidebar table-responsive bg-white border-end" style="width:250px; position:fixed; padding-top:1.5rem;">
+    <table class="table table-borderless ms-3">
+      <tbody>
+        <tr>
+          <td class="text-center" colspan="2">
+            <i class="fa-solid fa-user fa-2x mb-2 me-4"></i><br>
+            <small class="text-muted me-4">Patient</small>
+          </td>
+        </tr>
+        <tr>
+          <td><i class="bi bi-house-door"></i></td>
+          <td><a href="/patient/dashboard" class="text-decoration-none">Dashboard</a></td>
+        </tr>
+        <tr>
+          <td><i class="bi bi-calendar"></i></td>
+          <td>
+            <table class="table table-borderless mb-0">
+              <tr><td><a href="/patient/bookappointment" class="text-decoration-none">• Book Appointment</a></td></tr>
+              <tr><td><a href="/patient/upcomingappointments" class="text-decoration-none">• Upcoming</a></td></tr>
+              <tr><td><a href="/patient/todaysappointments" class="text-decoration-none">• Today</a></td></tr>
+              <tr><td><a href="/patient/pastappointments" class="text-decoration-none">• Past</a></td></tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td><i class="bi bi-clipboard"></i></td>
+          <td><a href="/patient/healthrecords" class="text-decoration-none">Medical Records</a></td>
+        </tr>
+        <tr>
+          <td><i class="bi bi-file-text"></i></td>
+          <td><a href="/patient/prescriptions" class="text-decoration-none">Prescriptions</a></td>
+        </tr>
+        <tr>
+          <td><i class="bi bi-receipt"></i></td>
+          <td><a href="/patient/billings" class="text-decoration-none">Billing</a></td>
+        </tr>
+        <tr>
+          <td><i class="bi bi-people"></i></td>
+          <td><a href="/patient/doctors" class="text-decoration-none">Doctors</a></td>
+        </tr>
+        <tr>
+          <td><i class="bi bi-chat-square-text"></i></td>
+          <td><a href="/patient/chat" class="text-decoration-none">Chat</a></td>
+        </tr>
+        <tr>
+          <td><i class="bi bi-box-arrow-right text-danger"></i></td>
+          <td><a href="/auth/logout" class="text-decoration-none text-danger">Logout</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-  /* Move toggle button when sidebar is visible */
-  .sidebar.show ~ .sidebar-toggle {
-      left: 260px;
-  }
+  <!-- JavaScript for Sidebar Toggle -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const sidebar = document.querySelector(".sidebar");
+        const toggleButton = document.querySelector(".sidebar-toggle");
+        const content = document.querySelector(".content");
 
-  /* Hover Effect */
-  .sidebar-toggle:hover {
-    background: #0266d1;
-  }
-
-  .sidebar-toggle:focus {
-      outline: none;
-  }
-
-  /* Navigation Link Styles */
-  .nav-link {
-      color: #333333;
-      padding: 12px 18px;
-      border-radius: 8px;
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      text-decoration: none;
-      transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
-  }
-
-  .nav-link:hover,
-  .nav-link.active {
-      background-color: #f0f0f0;
-      color: #007bff;
-  }
-
-  .nav-link i {
-      margin-right: 12px;
-  }
-
-  /* Text Styling */
-  .sidebar .text-center {
-      color: #333333;
-  }
-
-  .sidebar .text-muted {
-      color: #666666 !important;
-  }
-
-  /* Profile Image */
-  .profile-image {
-      width: 80px;
-      height: 80px;
-      border-radius: 10px;
-      margin-bottom: 12px;
-      transition: transform 0.3s ease-in-out;
-  }
-
-  .profile-image:hover {
-      transform: scale(1.05); /* Subtle hover effect */
-  }
-</style>
-
-<!-- Sidebar Toggle Button -->
-<button class="sidebar-toggle">
-  <i class="bi bi-list"></i>
-</button>
-
-<!-- Sidebar -->
-<div
-  class="sidebar table-responsive bg-white border-end"
-  style="width:250px; position:fixed; padding-top:1.5rem;"
->
-  <!-- Now everything inside will scroll vertically if it grows past the viewport -->
-  <table class="table table-borderless ms-3">
-    <tbody>
-      <tr>
-        <td class="text-center" colspan="2">
-          <i class="fa-solid fa-user fa-2x mb-2 me-4"></i><br>
-          <small class="text-muted me-4">Patient</small>
-        </td>
-      </tr>
-      <tr>
-        <td><i class="bi bi-house-door"></i></td>
-        <td><a href="/patient/dashboard" class="text-decoration-none">Dashboard</a></td>
-      </tr>
-      <tr>
-        <td><i class="bi bi-calendar"></i></td>
-        <td>
-          <!-- simply indent submenu with a nested table -->
-          <table class="table table-borderless mb-0">
-            <tr><td><a href="/patient/bookappointment" class="text-decoration-none">• Book Appointment</a></td></tr>
-            <tr><td><a href="/patient/upcomingappointments" class="text-decoration-none">• Upcoming</a></td></tr>
-            <tr><td><a href="/patient/todaysappointments" class="text-decoration-none">• Today</a></td></tr>
-            <tr><td><a href="/patient/pastappointments" class="text-decoration-none">• Past</a></td></tr>
-          </table>
-        </td>
-      </tr>
-      <tr>
-        <td><i class="bi bi-clipboard"></i></td>
-        <td><a href="/patient/healthrecords" class="text-decoration-none">Medical Records</a></td>
-      </tr>
-      <tr>
-        <td><i class="bi bi-file-text"></i></td>
-        <td><a href="/patient/prescriptions" class="text-decoration-none">Prescriptions</a></td>
-      </tr>
-      <tr>
-        <td><i class="bi bi-receipt"></i></td>
-        <td><a href="/patient/billings" class="text-decoration-none">Billing</a></td>
-      </tr>
-      <tr>
-        <td><i class="bi bi-people"></i></td>
-        <td><a href="/patient/doctors" class="text-decoration-none">Doctors</a></td>
-      </tr>
-      <tr>
-        <td><i class="bi bi-chat-square-text"></i></td>
-        <td><a href="/patient/chat" class="text-decoration-none">Chat</a></td>
-      </tr>
-      <tr>
-        <td><i class="bi bi-box-arrow-right text-danger"></i></td>
-        <td><a href="/auth/logout" class="text-decoration-none text-danger">Logout</a></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<!-- JavaScript for Sidebar Toggle -->
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-      const sidebar = document.querySelector(".sidebar");
-      const toggleButton = document.querySelector(".sidebar-toggle");
-      const content = document.querySelector(".content");
-
-      toggleButton.addEventListener("click", function () {
-          sidebar.classList.toggle("show");
-          content.classList.toggle("shifted");
-      });
-  });
-</script>
+        toggleButton.addEventListener("click", function () {
+            sidebar.classList.toggle("show");
+            if(content) content.classList.toggle("shifted");
+        });
+    });
+  </script>
+</body>
+</html>

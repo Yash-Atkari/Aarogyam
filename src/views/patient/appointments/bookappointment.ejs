@@ -1,48 +1,7 @@
 <%- layout("./layouts/patientboilerplate") %>
 
-<style>
-    body { background-color: #f8f9fa; }
-    
-    .appointment-form-container {
-        max-width: 100%;
-        background: white;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .form-header {
-        font-size: 22px;
-        font-weight: bold;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .form-group {
-        margin-bottom: 15px;
-    }
-
-    label {
-        font-weight: bold;
-        display: block;
-        margin-bottom: 5px;
-    }
-
-    input, select, textarea {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-    }
-
-    .success-message {
-        text-align: center;
-        color: green;
-        font-weight: bold;
-        margin-top: 10px;
-    }
-</style>
+<!-- Link external CSS -->
+<link rel="stylesheet" href="/css/patient/appointments/bookappointment.css">
 
 <div class="container">
     <div class="form-header">
@@ -50,12 +9,15 @@
     </div>
     <div class="appointment-form-container my-3">
         <form id="appointmentForm" action="/patient/bookappointment" method="POST" enctype="application/x-www-form-urlencoded" class="needs-validation" novalidate>
+            
             <div class="mb-2">
                 <label class="form-label">Select Doctor</label>
                 <select name="patient[doctorId]" class="form-select" required>
                     <option value="" selected disabled>Select a doctor</option>
                     <% doctors.forEach(doctor => { %>
-                        <option value="<%= doctor._id %>"><%= doctor.fullName ||  doctor.username %> (<%= doctor.specialization %>)</option>
+                        <option value="<%= doctor._id %>">
+                            <%= doctor.fullName || doctor.username %> (<%= doctor.specialization %>)
+                        </option>
                     <% }); %>
                 </select>
                 <div class="invalid-feedback">Please select a doctor.</div>
@@ -85,7 +47,7 @@
     </div>
 </div>
 
-<!-- Bootstrap Form Validation Script -->
+<!-- Scripts -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const form = document.getElementById("appointmentForm");
@@ -98,6 +60,7 @@
         });
     });
 </script>
+
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     const doctorSelect = document.querySelector("select[name='patient[doctorId]']");
@@ -105,36 +68,27 @@ document.addEventListener("DOMContentLoaded", function () {
     const timeSlotSelect = document.getElementById("timeSlot");
     let calendar;
 
-    // When a doctor is selected, fetch available slots and initialize calendar with those dates
     doctorSelect.addEventListener("change", async function () {
         const doctorId = this.value;
         if (!doctorId) return;
 
-        // Fetch slots
         const response = await fetch(`/doctor/${doctorId}/slots`);
         const data = await response.json();
 
-        // Extract unique available dates
         const validDates = [...new Set(data.slots.map(slot =>
             new Date(slot.date).toISOString().split("T")[0]
         ))];
 
-        console.log("Available dates:", validDates);
-
-        // Destroy old calendar if exists
         if (calendar) calendar.destroy();
 
-        // Initialize Flatpickr with enabled dates only
         calendar = flatpickr(dateInput, {
             dateFormat: "Y-m-d",
             enable: validDates
         });
 
-        // Reset times
         timeSlotSelect.innerHTML = `<option value="" disabled selected>Select a time</option>`;
     });
 
-    // When a valid date is chosen, populate slots
     dateInput.addEventListener("change", async function () {
         const doctorId = doctorSelect.value;
         const selectedDate = this.value;
@@ -144,8 +98,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const data = await response.json();
 
         timeSlotSelect.innerHTML = `<option value="" disabled selected>Select a time</option>`;
-
-        console.log("Slots for date:", data.slots);
 
         if (data.slots && data.slots.length > 0) {
             data.slots.forEach(slot => {
@@ -163,5 +115,5 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 </script>
-<!-- Flatpickr for better date selection -->
+
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>

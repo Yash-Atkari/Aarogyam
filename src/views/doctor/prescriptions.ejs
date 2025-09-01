@@ -1,52 +1,46 @@
 <%- layout("./layouts/doctorboilerplate") %>
 
-<style>
-    .card {
-        border-radius: 15px;
-        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-        transition: 0.3s;
-        padding: 1rem;
-        margin-bottom: 1rem;
-    }
-    .card:hover {
-        transform: translateY(-5px);
-    }
-    .btn-custom {
-        width: 100%;
-        margin-top: 0.5rem;
-    }
-</style>
+<link rel="stylesheet" href="/css/doctor/prescriptions.css">
 
 <body>
-    <div class="container container-fluid">
-        <h2 class="">Prescriptions for <a href="" style="text-decoration: none;"><%= appointments[0].patientId.fullName || appointments[0].patientId.username %></a></h2>
-        <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
-            <% for (let appointment of appointments) { %>
-                <div class="col">
-                    <div class="bg-white px-3 pt-3 rounded-3">
-                        <h6 class="text-dark">
-                            <i class="fa-solid fa-calendar"></i>&nbsp; Appointment on <%= new Date(appointment.date).toDateString() %>
-                        </h6>
-                        <% if (appointment.attachments && appointment.attachments.length > 0) { %>
-                            <p><strong>Prescriptions:</strong></p>
-                            <ul>
-                                <% for (let file of appointment.attachments) { %>
-                                    <li class="mb-2">
-                                        <a href="<%= file %>" class="btn btn-primary" target="_blank">
-                                            <i class="fa-solid fa-eye"></i> View
-                                        </a>
-                                        <a href="<%= file %>" class="btn btn-success" target="_blank" download>
-                                            <i class="fa-solid fa-download"></i> Download
-                                        </a>
-                                    </li>
-                                <% } %>
-                            </ul>
-                        <% } else { %>
-                            <p class="text-muted">No prescriptions available</p>
-                        <% } %>
+    <div class="container">
+        <h2>
+            Prescriptions for 
+            <a href="" style="text-decoration: none;">
+                <%= appointments[0].patientId.fullName || appointments[0].patientId.username %>
+            </a>
+        </h2>
 
-                        <p class="text-muted badge"><%= new Date(appointment.date).toDateString() %></p>
-                    </div>
+        <!-- Use custom grid container -->
+        <div class="cards-container">
+            <% for (let appointment of appointments) { %>
+                <div class="prescription-card">
+                    <h6 class="text-dark">
+                        <i class="fa-solid fa-calendar"></i>&nbsp; Appointment on 
+                        <%= new Date(appointment.date).toDateString() %>
+                    </h6>
+
+                    <% if (appointment.attachments && appointment.attachments.length > 0) { %>
+                        <p><strong>Prescriptions:</strong></p>
+                        <ul>
+                            <% for (let file of appointment.attachments) { %>
+                                <li>
+                                    <a href="<%= file %>" class="btn btn-primary" target="_blank">
+                                        <i class="fa-solid fa-eye"></i> View
+                                    </a>
+                                    <a href="<%= file %>" class="btn btn-success" target="_blank" download>
+                                        <i class="fa-solid fa-download"></i> Download
+                                    </a>
+                                </li>
+                            <% } %>
+                        </ul>
+                    <% } else { %>
+                        <p class="text-muted">No prescriptions available</p>
+                    <% } %>
+
+                    <p class="text-muted badge">
+                        <%= new Date(appointment.date).toDateString() %>
+                    </p>
                 </div>
             <% } %>
         </div>
