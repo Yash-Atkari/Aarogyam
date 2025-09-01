@@ -42,11 +42,11 @@ router
   );
 
 router
-  .route("/billings/delete/:id")
+  .route("/billings/:billingId/attachments/delete")
   .post(
     isAuthenticated,
-    isAuthorized(Billing, "id", "patientId"),
-    patientController.deleteBilling
+    isAuthorized(Billing, "billingId", "patientId"),
+    patientController.deleteBillingAttachment
   );
 
 // POST route for booking appointment

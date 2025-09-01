@@ -113,7 +113,7 @@ module.exports.cancelAppointment = async (req, res, next) => {
 module.exports.filterAppointments = async (req, res, next) => {
   try {
     const { search, date, status } = req.query;
-    let filter = {};
+    let filter = { patientId: req.user._id }; // 👈 Only fetch this user's appointments
 
     if (date) {
       const start = new Date(date);
@@ -236,10 +236,10 @@ module.exports.billings = async (req, res, next) => {
   }
 };
 
-// Delete a billing file from the attachments.
-module.exports.deleteBilling = async (req, res, next) => {
+// Delete a billing attachment (file) from a billing record.
+module.exports.deleteBillingAttachment = async (req, res, next) => {
   try {
-    const billingId = req.params.id;
+    const billingId = req.params.billingId;
     const filePath = req.query.file;
 
     if (!filePath) {
@@ -253,14 +253,26 @@ module.exports.deleteBilling = async (req, res, next) => {
       return res.redirect("back");
     }
 
+    // Remove the file URL from attachments
     billing.attachments = billing.attachments.filter(file => file !== filePath);
     await billing.save();
 
-    req.flash("success", "Billing deleted successfully.");
+    // // Optional: Delete the file from Cloudinary
+    // try {
+    //   const publicId = filePath
+    //     .split('/') // split by /
+    //     .pop()      // get last part (filename)
+    //     .split('.')[0]; // remove extension
+    //   await cloudinary.uploader.destroy(`aarogyam_DEV/${publicId}`, { resource_type: "raw" });
+    // } catch (cloudErr) {
+    //   console.warn("Could not delete file from Cloudinary:", cloudErr.message);
+    // }
+
+    req.flash("success", "Attachment deleted successfully.");
     res.redirect("back");
   } catch (error) {
-    console.error("Error deleting billing:", error);
-    req.flash("error", "Something went wrong.");
+    console.error("Error deleting billing attachment:", error);
+    req.flash("error", "Something went wrong while deleting the attachment.");
     res.redirect("back");
   }
 };
