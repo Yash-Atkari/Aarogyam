@@ -51,7 +51,7 @@ const Billing = require("./src/models/Billing");
 
 // MongoDB connection
 
-const MongoUrl = process.env.ATLASDB_URL || "mongodb://127.0.0.1:27017/aarogyam";
+const MongoUrl = /*process.env.ATLASDB_URL ||*/ "mongodb://127.0.0.1:27017/aarogyam";
 
 main()
   .then(() => console.log("Connected to DB"))
