@@ -83,7 +83,7 @@ module.exports.pastAppointments = async (req, res, next) => {
       .populate("patientId")
       .populate("doctorId");
 
-    res.render("patient/appointments/pastappointments", { appointments });
+    res.render("patient/appointments/past-appointments", { appointments });
   } catch (err) {
     console.error("Error fetching past appointments:", err);
     req.flash("error", "Internal Server Error.");
@@ -144,11 +144,11 @@ module.exports.filterAppointments = async (req, res, next) => {
 
     const referer = req.get("referer");
     if (referer && referer.includes("/pastappointments")) {
-      return res.render("patient/appointments/pastappointments", { appointments });
+      return res.render("patient/appointments/past-appointments", { appointments });
     } else if (referer && referer.includes("/upcomingappointments")) {
-      return res.render("patient/appointments/upcomingappointments", { appointments });
+      return res.render("patient/appointments/upcoming-appointments", { appointments });
     } else {
-      return res.render("patient/appointments/todaysappointments", { appointments });
+      return res.render("patient/appointments/todays-appointments", { appointments });
     }
   } catch (error) {
     console.error("Error filtering appointments:", error);
@@ -161,7 +161,7 @@ module.exports.filterAppointments = async (req, res, next) => {
 module.exports.bookAppointmentPage = async (req, res, next) => {
   try {
     const doctors = await Doctor.find();
-    res.render("patient/appointments/bookappointment", { doctors });
+    res.render("patient/appointments/book-appointment", { doctors });
   } catch (err) {
     console.error("Error rendering appointment booking page:", err);
     req.flash("error", "Internal Server Error.");
@@ -174,7 +174,7 @@ module.exports.healthRecords = async (req, res, next) => {
   try {
     const patientId = req.user._id;
     const records = await HealthRecord.find({ patientId }).populate("doctorId");
-    res.render("patient/healthrecords", { records });
+    res.render("patient/health-records", { records });
   } catch (err) {
     console.error("Error fetching health records:", err);
     req.flash("error", "Internal Server Error.");

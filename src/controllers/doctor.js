@@ -64,7 +64,7 @@ module.exports.renderEditAppointment = async (req, res, next) => {
       req.flash("error", "Appointment not found.");
       return res.redirect("/doctor/appointments");
     }
-    res.render("doctor/editAppointment", { appointment});
+    res.render("doctor/edit-appointment", { appointment });
   } catch (err) {
     console.error("Error fetching data for edit:", err);
     req.flash("error", "Failed to load appointment details. Please try again.");
@@ -107,7 +107,7 @@ module.exports.healthRecords = async (req, res, next) => {
     const healthrecords = await HealthRecord.find({ _id: { $in: healthRecordIds } });
 
     // Pass both appointments + healthrecords to view
-    res.render("doctor/healthrecords", { appointments, healthrecords });
+    res.render("doctor/health-records", { appointments, healthrecords });
   } catch (error) {
     console.error("Error fetching health records:", error);
     req.flash("error", "Failed to load health records. Please try again.");

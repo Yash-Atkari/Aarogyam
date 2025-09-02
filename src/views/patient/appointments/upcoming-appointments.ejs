@@ -1,11 +1,11 @@
-<%- layout("./layouts/patientboilerplate") %>
+<%- layout("./layouts/patient-boilerplate") %>
 <link rel="stylesheet" href="/css/patient/appointments/appointments.css">
 
 <div class="container">
     <div class="appointment-header">
-        <h2>Past Appointments</h2>
+        <h2>Upcoming Appointments</h2>
     </div>
-
+    
     <!-- Search and Filter Section -->
     <form id="filterForm" method="GET" class="mt-4" action="/patient/filterappointments">
         <div class="row g-2">
@@ -111,6 +111,6 @@
 
 <script>
 function setAppointmentId(appointmentId) {
-  document.getElementById("cancelForm").action = `/patient/pastappointments/cancel/${appointmentId}?_method=DELETE`;
+  document.getElementById("cancelForm").action = `/patient/upcomingappointments/cancel/${appointmentId}?_method=DELETE`;
 }
 </script>
