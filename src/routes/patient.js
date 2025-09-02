@@ -55,7 +55,7 @@ router
   .post(isAuthenticated, patientController.bookAppointment);
 
 router.get("/chat", (req, res) => {
-  res.render("patient/chat");
+  res.render("patient/chatbot");
 });  
 
 router
