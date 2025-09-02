@@ -110,7 +110,7 @@ app.use(passport.session());
 passport.use("doctor-local", new LocalStrategy(Doctor.authenticate()));
 passport.use("patient-local", new LocalStrategy(Patient.authenticate()));
 
-// 🛠️ Custom serializeUser & deserializeUser to distinguish user types
+// Custom serializeUser & deserializeUser to distinguish user types
 passport.serializeUser((user, done) => {
   done(null, { id: user.id, role: user instanceof Doctor ? "doctor" : "patient" });
 });
