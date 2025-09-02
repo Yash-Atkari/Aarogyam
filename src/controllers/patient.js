@@ -37,7 +37,7 @@ module.exports.upcomingAppointments = async (req, res, next) => {
       .populate("patientId")
       .populate("doctorId");
 
-    res.render("patient/appointments/upcomingappointments", { appointments });
+    res.render("patient/appointments/upcoming-appointments", { appointments });
   } catch (err) {
     console.error("Error fetching upcoming appointments:", err);
     req.flash("error", "Internal Server Error.");
@@ -61,7 +61,7 @@ module.exports.todaysAppointments = async (req, res, next) => {
       .populate("patientId")
       .populate("doctorId");
 
-    res.render("patient/appointments/todaysappointments", { appointments });
+    res.render("patient/appointments/todays-appointments", { appointments });
   } catch (err) {
     console.error("Error fetching today's appointments:", err);
     req.flash("error", "Internal Server Error.");

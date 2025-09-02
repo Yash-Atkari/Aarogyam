@@ -76,20 +76,20 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// const store = MongoStore.create({
-//   mongoUrl: MongoUrl,
-//   crypto: {
-//       secret: process.env.MONGOSTORESECRET,
-//   },
-//   touchAfter: 24 * 3600,
-// });
+const store = MongoStore.create({
+  mongoUrl: MongoUrl,
+  crypto: {
+      secret: process.env.MONGOSTORESECRET,
+  },
+  touchAfter: 24 * 3600,
+});
 
-// store.on("error", () => {
-//   console.log("ERROR in MONGO SESSION STORE");
-// });
+store.on("error", () => {
+  console.log("ERROR in MONGO SESSION STORE");
+});
 
 const sessionOptions = {
-  // store,
+  store,
   secret: process.env.SECRET,   // use env variable properly
   resave: false,
   saveUninitialized: false,     // only save when needed
