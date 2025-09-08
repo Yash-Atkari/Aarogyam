@@ -1,10 +1,10 @@
-# Aarogyam – A Healthcare Management System (HMS)
+# Aarogyam – Healthcare Management System (HMS)
 
 A digital platform designed to securely manage student healthcare records, streamline documentation, and improve accessibility within educational institutes.
 
 ## Live Demo
 
-[View Aarogyam](https://your-deployment-url.com)
+[View Aarogyam](https://aarogyam-v6ig.onrender.com/)
 
 ## Tech Stack
 
@@ -20,7 +20,7 @@ A digital platform designed to securely manage student healthcare records, strea
 ## Features:
 - **User Authentication** – Secure login/signup using passport-based authentication.
 - **Student Dashboard** – View medical history, prescriptions, and past treatments.
-- **Health Record Storage** – Backend API to store & retrieve medical records.
+- **Health Record Storage** – Store & retrieve medical records, prescriptions & billings.
 - **Automated Leave Documentation** – System generates medical certificates and leave requests.
 - **Appointment Booking System** – Initial setup for scheduling doctor appointments.
 - **Mental Health Chatbot** – Integrated mental health assessment using the Together API.
