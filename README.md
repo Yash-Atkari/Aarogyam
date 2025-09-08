@@ -2,7 +2,7 @@
 
 A digital platform designed to securely manage student healthcare records, streamline documentation, and improve accessibility within educational institutes.
 
-## Live Demo
+## Live Links
 
 - [View Aarogyam](https://aarogyam-v6ig.onrender.com/)
 - [View Demo Video on LinkedIn](https://www.linkedin.com/feed/update/urn:li:activity:7370769756301221888/)
