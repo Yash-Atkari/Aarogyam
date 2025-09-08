@@ -1,4 +1,4 @@
-# Aarogyam – Healthcare Management System (HMS)
+# Aarogyam – A Healthcare Management System (HMS)
 
 A digital platform designed to securely manage student healthcare records, streamline documentation, and improve accessibility within educational institutes.
 
