@@ -31,11 +31,14 @@ A digital platform designed to securely manage student healthcare records, strea
 ## Screenshots:
 
 <img width="1900" height="972" alt="image" src="https://github.com/user-attachments/assets/2b921d37-4df7-4006-86c9-7a3a60e38ea7" />
-<img width="1919" height="970" alt="image" src="https://github.com/user-attachments/assets/92e2ddcf-6e2f-4da5-808f-268a843abdc6" />
 <img width="1919" height="967" alt="image" src="https://github.com/user-attachments/assets/3db5bf96-ca81-4918-be82-4ff8e503d6f7" />
 <img width="1919" height="972" alt="image" src="https://github.com/user-attachments/assets/4869e483-2c44-4cd5-80d2-f3983b4b47ba" />
+<img width="1919" height="969" alt="image" src="https://github.com/user-attachments/assets/e450c3b6-f4a8-4dc9-8b0d-357a73872810" />
 <img width="1919" height="971" alt="image" src="https://github.com/user-attachments/assets/2993ced8-570e-49f1-96ba-8216e1d51621" />
+<img width="1901" height="972" alt="image" src="https://github.com/user-attachments/assets/d4c1918f-b0cd-4fe1-9c15-25c95eb08ece" />
 <img width="1919" height="971" alt="image" src="https://github.com/user-attachments/assets/ba1cae42-cfdd-4da9-8db4-539d765f2cf1" />
+<img width="1919" height="946" alt="image" src="https://github.com/user-attachments/assets/252fae09-f362-4593-aa1e-82d1e2c2bf07" />
+
 
 ## How to Run the Project
 
