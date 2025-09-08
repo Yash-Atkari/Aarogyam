@@ -4,8 +4,8 @@ A digital platform designed to securely manage student healthcare records, strea
 
 ## Live Demo
 
-[View Aarogyam](https://aarogyam-v6ig.onrender.com/)
-[View Demo Video on LinkedIn](https://www.linkedin.com/feed/update/urn:li:activity:7370769756301221888/)
+- [View Aarogyam](https://aarogyam-v6ig.onrender.com/)
+- [View Demo Video on LinkedIn](https://www.linkedin.com/feed/update/urn:li:activity:7370769756301221888/)
 
 ## Tech Stack
 
